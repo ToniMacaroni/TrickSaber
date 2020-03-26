@@ -1,33 +1,28 @@
-﻿using System;
-using System.IO;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿using UnityEngine;
 
 namespace TrickSaber
 {
-    //For future use
     public class AssetLoader : MonoBehaviour
     {
         public static AssetBundle Bundle;
 
         public static void Load()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "UserData\\TrickSaber\\prefabs");
-            Bundle = AssetBundle.LoadFromFile(path);
+            Bundle = AssetBundle.LoadFromFile(@"E:\SteamLibrary\steamapps\common\Beat Saber\UserData\TrickSaber\prefabs");
         }
 
-        public static Object GetAsset(string name)
+        public static UnityEngine.Object GetAsset(string name)
         {
             if(Bundle==null)Load();
             return Bundle.LoadAsset(name);
         }
 
-        public static Object GetHandLeftPrefab()
+        public static UnityEngine.Object GetHandLeftPrefab()
         {
             return GetAsset("HandLeft");
         }
 
-        public static Object GetHandRightPrefab()
+        public static UnityEngine.Object GetHandRightPrefab()
         {
             return GetAsset("HandRight");
         }
