@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
+  "author": "Toni Macaroni",
+  "description": "do sick tricks",
+  "gameVersion": "1.8.0",
+  "id": "TrickSaber",
+  "name": "TrickSaber",
+  "version": "0.0.2",
+  "features": [
+  ]
+}
