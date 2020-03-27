@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using BS_Utils.Gameplay;
 using HarmonyLib;
 using IPA;
 using IPA.Config;
@@ -32,6 +33,7 @@ namespace TrickSaber
         public void OnStart()
         {
             Log.Debug("TrickSaber Started");
+            ScoreSubmission.ProlongedDisableSubmission("TrickSaber");
         }
 
         [OnExit]
