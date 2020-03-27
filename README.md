@@ -17,5 +17,3 @@ for right saber: move your right thumbstick to the right
 ```
 
 Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ
-
-Input handling for this plugin is still very buggy
