@@ -1,5 +1,4 @@
 # Trick Saber
-*For Beat Saber v1.8*
 
 This mod allows you to perform various tricks (like in Audica) with your sabers,
 hence the name "Trick Saber".
@@ -17,5 +16,3 @@ for right saber: move your right thumbstick to the right
 ```
 
 Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ
-
-Input handling for this plugin is still very buggy
