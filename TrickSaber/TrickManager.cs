@@ -16,6 +16,7 @@ namespace TrickSaber
         private bool _getBack;
         private Rigidbody _rigidbody;
         private BoxCollider _collider;
+        private float _controllerSnapThreshold = 0.3f;
 
         Vector3 _controllerPosition = Vector3.zero;
         Quaternion _controllerRotation = Quaternion.identity;
@@ -37,6 +38,8 @@ namespace TrickSaber
 
             _inputManager = new InputManager();
             _inputManager.Init(Saber.saberType);
+
+            _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
         }
 
         void Update()
@@ -56,7 +59,7 @@ namespace TrickSaber
 
                 float distance = Vector3.Distance(_controllerPosition, position);
 
-                if (distance < 0.3f)
+                if (distance < _controllerSnapThreshold)
                 {
                     ThrowEnd();
                     

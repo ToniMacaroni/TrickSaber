@@ -20,5 +20,7 @@ namespace TrickSaber
         public bool UseTrigger { get; set; } = true;
 
         public bool UseGrip { get; set; } = false;
+
+        public float ControllerSnapThreshold { get; set; } = 0.3f;
     }
 }
