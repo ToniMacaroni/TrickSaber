@@ -11,4 +11,18 @@ namespace TrickSaber
         Oculus,
         SteamVR
     }
+
+    public enum ThumstickDir
+    {
+        Horizontal,
+        Vertical
+    }
+
+    public static class EnumTools
+    {
+        public static ThumstickDir GetDir(string str)
+        {
+            return (ThumstickDir)Enum.Parse(typeof(ThumstickDir), str, true);
+        }
+    }
 }

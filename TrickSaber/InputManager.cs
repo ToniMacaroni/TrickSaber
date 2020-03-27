@@ -30,7 +30,7 @@ namespace TrickSaber
 
             if(PluginConfig.Instance.UseTrigger)_throwInputHandlers.Add(new TriggerHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.TriggerThreshold));
             if(PluginConfig.Instance.UseGrip) _throwInputHandlers.Add(new GripHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.GripThreshold));
-            _spinHandler = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold);
+            _spinHandler = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold, EnumTools.GetDir(PluginConfig.Instance.ThumstickDirection));
 
             Plugin.Log.Debug("Started Input Manager using "+vrSystem);
         }

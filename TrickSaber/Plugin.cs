@@ -32,8 +32,9 @@ namespace TrickSaber
         [OnStart]
         public void OnStart()
         {
-            Log.Debug("TrickSaber Started");
+            SettingsUI.CreateMenu();
             ScoreSubmission.ProlongedDisableSubmission("TrickSaber");
+            Log.Debug("TrickSaber Started");
         }
 
         [OnExit]
