@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
 using IPA;
+using IPA.Config;
+using IPA.Config.Stores;
 using Logger = IPA.Logging.Logger;
 
 namespace TrickSaber
@@ -17,9 +19,10 @@ namespace TrickSaber
         public static Harmony Harmony { get; set; }
 
         [Init]
-        public Plugin(Logger logger)
+        public Plugin(Logger logger, Config config)
         {
             Log = logger;
+            PluginConfig.Instance = config.Generated<PluginConfig>();
 
             Harmony = new Harmony("tricksaber.toni.com");
             Harmony.PatchAll(Assembly.GetExecutingAssembly());
