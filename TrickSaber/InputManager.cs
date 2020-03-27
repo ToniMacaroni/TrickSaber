@@ -7,8 +7,8 @@ namespace TrickSaber
 {
     public class InputManager : MonoBehaviour
     {
-        private InputHandler _spinHandler;
-        List<InputHandler> _throwInputHandlers = new List<InputHandler>();
+        HashSet<InputHandler> _throwInputHandlers = new HashSet<InputHandler>();
+        HashSet<InputHandler> _spinInputHandlers = new HashSet<InputHandler>();
 
         public void Init(SaberType type)
         {
@@ -28,17 +28,40 @@ namespace TrickSaber
 
             vrSystem = OVRInput.IsControllerConnected(_oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
 
-            if(PluginConfig.Instance.UseTrigger)_throwInputHandlers.Add(new TriggerHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.TriggerThreshold));
-            if(PluginConfig.Instance.UseGrip) _throwInputHandlers.Add(new GripHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.GripThreshold));
-            _spinHandler = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold, EnumTools.GetDir(PluginConfig.Instance.ThumstickDirection));
+            var dir = (ThumstickDir)Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
+
+            var triggerHandler = new TriggerHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.TriggerThreshold);
+            var gripHandler = new GripHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.GripThreshold);
+            var thumbstickAction = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold, dir);
+            AddHandler(triggerHandler, PluginConfig.Instance.TriggerAction.GetTrickAction());
+            AddHandler(gripHandler, PluginConfig.Instance.GripAction.GetTrickAction());
+            AddHandler(thumbstickAction, PluginConfig.Instance.ThumbstickAction.GetTrickAction());
 
             Plugin.Log.Debug("Started Input Manager using "+vrSystem);
         }
 
-        public bool CheckThrowButton()
+        private void AddHandler(InputHandler handler, TrickAction action)
         {
+            switch (action)
+            {
+                case TrickAction.None:
+                    return;
+                case TrickAction.Throw:
+                    _throwInputHandlers.Add(handler);
+                    break;
+                case TrickAction.Spin:
+                    _spinInputHandlers.Add(handler);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        private bool CheckHandlersDown(HashSet<InputHandler> handlers)
+        {
+            if (handlers.Count == 0) return false;
             bool output = true;
-            foreach (InputHandler handler in _throwInputHandlers)
+            foreach (InputHandler handler in handlers)
             {
                 output &= handler.Pressed();
             }
@@ -46,9 +69,9 @@ namespace TrickSaber
             return output;
         }
 
-        public bool CheckThrowButtonUp()
+        private bool CheckHandlersUp(HashSet<InputHandler> handlers)
         {
-            foreach (InputHandler handler in _throwInputHandlers)
+            foreach (InputHandler handler in handlers)
             {
                 if (handler.Up()) return true;
             }
@@ -56,14 +79,24 @@ namespace TrickSaber
             return false;
         }
 
-        public bool CheckSpinButton()
+        public bool CheckThrowAction()
         {
-            return _spinHandler.Pressed();
+            return CheckHandlersDown(_throwInputHandlers);
         }
 
-        public bool CheckSpinButtonUp()
+        public bool CheckThrowActionUp()
         {
-            return _spinHandler.Up();
+            return CheckHandlersUp(_throwInputHandlers);
+        }
+
+        public bool CheckSpinAction()
+        {
+            return CheckHandlersDown(_spinInputHandlers);
+        }
+
+        public bool CheckSpinActionUp()
+        {
+            return CheckHandlersUp(_spinInputHandlers);
         }
     }
 }

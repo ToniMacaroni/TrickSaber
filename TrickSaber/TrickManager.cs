@@ -18,6 +18,9 @@ namespace TrickSaber
         private BoxCollider _collider;
         private float _controllerSnapThreshold = 0.3f;
 
+        private float _spinSpeedMultiplier = 1f;
+        private float _velocityMultiplier = 1f;
+
         Vector3 _controllerPosition = Vector3.zero;
         Quaternion _controllerRotation = Quaternion.identity;
         private Vector3 _velocity = Vector3.zero;
@@ -40,6 +43,9 @@ namespace TrickSaber
             _inputManager.Init(Saber.saberType);
 
             _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
+            _spinSpeedMultiplier = PluginConfig.Instance.SpinSpeed;
+            if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) _spinSpeedMultiplier = -_spinSpeedMultiplier;
+            _velocityMultiplier = PluginConfig.Instance.ThrowVelocity;
         }
 
         void Update()
@@ -91,19 +97,19 @@ namespace TrickSaber
 
         void CheckButtons()
         {
-            if (_inputManager.CheckThrowButton() && !_getBack)
+            if (_inputManager.CheckThrowAction() && !_getBack)
             {
                 ThrowStart();
             }
-            else if (_inputManager.CheckThrowButtonUp() && !_getBack)
+            else if (_inputManager.CheckThrowActionUp() && !_getBack)
             {
                 ThrowReturn();
             }
-            else if (_inputManager.CheckSpinButton() && !_isThrowing && !_getBack)
+            else if (_inputManager.CheckSpinAction() && !_isThrowing && !_getBack)
             {
                 InPlaceRotation();
             }
-            else if (_inputManager.CheckSpinButtonUp() && _isRotatingInPlace)
+            else if (_inputManager.CheckSpinActionUp() && _isRotatingInPlace)
             {
                 InPlaceRotationEnd();
             }
@@ -116,7 +122,7 @@ namespace TrickSaber
                 Controller.enabled = false;
                 //--------------
                 _rigidbody.isKinematic = false;
-                _rigidbody.velocity = _velocity * 220;
+                _rigidbody.velocity = _velocity * 220 * _velocityMultiplier;
                 _collider.enabled = false;
                 _saberRotSpeed = _saberSpeed*400;
                 //--------------
@@ -173,7 +179,7 @@ namespace TrickSaber
 
             Saber.transform.rotation = _controllerRotation;
             Saber.transform.position = _controllerPosition;
-            _currentRotation -= 18;
+            _currentRotation += 18*_spinSpeedMultiplier;
             Saber.transform.Rotate(Vector3.right, _currentRotation);
         }
     }

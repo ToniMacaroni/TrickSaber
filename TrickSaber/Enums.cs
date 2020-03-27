@@ -18,11 +18,24 @@ namespace TrickSaber
         Vertical
     }
 
+    public enum SpinDir
+    {
+        Forward,
+        Backward
+    }
+
+    public enum TrickAction
+    {
+        None,
+        Throw,
+        Spin
+    }
+
     public static class EnumTools
     {
-        public static ThumstickDir GetDir(string str)
+        public static TrickAction GetTrickAction(this string name)
         {
-            return (ThumstickDir)Enum.Parse(typeof(ThumstickDir), str, true);
+            return (TrickAction) Enum.Parse(typeof(TrickAction), name, true);
         }
     }
 }

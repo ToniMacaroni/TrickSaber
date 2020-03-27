@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BeatmapEditor3D;
-
-namespace TrickSaber
+﻿namespace TrickSaber
 {
     public class PluginConfig
     {
         public static PluginConfig Instance { get; set; }
 
-        public bool UseTrigger { get; set; } = true;
+        public string TriggerAction { get; set; } = TrickAction.Throw.ToString();
 
-        public bool UseGrip { get; set; } = false;
+        public string GripAction { get; set; } = TrickAction.None.ToString();
+
+        public string ThumbstickAction { get; set; } = TrickAction.Spin.ToString();
 
         public string ThumstickDirection { get; set; } = ThumstickDir.Horizontal.ToString();
 
@@ -24,5 +19,12 @@ namespace TrickSaber
         public float ThumbstickThreshold { get; set; } = 0.8f;
 
         public float ControllerSnapThreshold { get; set; } = 0.3f;
+
+
+        public float SpinSpeed { get; set; } = 1f;
+
+        public string SpinDirection { get; set; } = SpinDir.Backward.ToString();
+
+        public float ThrowVelocity { get; set; } = 1f;
     }
 }

@@ -10,17 +10,24 @@ namespace TrickSaber
     {
         public override string ResourceName => "TrickSaber.TrickSaberSettings.bsml";
 
-        [UIValue("UseTrigger-value")]
-        public bool UseTrigger {
-            get => PluginConfig.Instance.UseTrigger;
-            set => PluginConfig.Instance.UseTrigger = value;
+        [UIValue("TriggerAction-value")]
+        public string UseTrigger {
+            get => PluginConfig.Instance.TriggerAction;
+            set => PluginConfig.Instance.TriggerAction = value;
         }
 
-        [UIValue("UseGrip-value")]
-        public bool UseGrip
+        [UIValue("GripAction-value")]
+        public string GripAction
         {
-            get => PluginConfig.Instance.UseGrip;
-            set => PluginConfig.Instance.UseGrip = value;
+            get => PluginConfig.Instance.GripAction;
+            set => PluginConfig.Instance.GripAction = value;
+        }
+
+        [UIValue("ThumbAction-value")]
+        public string ThumbAction
+        {
+            get => PluginConfig.Instance.ThumbstickAction;
+            set => PluginConfig.Instance.ThumbstickAction = value;
         }
 
         [UIValue("ThumbDir-value")]
@@ -58,7 +65,34 @@ namespace TrickSaber
             set => PluginConfig.Instance.ControllerSnapThreshold = value;
         }
 
+        [UIValue("SpinSpeed-value")]
+        public float SpinSpeed
+        {
+            get => PluginConfig.Instance.SpinSpeed;
+            set => PluginConfig.Instance.SpinSpeed = value;
+        }
+
+        [UIValue("SpinDir-value")]
+        public string SpinDir
+        {
+            get => PluginConfig.Instance.SpinDirection;
+            set => PluginConfig.Instance.SpinDirection = value;
+        }
+
+        [UIValue("ThrowVelocity-value")]
+        public float ThrowVelocity
+        {
+            get => PluginConfig.Instance.ThrowVelocity;
+            set => PluginConfig.Instance.ThrowVelocity = value;
+        }
+
         [UIValue("DirEnum-list")]
-        public List<object> trailType = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
+        public List<object> ThumbstickDirectionsList = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
+
+        [UIValue("SpinDirEnum-list")]
+        public List<object> SpinDirectionsList = Enum.GetNames(typeof(SpinDir)).ToList<object>();
+
+        [UIValue("TrickActionEnum-list")]
+        public List<object> TrickActionList = Enum.GetNames(typeof(TrickAction)).ToList<object>();
     }
 }
