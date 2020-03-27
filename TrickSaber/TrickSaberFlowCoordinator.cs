@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage;
 using HMUI;
+using TrickSaber.ViewControllers;
 
 namespace TrickSaber
 {
@@ -12,10 +13,9 @@ namespace TrickSaber
     {
         public void Awake()
         {
-            if (!settingsViewController)
-            {
-                this.settingsViewController = BeatSaberUI.CreateViewController<TrickSaberSettingsViewController>();
-            }
+            if (!bindingsViewController) bindingsViewController = BeatSaberUI.CreateViewController<BindingsViewController>();
+            if (!thresholdViewController) thresholdViewController = BeatSaberUI.CreateViewController<ThresholdViewController>();
+            if (!miscViewController) miscViewController = BeatSaberUI.CreateViewController<MiscViewController>();
         }
 
         protected override void DidActivate(bool firstActivation, FlowCoordinator.ActivationType activationType)
@@ -24,9 +24,9 @@ namespace TrickSaber
             {
                 if (firstActivation)
                 {
-                    base.title = "Trick Saber";
+                    base.title = "Trick Settings";
                     base.showBackButton = true;
-                    base.ProvideInitialViewControllers(this.settingsViewController, null, null, null, null);
+                    base.ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController, null, null);
                 }
             }
             catch (Exception e)
@@ -40,6 +40,8 @@ namespace TrickSaber
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, false);
         }
 
-        private TrickSaberSettingsViewController settingsViewController;
+        private BindingsViewController bindingsViewController;
+        private ThresholdViewController thresholdViewController;
+        private MiscViewController miscViewController;
     }
 }

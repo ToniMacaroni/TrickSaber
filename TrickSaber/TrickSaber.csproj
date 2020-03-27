@@ -118,14 +118,20 @@
     <Compile Include="SettingsUI.cs" />
     <Compile Include="ThumbstickHandler.cs" />
     <Compile Include="TrickManager.cs" />
-    <Compile Include="TrickSaberSettingsViewController.cs" />
+    <Compile Include="ViewControllers\BindingsViewController.cs" />
     <Compile Include="TriggerHandler.cs" />
+    <Compile Include="ViewControllers\MiscViewController.cs" />
+    <Compile Include="ViewControllers\ThresholdViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TrickSaberSettings.bsml" />
+    <EmbeddedResource Include="Views\BindingsView.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\MiscView.bsml" />
+    <EmbeddedResource Include="Views\ThresholdView.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
