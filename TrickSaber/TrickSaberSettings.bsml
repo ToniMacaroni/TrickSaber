@@ -1,4 +1,4 @@
-﻿<vertical child-control-height='false' preferred-height='500'>
+﻿<vertical child-control-height='false'>
   <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
     <text text='Trick Settings' align='Center' font-size='7'></text>
   </horizontal>
