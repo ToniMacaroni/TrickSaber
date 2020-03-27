@@ -1,5 +1,4 @@
 # Trick Saber
-*For Beat Saber v1.8*
 
 This mod allows you to perform various tricks (like in Audica) with your sabers,
 hence the name "Trick Saber".
