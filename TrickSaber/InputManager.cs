@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -6,17 +7,14 @@ namespace TrickSaber
 {
     public class InputManager : MonoBehaviour
     {
-        private bool _axisUpTriggered = true;
-        private bool _triggerUpTriggered = true;
-
-        private bool _isOculus;
-        private ButtonMapping _mapping = ButtonMapping.DefaultMapping;
-
-        private InputDevice _controllerInputDevice;
-        private OVRInput.Controller _oculusController;
+        private InputHandler _spinHandler;
+        List<InputHandler> _throwInputHandlers = new List<InputHandler>();
 
         public void Init(SaberType type)
         {
+            OVRInput.Controller _oculusController;
+            InputDevice _controllerInputDevice;
+            VrSystem vrSystem;
             if (type == SaberType.SaberA)
             {
                 _oculusController = OVRInput.Controller.LTouch;
@@ -28,67 +26,44 @@ namespace TrickSaber
                 _controllerInputDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
             }
 
-            if (OVRInput.IsControllerConnected(_oculusController)) _isOculus = true;
+            vrSystem = OVRInput.IsControllerConnected(_oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
 
-            Plugin.Log.Debug("Input Manager Init: "+(_isOculus ? "Oculus" : "Steam"));
+            if(PluginConfig.Instance.UseTrigger)_throwInputHandlers.Add(new TriggerHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.TriggerThreshold));
+            if(PluginConfig.Instance.UseGrip) _throwInputHandlers.Add(new GripHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.GripThreshold));
+            _spinHandler = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold);
+
+            Plugin.Log.Debug("Started Input Manager using "+vrSystem);
         }
 
-        public bool CheckAxis()
+        public bool CheckThrowButton()
         {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out var outval) &&
-                Math.Abs(outval.x) > 0.8f)
+            bool output = true;
+            foreach (InputHandler handler in _throwInputHandlers)
             {
-                _axisUpTriggered = false;
-                return true;
+                output &= handler.Pressed();
+            }
+
+            return output;
+        }
+
+        public bool CheckThrowButtonUp()
+        {
+            foreach (InputHandler handler in _throwInputHandlers)
+            {
+                if (handler.Up()) return true;
             }
 
             return false;
         }
 
-        public bool CheckAxisUp()
+        public bool CheckSpinButton()
         {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out var outval) &&
-                Math.Abs(outval.x) < 0.5f && !_axisUpTriggered)
-            {
-                _axisUpTriggered = true;
-                return true;
-            }
-
-            return false;
+            return _spinHandler.Pressed();
         }
 
-        bool GetTriggerOculus()
+        public bool CheckSpinButtonUp()
         {
-            return OVRInput.Get(_mapping.ThrowButtton, _oculusController);
-        }
-
-        bool GetTriggerUpOculus()
-        {
-            return OVRInput.GetUp(_mapping.ThrowButtton, _oculusController);
-        }
-
-        public bool GetTrigger()
-        {
-            if (_isOculus) return GetTriggerOculus();
-
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out var outvar) && outvar)
-            {
-                _triggerUpTriggered = false;
-                return true;
-            }
-            return false;
-        }
-
-        public bool GetTriggerUp()
-        {
-            if (_isOculus) return GetTriggerUpOculus();
-
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out var outvar) && !outvar && !_triggerUpTriggered)
-            {
-                _triggerUpTriggered = true;
-                return true;
-            }
-            return false;
+            return _spinHandler.Up();
         }
     }
 }

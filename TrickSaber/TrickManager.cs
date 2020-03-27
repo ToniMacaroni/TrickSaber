@@ -88,19 +88,19 @@ namespace TrickSaber
 
         void CheckButtons()
         {
-            if (_inputManager.GetTrigger() && !_getBack)
+            if (_inputManager.CheckThrowButton() && !_getBack)
             {
                 ThrowStart();
             }
-            else if (_inputManager.GetTriggerUp() && !_getBack)
+            else if (_inputManager.CheckThrowButtonUp() && !_getBack)
             {
                 ThrowReturn();
             }
-            else if (_inputManager.CheckAxis() && !_isThrowing && !_getBack)
+            else if (_inputManager.CheckSpinButton() && !_isThrowing && !_getBack)
             {
                 InPlaceRotation();
             }
-            else if (_inputManager.CheckAxisUp() && _isRotatingInPlace)
+            else if (_inputManager.CheckSpinButtonUp() && _isRotatingInPlace)
             {
                 InPlaceRotationEnd();
             }
