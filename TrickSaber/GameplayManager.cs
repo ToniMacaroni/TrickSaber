@@ -13,5 +13,16 @@ namespace TrickSaber
         {
             if(PluginConfig.Instance.EnableCuttingDuringTrick) ScoreSubmission.DisableSubmission("TrickSaber");
         }
+
+        public static void OnGameSceneLoaded()
+        {
+
+            DisableScoreSubmissionIfNeeded();
+        }
+
+        public static void OnMenuSceneLoadedFresh()
+        {
+            Globals.TransformOffset = UnityEngine.Object.FindObjectOfType<VRControllerTransformOffset>();
+        }
     }
 }

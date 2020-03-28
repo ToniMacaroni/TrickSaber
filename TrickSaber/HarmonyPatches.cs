@@ -11,9 +11,9 @@ namespace TrickSaber
         public static void Prefix(Saber __instance, VRController ____vrController)
         {
             Plugin.Log.Debug("Hooked Saber Start");
-            TrickManager trickManager = new GameObject("TrickManager_"+__instance.saberType).AddComponent<TrickManager>();
-            trickManager.Saber = __instance;
-            trickManager.Controller = ____vrController;
+            SaberTrickManager saberTrickManager = new GameObject("TrickManager_"+__instance.saberType).AddComponent<SaberTrickManager>();
+            saberTrickManager.Saber = __instance;
+            saberTrickManager.Controller = ____vrController;
         }
     }
 
@@ -25,8 +25,8 @@ namespace TrickSaber
         {
             if (!PluginConfig.Instance.EnableCuttingDuringTrick)
             {
-                if (saber.saberType == SaberType.SaberA && Globals.LeftSaberTrickManager.IsDoingTrick) return false;
-                if (saber.saberType == SaberType.SaberB && Globals.RightSaberTrickManager.IsDoingTrick) return false;
+                if (saber.saberType == SaberType.SaberA && Globals.LeftSaberSaberTrickManager.IsDoingTrick) return false;
+                if (saber.saberType == SaberType.SaberB && Globals.RightSaberSaberTrickManager.IsDoingTrick) return false;
             }
             return true;
         }

@@ -8,7 +8,9 @@ namespace TrickSaber
 {
     class Globals
     {
-        public static TrickManager LeftSaberTrickManager;
-        public static TrickManager RightSaberTrickManager;
+        public static SaberTrickManager LeftSaberSaberTrickManager;
+        public static SaberTrickManager RightSaberSaberTrickManager;
+
+        public static VRControllerTransformOffset TransformOffset;
     }
 }

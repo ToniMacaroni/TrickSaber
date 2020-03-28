@@ -4,7 +4,7 @@ using UnityEngine.XR;
 
 namespace TrickSaber
 {
-    public class TrickManager : MonoBehaviour
+    public class SaberTrickManager : MonoBehaviour
     {
         public bool IsDoingTrick;
 
@@ -37,8 +37,8 @@ namespace TrickSaber
         private void Start()
         {
             Plugin.Log.Debug("Trick Manager Start");
-            if (IsLeftSaber) Globals.LeftSaberTrickManager = this;
-            else Globals.RightSaberTrickManager = this;
+            if (IsLeftSaber) Globals.LeftSaberSaberTrickManager = this;
+            else Globals.RightSaberSaberTrickManager = this;
             _rigidbody = Saber.gameObject.GetComponent<Rigidbody>();
             _collider = Saber.gameObject.GetComponent<BoxCollider>();
             _vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
@@ -83,6 +83,8 @@ namespace TrickSaber
         {
             var success = _vrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
             if (!success) return (new Vector3(-0.2f, 0.05f, 0f), Quaternion.identity);
+            pos += Globals.TransformOffset.positionOffset;
+            rot.eulerAngles += Globals.TransformOffset.rotationOffset;
             return (pos, rot);
         }
 
