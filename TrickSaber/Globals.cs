@@ -10,7 +10,5 @@ namespace TrickSaber
     {
         public static SaberTrickManager LeftSaberSaberTrickManager;
         public static SaberTrickManager RightSaberSaberTrickManager;
-
-        public static VRControllerTransformOffset TransformOffset;
     }
 }

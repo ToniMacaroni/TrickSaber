@@ -22,7 +22,6 @@ namespace TrickSaber
 
         public static void OnMenuSceneLoadedFresh()
         {
-            Globals.TransformOffset = UnityEngine.Object.FindObjectOfType<VRControllerTransformOffset>();
         }
     }
 }

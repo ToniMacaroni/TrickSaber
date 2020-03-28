@@ -56,17 +56,18 @@ namespace TrickSaber
         private void Update()
         {
             (_controllerPosition, _controllerRotation) = GetTrackingPos();
-            _velocity = _controllerPosition - _prevPos;
-            _saberSpeed = Vector3.Distance(_controllerPosition, _prevPos);
-            _prevPos = _controllerPosition;
+            var controllerPosition = Controller.position;
+            _velocity = controllerPosition - _prevPos;
+            _saberSpeed = Vector3.Distance(controllerPosition, _prevPos);
+            _prevPos = controllerPosition;
 
             if (_getBack)
             {
                 float interpolation = 8 * Time.deltaTime;
 
-                Vector3 position = Saber.transform.position;
+                Vector3 position = Saber.transform.localPosition;
                 position = Vector3.Lerp(position, _controllerPosition, interpolation);
-                Saber.gameObject.transform.position = position;
+                Saber.gameObject.transform.localPosition = position;
 
                 float distance = Vector3.Distance(_controllerPosition, position);
 
@@ -83,8 +84,6 @@ namespace TrickSaber
         {
             var success = _vrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
             if (!success) return (new Vector3(-0.2f, 0.05f, 0f), Quaternion.identity);
-            pos += Globals.TransformOffset.positionOffset;
-            rot.eulerAngles += Globals.TransformOffset.rotationOffset;
             return (pos, rot);
         }
 
@@ -108,13 +107,13 @@ namespace TrickSaber
             if (!_isThrowing)
             {
                 IsDoingTrick = true;
-                Controller.enabled = false;
                 //--------------
                 _rigidbody.isKinematic = false;
                 _rigidbody.velocity = _velocity * 220 * _velocityMultiplier;
                 _collider.enabled = false;
                 _saberRotSpeed = _saberSpeed * 400;
                 //--------------
+                Controller.enabled = false;
                 _isThrowing = true;
             }
 
@@ -166,8 +165,8 @@ namespace TrickSaber
         {
             if (!_isRotatingInPlace) InPlaceRotationStart();
 
-            Saber.transform.rotation = _controllerRotation;
-            Saber.transform.position = _controllerPosition;
+            Saber.transform.localRotation = _controllerRotation;
+            Saber.transform.localPosition = _controllerPosition;
             _currentRotation += 18 * _spinSpeedMultiplier;
             Saber.transform.Rotate(Vector3.right, _currentRotation);
         }
