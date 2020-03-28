@@ -33,7 +33,7 @@ namespace TrickSaber
         public void OnStart()
         {
             SettingsUI.CreateMenu();
-            ScoreSubmission.ProlongedDisableSubmission("TrickSaber");
+            BS_Utils.Utilities.BSEvents.gameSceneLoaded += GameplayManager.DisableScoreSubmissionIfNeeded;
             Log.Debug("TrickSaber Started");
         }
 

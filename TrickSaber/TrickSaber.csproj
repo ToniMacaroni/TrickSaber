@@ -89,6 +89,10 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.InputModule">
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.InputModule.dll</HintPath>
     </Reference>
@@ -107,6 +111,8 @@
     <Compile Include="AssetLoader.cs" />
     <Compile Include="ButtonMapping.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="GameplayManager.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="GripHandler.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="InputHandler.cs" />

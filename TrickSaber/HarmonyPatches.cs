@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using Logger = IPA.Logging.Logger;
+using UnityEngine.XR;
 
 namespace TrickSaber
 {
@@ -14,6 +14,21 @@ namespace TrickSaber
             TrickManager trickManager = new GameObject("TrickManager_"+__instance.saberType).AddComponent<TrickManager>();
             trickManager.Saber = __instance;
             trickManager.Controller = ____vrController;
+        }
+    }
+
+    [HarmonyPatch(typeof(Cutter))]
+    [HarmonyPatch("Cut")]
+    public class CutterPatch
+    {
+        public static bool Prefix(Saber saber)
+        {
+            if (!PluginConfig.Instance.EnableCuttingDuringTrick)
+            {
+                if (saber.saberType == SaberType.SaberA && Globals.LeftSaberTrickManager.IsDoingTrick) return false;
+                if (saber.saberType == SaberType.SaberB && Globals.RightSaberTrickManager.IsDoingTrick) return false;
+            }
+            return true;
         }
     }
 }

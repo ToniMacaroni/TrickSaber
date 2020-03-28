@@ -40,6 +40,13 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ThrowVelocity = value;
         }
 
+        [UIValue("EnableCutting-value")]
+        public bool EnableCutting
+        {
+            get => PluginConfig.Instance.EnableCuttingDuringTrick;
+            set => PluginConfig.Instance.EnableCuttingDuringTrick = value;
+        }
+
         [UIValue("DirEnum-list")]
         public List<object> ThumbstickDirectionsList = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
 

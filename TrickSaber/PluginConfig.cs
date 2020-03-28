@@ -26,5 +26,7 @@
         public string SpinDirection { get; set; } = SpinDir.Backward.ToString();
 
         public float ThrowVelocity { get; set; } = 1f;
+
+        public bool EnableCuttingDuringTrick { get; set; } = false;
     }
 }
