@@ -40,6 +40,13 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ThrowVelocity = value;
         }
 
+        [UIValue("ReturnSpeed-value")]
+        public float ReturnSpeed
+        {
+            get => PluginConfig.Instance.ReturnSpeed;
+            set => PluginConfig.Instance.ReturnSpeed = value;
+        }
+
         [UIValue("EnableCutting-value")]
         public bool EnableCutting
         {

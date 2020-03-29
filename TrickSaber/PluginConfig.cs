@@ -1,4 +1,6 @@
-﻿namespace TrickSaber
+﻿using System.Security.Policy;
+
+namespace TrickSaber
 {
     public class PluginConfig
     {
@@ -26,6 +28,8 @@
         public string SpinDirection { get; set; } = SpinDir.Backward.ToString();
 
         public float ThrowVelocity { get; set; } = 1f;
+
+        public float ReturnSpeed { get; set; } = 1f;
 
         public bool EnableCuttingDuringTrick { get; set; } = false;
     }

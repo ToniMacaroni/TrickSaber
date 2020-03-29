@@ -8,6 +8,7 @@
       <increment-setting text='Spin speed' value='SpinSpeed-value' min='0.1' max='2' increment='0.05' integer-only='false' apply-on-change='true' hover-hint='How fast does the saber spin'/>
       <list-setting text='Spin Direction' value='SpinDir-value' options='SpinDirEnum-list' apply-on-change='true' hover-hint='In which direction does the saber spin'/>
       <increment-setting text='Throw velocity' value='ThrowVelocity-value' min='0.1' max='2' increment='0.05' integer-only='false' apply-on-change='true' hover-hint='This multiplies the force with which you throw the saber'/>
+      <increment-setting text='Saber return speed' value='ReturnSpeed-value' min='0.1' max='4' increment='0.1' integer-only='false' apply-on-change='true' hover-hint='How fast does the saber return'/>
       <checkbox-setting text='Hit blocks during trick' font-color='red' value='EnableCutting-value' apply-on-change='true' hover-hint='!DISABLES SCORE SUBMISSION!'/>
     </vertical>
 </vertical>

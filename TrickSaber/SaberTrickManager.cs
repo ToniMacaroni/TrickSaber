@@ -1,4 +1,5 @@
-﻿using IPA.Utilities;
+﻿using System.Collections;
+using IPA.Utilities;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -15,6 +16,7 @@ namespace TrickSaber
         private float _controllerSnapThreshold = 0.3f;
         private float _currentRotation;
         private bool _getBack;
+        private float _returnSpeed;
 
         private InputManager _inputManager;
         private bool _isRotatingInPlace;
@@ -51,6 +53,7 @@ namespace TrickSaber
             if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString())
                 _spinSpeedMultiplier = -_spinSpeedMultiplier;
             _velocityMultiplier = PluginConfig.Instance.ThrowVelocity;
+            _returnSpeed = 8 * PluginConfig.Instance.ReturnSpeed;
         }
 
         private void Update()
@@ -63,7 +66,7 @@ namespace TrickSaber
 
             if (_getBack)
             {
-                float interpolation = 8 * Time.deltaTime;
+                float interpolation = _returnSpeed * Time.deltaTime;
 
                 Vector3 position = Saber.transform.localPosition;
                 position = Vector3.Lerp(position, _controllerPosition, interpolation);
