@@ -117,6 +117,9 @@
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="InputManager.cs" />
+    <Compile Include="SpinTrick.cs" />
+    <Compile Include="ThrowTrick.cs" />
+    <Compile Include="Trick.cs" />
     <Compile Include="TrickSaberFlowCoordinator.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="PluginConfig.cs" />

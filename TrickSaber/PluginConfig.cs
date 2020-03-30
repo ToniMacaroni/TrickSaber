@@ -29,7 +29,7 @@ namespace TrickSaber
 
         public float ThrowVelocity { get; set; } = 1f;
 
-        public float ReturnSpeed { get; set; } = 1f;
+        public float ReturnSpeed { get; set; } = 10f;
 
         public bool EnableCuttingDuringTrick { get; set; } = false;
     }

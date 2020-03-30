@@ -9,77 +9,61 @@ namespace TrickSaber
     {
         public bool IsDoingTrick;
 
-        private BoxCollider _collider;
+        public BoxCollider _collider;
 
-        private Vector3 _controllerPosition = Vector3.zero;
-        private Quaternion _controllerRotation = Quaternion.identity;
-        private float _controllerSnapThreshold = 0.3f;
-        private float _currentRotation;
-        private bool _getBack;
-        private float _returnSpeed;
+        public Vector3 _controllerPosition = Vector3.zero;
+        public Quaternion _controllerRotation = Quaternion.identity;
 
         private InputManager _inputManager;
-        private bool _isRotatingInPlace;
-        private bool _isThrowing;
         private Vector3 _prevPos = Vector3.zero;
-        private Rigidbody _rigidbody;
-        private float _saberRotSpeed;
+        public Rigidbody Rigidbody;
 
-        private float _saberSpeed;
+        public float SaberSpeed;
 
-        private float _spinSpeedMultiplier = 1f;
-        private Vector3 _velocity = Vector3.zero;
-        private float _velocityMultiplier = 1f;
+        public Vector3 _velocity = Vector3.zero;
         private VRPlatformHelper _vrPlatformHelper;
         public VRController Controller;
         public Saber Saber;
 
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
 
+        //Tricks
+        private ThrowTrick _throwTrick;
+        private SpinTrick _spinTrick;
+
         private void Start()
         {
             Plugin.Log.Debug("Trick Manager Start");
             if (IsLeftSaber) Globals.LeftSaberSaberTrickManager = this;
             else Globals.RightSaberSaberTrickManager = this;
-            _rigidbody = Saber.gameObject.GetComponent<Rigidbody>();
+
+            Rigidbody = Saber.gameObject.GetComponent<Rigidbody>();
+            Rigidbody.maxAngularVelocity = 800;
+            Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+
             _collider = Saber.gameObject.GetComponent<BoxCollider>();
             _vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
             _inputManager = new InputManager();
             _inputManager.Init(Saber.saberType);
 
-            _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
-            _spinSpeedMultiplier = PluginConfig.Instance.SpinSpeed;
-            if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString())
-                _spinSpeedMultiplier = -_spinSpeedMultiplier;
-            _velocityMultiplier = PluginConfig.Instance.ThrowVelocity;
-            _returnSpeed = 8 * PluginConfig.Instance.ReturnSpeed;
+            _throwTrick = gameObject.AddComponent<ThrowTrick>();
+            _throwTrick.SaberTrickManager = this;
+
+            _spinTrick = gameObject.AddComponent<SpinTrick>();
+            _spinTrick.SaberTrickManager = this;
         }
 
         private void Update()
         {
             (_controllerPosition, _controllerRotation) = GetTrackingPos();
-            var controllerPosition = Controller.position;
-            _velocity = controllerPosition - _prevPos;
-            _saberSpeed = Vector3.Distance(controllerPosition, _prevPos);
-            _prevPos = controllerPosition;
-
-            if (_getBack)
+            if (Controller.enabled)
             {
-                float interpolation = _returnSpeed * Time.deltaTime;
-
-                Vector3 position = Saber.transform.localPosition;
-                position = Vector3.Lerp(position, _controllerPosition, interpolation);
-                Saber.gameObject.transform.localPosition = position;
-
-                float distance = Vector3.Distance(_controllerPosition, position);
-
-                if (distance < _controllerSnapThreshold)
-                    ThrowEnd();
-                else
-                    Saber.gameObject.transform.Rotate(Vector3.right, _saberRotSpeed);
+                var controllerPosition = Controller.position;
+                _velocity = (controllerPosition - _prevPos)/Time.deltaTime;
+                SaberSpeed = _velocity.magnitude;
+                _prevPos = controllerPosition;
             }
-
             CheckButtons();
         }
 
@@ -92,86 +76,17 @@ namespace TrickSaber
 
         private void CheckButtons()
         {
-            if (_inputManager.CheckThrowAction() && !_getBack)
-                ThrowStart();
+            if (_inputManager.CheckThrowAction() && !IsDoingTrick)
+                _throwTrick.StartTrick();
 
-            else if (_inputManager.CheckThrowActionUp() && !_getBack)
-                ThrowReturn();
+            else if (_inputManager.CheckThrowActionUp())
+                _throwTrick.EndTrick();
 
-            else if (_inputManager.CheckSpinAction() && !_isThrowing && !_getBack)
-                InPlaceRotation();
+            else if (_inputManager.CheckSpinAction() && !IsDoingTrick)
+                _spinTrick.StartTrick();
 
-            else if (_inputManager.CheckSpinActionUp() && _isRotatingInPlace)
-                InPlaceRotationEnd();
-        }
-
-        private void ThrowStart()
-        {
-            if (!_isThrowing)
-            {
-                IsDoingTrick = true;
-                //--------------
-                _rigidbody.isKinematic = false;
-                _rigidbody.velocity = _velocity * 220 * _velocityMultiplier;
-                _collider.enabled = false;
-                _saberRotSpeed = _saberSpeed * 400;
-                //--------------
-                Controller.enabled = false;
-                _isThrowing = true;
-            }
-
-            ThrowUpdate();
-        }
-
-        private void ThrowUpdate()
-        {
-            Saber.gameObject.transform.Rotate(Vector3.right, _saberRotSpeed);
-        }
-
-        private void ThrowReturn()
-        {
-            if (_isThrowing)
-            {
-                //--------------
-                _rigidbody.isKinematic = true;
-                _rigidbody.velocity = Vector3.zero;
-                _getBack = true;
-                //--------------
-                _isThrowing = false;
-            }
-        }
-
-        private void ThrowEnd()
-        {
-            _getBack = false;
-            _collider.enabled = true;
-            Controller.enabled = true;
-            IsDoingTrick = false;
-        }
-
-        private void InPlaceRotationStart()
-        {
-            IsDoingTrick = true;
-            _currentRotation = 0;
-            Controller.enabled = false;
-            _isRotatingInPlace = true;
-        }
-
-        private void InPlaceRotationEnd()
-        {
-            _isRotatingInPlace = false;
-            Controller.enabled = true;
-            IsDoingTrick = false;
-        }
-
-        private void InPlaceRotation()
-        {
-            if (!_isRotatingInPlace) InPlaceRotationStart();
-
-            Saber.transform.localRotation = _controllerRotation;
-            Saber.transform.localPosition = _controllerPosition;
-            _currentRotation += 18 * _spinSpeedMultiplier;
-            Saber.transform.Rotate(Vector3.right, _currentRotation);
+            else if (_inputManager.CheckSpinActionUp())
+                _spinTrick.EndTrick();
         }
     }
 }
