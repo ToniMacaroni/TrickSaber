@@ -30,6 +30,11 @@ namespace TrickSaber
             set => PluginConfig.Instance.ThumbstickAction = value;
         }
 
+        [UIValue("ShowGripBinding")]
+        public bool GripEnabled => Plugin.HeadSet!="Oculus Rift";
+
+        [UIValue("ShowIndexText")] public bool ShowIndexText => !GripEnabled;
+
         [UIValue("TrickActionEnum-list")]
         public List<object> TrickActionList = Enum.GetNames(typeof(TrickAction)).ToList<object>();
     }

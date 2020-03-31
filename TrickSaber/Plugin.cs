@@ -9,6 +9,7 @@ using HarmonyLib;
 using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
+using UnityEngine.XR;
 using Logger = IPA.Logging.Logger;
 
 namespace TrickSaber
@@ -18,6 +19,8 @@ namespace TrickSaber
     {
         public static Logger Log { get; set; }
         public static Harmony Harmony { get; set; }
+
+        public static string HeadSet;
 
         [Init]
         public Plugin(Logger logger, Config config)
@@ -36,7 +39,7 @@ namespace TrickSaber
             BS_Utils.Utilities.BSEvents.gameSceneLoaded += GameplayManager.OnGameSceneLoaded;
             BS_Utils.Utilities.BSEvents.menuSceneLoadedFresh += GameplayManager.OnMenuSceneLoadedFresh;
             Log.Debug("TrickSaber Started");
-            
+            HeadSet = InputDevices.GetDeviceAtXRNode(XRNode.Head).name;
         }
 
         [OnExit]
