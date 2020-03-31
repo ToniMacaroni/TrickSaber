@@ -4,7 +4,7 @@ using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 
-namespace TrickSaber
+namespace TrickSaber.ViewControllers
 {
     internal class BindingsViewController : BSMLResourceViewController
     {
@@ -30,10 +30,10 @@ namespace TrickSaber
             set => PluginConfig.Instance.ThumbstickAction = value;
         }
 
-        [UIValue("ShowGripBinding")]
-        public bool GripEnabled => Plugin.HeadSet!="Oculus Rift";
+        [UIValue("BindingSupported")]
+        public bool BindingSupported => Plugin.IsControllerSupported;
 
-        [UIValue("ShowIndexText")] public bool ShowIndexText => !GripEnabled;
+        [UIValue("ShowIndexText")] public bool ShowIndexText => !Plugin.IsControllerSupported;
 
         [UIValue("TrickActionEnum-list")]
         public List<object> TrickActionList = Enum.GetNames(typeof(TrickAction)).ToList<object>();

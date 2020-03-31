@@ -5,8 +5,8 @@
     <vertical ignore-layout='true' pad-top='20' spacing='0.7'
               child-control-height='false' child-expand-height='false'>
       <list-setting text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
-      <list-setting text='Grip action' value='GripAction-value' active='~ShowGripBinding' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
-      <list-setting text='Thumbstick action' value='ThumbAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
-      <text text='Grip binding not available on Index' active='~ShowIndexText' font-color='yellow' align='Center'/>
+      <list-setting text='Grip action' value='GripAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
+      <list-setting text='Thumbstick action' value='ThumbAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
+      <text text='Only trigger binding is supported on Index for now' active='~ShowIndexText' font-color='yellow' align='Center'/>
     </vertical>
 </vertical>
