@@ -5,6 +5,8 @@ namespace TrickSaber
 {
     public class SpinTrick : Trick
     {
+        public MovementController MovementController;
+
         private float _currentRotation;
         private float _spinSpeedMultiplier;
 
@@ -23,8 +25,8 @@ namespace TrickSaber
 
         public override void OnTrickUpdate()
         {
-            SaberTrickManager.Saber.transform.localRotation = SaberTrickManager._controllerRotation;
-            SaberTrickManager.Saber.transform.localPosition = SaberTrickManager._controllerPosition;
+            SaberTrickManager.Saber.transform.localRotation = MovementController.ControllerRotation;
+            SaberTrickManager.Saber.transform.localPosition = MovementController.ControllerPosition;
             _currentRotation += 18 * _spinSpeedMultiplier;
             SaberTrickManager.Saber.transform.Rotate(Vector3.right, _currentRotation);
         }

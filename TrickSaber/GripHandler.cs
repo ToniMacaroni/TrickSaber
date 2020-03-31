@@ -5,13 +5,17 @@ namespace TrickSaber
 {
     class GripHandler : InputHandler
     {
-        private Func<bool> _pressedFunc;
-        private Func<bool> _upFunc;
+        private readonly Func<bool> _pressedFunc;
+        private readonly Func<bool> _upFunc;
+
+        private readonly OVRInput.Controller _oculusController;
+        private InputDevice _controllerInputDevice;
 
         public GripHandler(VrSystem vrSystem, OVRInput.Controller oculusController,
-            InputDevice controllerInputDevice, float threshold) : base(vrSystem, oculusController,
-            controllerInputDevice, threshold)
+            InputDevice controllerInputDevice, float threshold) : base(threshold)
         {
+            _oculusController = oculusController;
+            _controllerInputDevice = controllerInputDevice;
             if (vrSystem == VrSystem.Oculus)
             {
                 _pressedFunc = PressedOculus;

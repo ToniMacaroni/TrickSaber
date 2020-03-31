@@ -38,7 +38,6 @@ namespace TrickSaber
             if (_trickStarted)
             {
                 _endRequested = true;
-                Plugin.Log.Debug("End Requested");
             }
         }
 

@@ -6,24 +6,17 @@ namespace TrickSaber
 {
     class ThumbstickHandler : InputHandler
     {
-        private ThumstickDir _thumstickDir;
+        private readonly string _axisString = "";
 
-        public ThumbstickHandler(VrSystem vrSystem, OVRInput.Controller oculusController,
-            InputDevice controllerInputDevice, float threshold, ThumstickDir thumstickDir) : base(vrSystem, oculusController,
-            controllerInputDevice, threshold)
+        public ThumbstickHandler(VrSystem vrSystem, XRNode node, float threshold, ThumstickDir thumstickDir) : base(threshold)
         {
-            _thumstickDir = thumstickDir;
-        }
-
-        private float GetAxis(Vector2 vec)
-        {
-            return Math.Abs(_thumstickDir == ThumstickDir.Horizontal ? vec.x : vec.y);
+            _axisString = thumstickDir == ThumstickDir.Horizontal ? "Horizontal" : "Vertical";
+            _axisString += node == XRNode.LeftHand ? "LeftHand" : "RightHand";
         }
 
         public override bool Pressed()
         {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out var outval) &&
-                GetAxis(outval) > _threshold)
+            if (Math.Abs(Input.GetAxis(_axisString)) > _threshold)
             {
                 _isUpTriggered = false;
                 return true;
@@ -34,8 +27,7 @@ namespace TrickSaber
 
         public override bool Up()
         {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out var outval) &&
-                GetAxis(outval) < _threshold && !_isUpTriggered)
+            if (Math.Abs(Input.GetAxis(_axisString)) < _threshold && !_isUpTriggered)
             {
                 _isUpTriggered = true;
                 return true;

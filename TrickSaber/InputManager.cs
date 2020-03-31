@@ -7,32 +7,32 @@ namespace TrickSaber
 {
     public class InputManager : MonoBehaviour
     {
-        HashSet<InputHandler> _throwInputHandlers = new HashSet<InputHandler>();
-        HashSet<InputHandler> _spinInputHandlers = new HashSet<InputHandler>();
+        readonly HashSet<InputHandler> _throwInputHandlers = new HashSet<InputHandler>();
+        readonly HashSet<InputHandler> _spinInputHandlers = new HashSet<InputHandler>();
 
-        public void Init(SaberType type)
+        public void Init(SaberType type, VRControllersInputManager vrControllersInputManager)
         {
-            OVRInput.Controller _oculusController;
-            InputDevice _controllerInputDevice;
-            VrSystem vrSystem;
+            OVRInput.Controller oculusController;
+            XRNode node;
             if (type == SaberType.SaberA)
             {
-                _oculusController = OVRInput.Controller.LTouch;
-                _controllerInputDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+                oculusController = OVRInput.Controller.LTouch;
+                node = XRNode.LeftHand;
             }
             else
             {
-                _oculusController = OVRInput.Controller.RTouch;
-                _controllerInputDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+                oculusController = OVRInput.Controller.RTouch;
+                node = XRNode.RightHand;
             }
+            var controllerInputDevice = InputDevices.GetDeviceAtXRNode(node);
 
-            vrSystem = OVRInput.IsControllerConnected(_oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
+            var vrSystem = OVRInput.IsControllerConnected(oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
 
             var dir = (ThumstickDir)Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
-            var triggerHandler = new TriggerHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.TriggerThreshold);
-            var gripHandler = new GripHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.GripThreshold);
-            var thumbstickAction = new ThumbstickHandler(vrSystem, _oculusController, _controllerInputDevice, PluginConfig.Instance.ThumbstickThreshold, dir);
+            var triggerHandler = new TriggerHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.TriggerThreshold);
+            var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.GripThreshold);
+            var thumbstickAction = new ThumbstickHandler(vrSystem, node, PluginConfig.Instance.ThumbstickThreshold, dir);
             AddHandler(triggerHandler, PluginConfig.Instance.TriggerAction.GetTrickAction());
             AddHandler(gripHandler, PluginConfig.Instance.GripAction.GetTrickAction());
             AddHandler(thumbstickAction, PluginConfig.Instance.ThumbstickAction.GetTrickAction());

@@ -9,21 +9,16 @@ namespace TrickSaber
     {
         public bool IsDoingTrick;
 
-        public BoxCollider _collider;
-
-        public Vector3 _controllerPosition = Vector3.zero;
-        public Quaternion _controllerRotation = Quaternion.identity;
+        public BoxCollider Collider;
 
         private InputManager _inputManager;
-        private Vector3 _prevPos = Vector3.zero;
         public Rigidbody Rigidbody;
-
-        public float SaberSpeed;
-
-        public Vector3 _velocity = Vector3.zero;
-        private VRPlatformHelper _vrPlatformHelper;
+        
+        public VRPlatformHelper VrPlatformHelper;
         public VRController Controller;
         public Saber Saber;
+
+        public MovementController MovementController;
 
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
 
@@ -41,37 +36,28 @@ namespace TrickSaber
             Rigidbody.maxAngularVelocity = 800;
             Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
-            _collider = Saber.gameObject.GetComponent<BoxCollider>();
-            _vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
+            Collider = Saber.gameObject.GetComponent<BoxCollider>();
+            VrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
+
+            MovementController = gameObject.AddComponent<MovementController>();
+            MovementController.Controller = Controller;
+            MovementController.SaberTrickManager = this;
 
             _inputManager = new InputManager();
-            _inputManager.Init(Saber.saberType);
+            _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
 
             _throwTrick = gameObject.AddComponent<ThrowTrick>();
+            _throwTrick.MovementController = MovementController;
             _throwTrick.SaberTrickManager = this;
 
             _spinTrick = gameObject.AddComponent<SpinTrick>();
+            _spinTrick.MovementController = MovementController;
             _spinTrick.SaberTrickManager = this;
         }
 
         private void Update()
         {
-            (_controllerPosition, _controllerRotation) = GetTrackingPos();
-            if (Controller.enabled)
-            {
-                var controllerPosition = Controller.position;
-                _velocity = (controllerPosition - _prevPos)/Time.deltaTime;
-                SaberSpeed = _velocity.magnitude;
-                _prevPos = controllerPosition;
-            }
             CheckButtons();
-        }
-
-        private (Vector3, Quaternion) GetTrackingPos()
-        {
-            var success = _vrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
-            if (!success) return (new Vector3(-0.2f, 0.05f, 0f), Quaternion.identity);
-            return (pos, rot);
         }
 
         private void CheckButtons()
