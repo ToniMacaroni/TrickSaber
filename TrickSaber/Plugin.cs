@@ -21,7 +21,7 @@ namespace TrickSaber
         public static Harmony Harmony { get; set; }
 
         public static string ControllerModel;
-        public static bool IsControllerSupported => ControllerModel != "Vive. MV";
+        public static bool IsControllerSupported => ControllerModel != "OpenVR Controller(Knuckles Left) - Left";
 
         [Init]
         public Plugin(Logger logger, Config config)
@@ -41,7 +41,7 @@ namespace TrickSaber
             BS_Utils.Utilities.BSEvents.menuSceneLoadedFresh += GameplayManager.OnMenuSceneLoadedFresh;
             Log.Debug("TrickSaber Started");
             ControllerModel = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand).name;
-            Log.Debug(ControllerModel);
+            Log.Debug("Controller Model: "+ControllerModel);
             if (!IsControllerSupported)
             {
                 PluginConfig.Instance.GripAction = TrickAction.None.ToString();

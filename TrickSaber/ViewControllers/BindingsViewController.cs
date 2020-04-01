@@ -35,6 +35,8 @@ namespace TrickSaber.ViewControllers
 
         [UIValue("ShowIndexText")] public bool ShowIndexText => !Plugin.IsControllerSupported;
 
+        [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
+
         [UIValue("TrickActionEnum-list")]
         public List<object> TrickActionList = Enum.GetNames(typeof(TrickAction)).ToList<object>();
     }

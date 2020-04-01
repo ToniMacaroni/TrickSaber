@@ -143,6 +143,9 @@
     <EmbeddedResource Include="Views\MiscView.bsml" />
     <EmbeddedResource Include="Views\ThresholdView.bsml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LogoSmall.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cp "$(TargetPath)" "E:\SteamLibrary\steamapps\common\Beat Saber\Plugins\$(TargetFileName)"</PostBuildEvent>

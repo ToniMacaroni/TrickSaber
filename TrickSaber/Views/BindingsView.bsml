@@ -1,4 +1,7 @@
 ﻿<vertical child-control-height='false'>
+  <horizontal ignore-layout='true' anchor-pos-x='-70.5' anchor-pos-y='30.5' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <image preserve-aspect='true' preferred-width='15' source='TrickSaber.Resources.LogoSmall.png'></image>
+  </horizontal>
   <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
     <text text='Bindings' align='Center' font-size='7'></text>
   </horizontal>
@@ -7,6 +10,11 @@
       <list-setting text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
       <list-setting text='Grip action' value='GripAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
       <list-setting text='Thumbstick action' value='ThumbAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
-      <text text='Only trigger binding is supported on Index for now' active='~ShowIndexText' font-color='yellow' align='Center'/>
+      <horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
+        <text text='Only trigger binding is supported on Index for now. Check BSMG Discord for future releases.' font-color='yellow' align='Center'/>
+      </horizontal>
+      <horizontal ignore-layout='true' pad-top='110' pad-left='100' horizontal-fit='PreferredSize' child-expand-height='false' child-control-height='false'>
+        <text text='~ContactInfo' font-size='4.5' font-color='#FFFFFF44'/>
+      </horizontal>
     </vertical>
 </vertical>
