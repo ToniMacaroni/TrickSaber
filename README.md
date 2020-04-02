@@ -19,4 +19,7 @@ For rotating the saber in your hand:
 * for left saber : move your left thumbstick to the left
 * for right saber: move your right thumbstick to the right
 
-Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ
+## Configuration
+You can configure the Plugin by going into the "Mods" tab on the left panel in Beat Saber and selecting "TrickSaber"
+
+**Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ**
