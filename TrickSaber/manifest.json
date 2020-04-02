@@ -1,11 +1,18 @@
 {
-  "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
+  "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "Toni Macaroni",
-  "description": "do sick tricks",
+  "description": "A BeatSaber mod for performing tricks",
   "gameVersion": "1.8.0",
   "id": "TrickSaber",
   "name": "TrickSaber",
   "version": "0.1.0",
+  "dependsOn": {
+    "BS Utils": "^1.4.8",
+    "BeatSaberMarkupLanguage": "^1.2.2"
+  },
+  "links": {
+    "project-source": "https://github.com/ToniMacaroni/TrickSaber"
+  },
   "features": [
   ]
 }

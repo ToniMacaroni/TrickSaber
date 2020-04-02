@@ -16,7 +16,7 @@ namespace TrickSaber
         private float _controllerSnapThreshold = 0.3f;
         private float _velocityMultiplier = 1;
 
-        private GameObject vrGameCore;
+        private GameObject _vrGameCore;
 
         public override void OnTrickStart()
         {
@@ -45,7 +45,7 @@ namespace TrickSaber
         {
             _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
             _velocityMultiplier = PluginConfig.Instance.ThrowVelocity;
-            vrGameCore = GameObject.Find("VRGameCore");
+            _vrGameCore = GameObject.Find("VRGameCore");
         }
 
         public IEnumerator ReturnSaber(float speed)
@@ -63,7 +63,7 @@ namespace TrickSaber
                 {
                     position = Vector3.MoveTowards(position, MovementController.ControllerPosition, Time.deltaTime * speed);
                 }
-                Vector3 worldPosition = vrGameCore.transform.TransformPoint(position);
+                Vector3 worldPosition = _vrGameCore.transform.TransformPoint(position);
                 SaberTrickManager.Rigidbody.MovePosition(worldPosition);
                 yield return new WaitForEndOfFrame();
             }
