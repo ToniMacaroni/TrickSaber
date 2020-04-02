@@ -10,6 +10,7 @@ hence the name "Trick Saber".
 
 ## Usage
 *Buttons can be configured*
+
 For throwing the saber:
 1) throw your controller (not literally)
 2) hold the trigger button to release the saber
