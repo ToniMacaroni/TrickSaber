@@ -16,7 +16,7 @@ For throwing the saber:
    (It does take a little bit of practice)
 
 For rotating the saber in your hand:
-for left saber : move your left thumbstick to the left
-for right saber: move your right thumbstick to the right
+* for left saber : move your left thumbstick to the left
+* for right saber: move your right thumbstick to the right
 
 Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ
