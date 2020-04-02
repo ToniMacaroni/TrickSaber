@@ -3,7 +3,12 @@
 This mod allows you to perform various tricks (like in Audica) with your sabers,
 hence the name "Trick Saber".
 
-```
+## Installation
+1) download the latest release from here (the dll file): https://github.com/ToniMacaroni/TrickSaber/releases
+2) make sure you have installed the dependencies listed in the release
+3) drop the downloaded  dll into your "Beat Saber/Plugins" directory
+
+## Usage
 For throwing the saber:
 1) throw your controller (not literally)
 2) hold the trigger button to release the saber
@@ -13,6 +18,5 @@ For throwing the saber:
 For rotating the saber in your hand:
 for left saber : move your left thumbstick to the left
 for right saber: move your right thumbstick to the right
-```
 
 Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ
