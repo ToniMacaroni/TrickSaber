@@ -9,6 +9,7 @@ hence the name "Trick Saber".
 3) drop the downloaded  dll into your "Beat Saber/Plugins" directory
 
 ## Usage
+*Buttons can be configured*
 For throwing the saber:
 1) throw your controller (not literally)
 2) hold the trigger button to release the saber
