@@ -2,6 +2,7 @@
 
 This mod allows you to perform various tricks like spinning / throwing your sabers,
 hence the name "Trick Saber".
+
 *currently not compatible with DynamicOpenVR.BeatSaber (the base mod DynamicOpenVR is fine tho)*
 
 ## Installation
