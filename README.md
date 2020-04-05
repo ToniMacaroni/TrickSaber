@@ -1,7 +1,9 @@
 # Trick Saber
 
-This mod allows you to perform various tricks (like in Audica) with your sabers,
+This mod allows you to perform various tricks like spinning / throwing your sabers,
 hence the name "Trick Saber".
+
+*currently not compatible with DynamicOpenVR.BeatSaber (the base mod DynamicOpenVR is fine tho)*
 
 ## Installation
 1) download the latest release from here (the dll file): https://github.com/ToniMacaroni/TrickSaber/releases
