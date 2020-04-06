@@ -3,85 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.XR;
 
 namespace TrickSaber
 {
     class TriggerHandler : InputHandler
     {
-        private readonly Func<bool> _pressedFunc;
-        private readonly Func<bool> _upFunc;
+        private readonly string _inputString;
 
-        private readonly OVRInput.Controller _oculusController;
-        private InputDevice _controllerInputDevice;
-
-        public TriggerHandler(VrSystem vrSystem, OVRInput.Controller oculusController,
-            InputDevice controllerInputDevice, float threshold) : base(threshold)
+        public TriggerHandler(XRNode node, float threshold) : base(threshold)
         {
-            _oculusController = oculusController;
-            _controllerInputDevice = controllerInputDevice;
-            if (vrSystem == VrSystem.Oculus)
-            {
-                _pressedFunc = PressedOculus;
-                _upFunc = UpOculus;
-            }
-            else
-            {
-                _pressedFunc = PressedSteam;
-                _upFunc = UpSteam;
-            }
-        }
-
-        private bool PressedOculus()
-        {
-            if (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, _oculusController) > _threshold)
-            {
-                _isUpTriggered = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool PressedSteam()
-        {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.trigger, out var outvar) && outvar > _threshold)
-            {
-                _isUpTriggered = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool UpOculus()
-        {
-            if (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, _oculusController) < _threshold && !_isUpTriggered)
-            {
-                _isUpTriggered = true;
-                return true;
-            }
-            return false;
-        }
-
-        private bool UpSteam()
-        {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.trigger, out var outvar) && outvar < _threshold && !_isUpTriggered)
-            {
-                _isUpTriggered = true;
-                return true;
-            }
-            return false;
+            _inputString = node == XRNode.LeftHand ? "TriggerLeftHand" : "TriggerRightHand";
         }
 
         public override bool Pressed()
         {
-            return _pressedFunc();
+            if (Input.GetAxis(_inputString) > _threshold)
+            {
+                _isUpTriggered = false;
+                return true;
+            }
+
+            return false;
         }
 
         public override bool Up()
         {
-            return _upFunc();
+            if (Input.GetAxis(_inputString) < _threshold && !_isUpTriggered)
+            {
+                _isUpTriggered = true;
+                return true;
+            }
+            return false;
         }
     }
 }
