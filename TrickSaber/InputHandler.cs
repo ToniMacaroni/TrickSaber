@@ -17,6 +17,7 @@ namespace TrickSaber
             _threshold = threshold;
         }
 
+        public abstract float GetValue();
         public abstract bool Pressed();
         public abstract bool Up();
     }

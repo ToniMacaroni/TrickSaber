@@ -17,6 +17,11 @@ namespace TrickSaber
             _inputString = node == XRNode.LeftHand ? "TriggerLeftHand" : "TriggerRightHand";
         }
 
+        public override float GetValue()
+        {
+            return Input.GetAxis(_inputString);
+        }
+
         public override bool Pressed()
         {
             if (Input.GetAxis(_inputString) > _threshold)

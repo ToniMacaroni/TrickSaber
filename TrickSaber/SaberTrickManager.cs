@@ -14,11 +14,10 @@ namespace TrickSaber
         private InputManager _inputManager;
         public Rigidbody Rigidbody;
         
-        public VRPlatformHelper VrPlatformHelper;
         public VRController Controller;
         public Saber Saber;
 
-        public MovementController MovementController;
+        private MovementController _movementController;
 
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
 
@@ -37,22 +36,27 @@ namespace TrickSaber
             Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
 
             Collider = Saber.gameObject.GetComponent<BoxCollider>();
-            VrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
+            VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
-            MovementController = gameObject.AddComponent<MovementController>();
-            MovementController.Controller = Controller;
-            MovementController.SaberTrickManager = this;
+            _movementController = gameObject.AddComponent<MovementController>();
+            _movementController.Controller = Controller;
+            _movementController.VrPlatformHelper = vrPlatformHelper;
+            _movementController.SaberTrickManager = this;
 
             _inputManager = new InputManager();
             _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
 
             _throwTrick = gameObject.AddComponent<ThrowTrick>();
-            _throwTrick.MovementController = MovementController;
+            _throwTrick.MovementController = _movementController;
             _throwTrick.SaberTrickManager = this;
+            _throwTrick.TrickStarted += OnTrickStart;
+            _throwTrick.TrickEnded += OnTrickEnd;
 
             _spinTrick = gameObject.AddComponent<SpinTrick>();
-            _spinTrick.MovementController = MovementController;
+            _spinTrick.MovementController = _movementController;
             _spinTrick.SaberTrickManager = this;
+            _spinTrick.TrickStarted += OnTrickStart;
+            _spinTrick.TrickEnded += OnTrickEnd;
         }
 
         private void Update()
@@ -68,11 +72,33 @@ namespace TrickSaber
             else if (_inputManager.CheckThrowActionUp())
                 _throwTrick.EndTrick();
 
-            else if (_inputManager.CheckSpinAction() && !IsDoingTrick)
+            else if (_inputManager.CheckSpinAction(out var val) && !IsDoingTrick)
+            {
+                _spinTrick.Value = val;
                 _spinTrick.StartTrick();
+            }
 
             else if (_inputManager.CheckSpinActionUp())
                 _spinTrick.EndTrick();
+        }
+
+        private void OnTrickStart(string trickName)
+        {
+            IsDoingTrick = true;
+            if(!PluginConfig.Instance.EnableCuttingDuringTrick&&trickName!="Spin") Saber.disableCutting = true;
+        }
+
+        private void OnTrickEnd(string trickName)
+        {
+            IsDoingTrick = false;
+            Saber.disableCutting = false;
+        }
+
+        public GameObject GetSaberModel()
+        {
+            var model = Saber.transform.Find(Saber.name);
+            if (model == null) model = Saber.transform.Find("BasicSaberModel(Clone)");
+            return model.gameObject;
         }
     }
 }

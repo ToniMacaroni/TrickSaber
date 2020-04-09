@@ -30,9 +30,9 @@ namespace TrickSaber
 
             var dir = (ThumstickDir)Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
-            var triggerHandler = new TriggerHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.TriggerThreshold);
+            var triggerHandler = new TriggerHandler(node, PluginConfig.Instance.TriggerThreshold);
             var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.GripThreshold);
-            var thumbstickAction = new ThumbstickHandler(vrSystem, node, PluginConfig.Instance.ThumbstickThreshold, dir);
+            var thumbstickAction = new ThumbstickHandler(node, PluginConfig.Instance.ThumbstickThreshold, dir);
             AddHandler(triggerHandler, PluginConfig.Instance.TriggerAction.GetTrickAction());
             AddHandler(gripHandler, PluginConfig.Instance.GripAction.GetTrickAction());
             AddHandler(thumbstickAction, PluginConfig.Instance.ThumbstickAction.GetTrickAction());
@@ -57,14 +57,18 @@ namespace TrickSaber
             }
         }
 
-        private bool CheckHandlersDown(HashSet<InputHandler> handlers)
+        private bool CheckHandlersDown(HashSet<InputHandler> handlers, out float val)
         {
-            if (handlers.Count == 0) return false;
+            val = 0;
+            if (handlers.Count == 0){ return false;}
             bool output = true;
             foreach (InputHandler handler in handlers)
             {
                 output &= handler.Pressed();
+                val += handler.GetValue();
             }
+
+            if (output) val /= handlers.Count;
 
             return output;
         }
@@ -81,7 +85,7 @@ namespace TrickSaber
 
         public bool CheckThrowAction()
         {
-            return CheckHandlersDown(_throwInputHandlers);
+            return CheckHandlersDown(_throwInputHandlers, out var _);
         }
 
         public bool CheckThrowActionUp()
@@ -89,9 +93,9 @@ namespace TrickSaber
             return CheckHandlersUp(_throwInputHandlers);
         }
 
-        public bool CheckSpinAction()
+        public bool CheckSpinAction(out float val)
         {
-            return CheckHandlersDown(_spinInputHandlers);
+            return CheckHandlersDown(_spinInputHandlers, out val);
         }
 
         public bool CheckSpinActionUp()

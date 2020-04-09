@@ -6,12 +6,17 @@ namespace TrickSaber
 {
     class ThumbstickHandler : InputHandler
     {
-        private readonly string _axisString = "";
+        private readonly string _axisString;
 
-        public ThumbstickHandler(VrSystem vrSystem, XRNode node, float threshold, ThumstickDir thumstickDir) : base(threshold)
+        public ThumbstickHandler(XRNode node, float threshold, ThumstickDir thumstickDir) : base(threshold)
         {
             _axisString = thumstickDir == ThumstickDir.Horizontal ? "Horizontal" : "Vertical";
             _axisString += node == XRNode.LeftHand ? "LeftHand" : "RightHand";
+        }
+
+        public override float GetValue()
+        {
+            return Input.GetAxis(_axisString);
         }
 
         public override bool Pressed()
