@@ -1,97 +1,83 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using IPA.Utilities;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace TrickSaber
 {
     public class SaberTrickManager : MonoBehaviour
     {
-        public bool IsDoingTrick;
-
-        public BoxCollider Collider;
+        private readonly Dictionary<TrickAction, Trick> _tricks = new Dictionary<TrickAction, Trick>();
+        private readonly List<TrickAction> _activeTricks = new List<TrickAction>();
 
         private InputManager _inputManager;
-        public Rigidbody Rigidbody;
-        
-        public VRController Controller;
-        public Saber Saber;
 
         private MovementController _movementController;
 
+        private SaberTrickModel _saberTrickModel;
+
+        public BoxCollider Collider;
+
+        public VRController Controller;
+
+        public Rigidbody Rigidbody;
+        public Saber Saber;
+
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
 
-        //Tricks
-        private ThrowTrick _throwTrick;
-        private SpinTrick _spinTrick;
-
-        private void Start()
+        private IEnumerator Start()
         {
-            Plugin.Log.Debug("Trick Manager Start");
-            if (IsLeftSaber) Globals.LeftSaberSaberTrickManager = this;
-            else Globals.RightSaberSaberTrickManager = this;
-
-            Rigidbody = Saber.gameObject.GetComponent<Rigidbody>();
-            Rigidbody.maxAngularVelocity = 800;
-            Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            if (IsLeftSaber) GlobalTrickManager.Instance.LeftSaberSaberTrickManager = this;
+            else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
             Collider = Saber.gameObject.GetComponent<BoxCollider>();
-            VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
+            VRPlatformHelper vrPlatformHelper =
+                Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
             _movementController = gameObject.AddComponent<MovementController>();
             _movementController.Controller = Controller;
             _movementController.VrPlatformHelper = vrPlatformHelper;
             _movementController.SaberTrickManager = this;
 
-            _inputManager = new InputManager();
+            _inputManager = gameObject.AddComponent<InputManager>();
             _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
+            _inputManager.TrickActivated += OnTrickActivated;
+            _inputManager.TrickDeactivated += OnTrickDeactivated;
 
-            _throwTrick = gameObject.AddComponent<ThrowTrick>();
-            _throwTrick.MovementController = _movementController;
-            _throwTrick.SaberTrickManager = this;
-            _throwTrick.TrickStarted += OnTrickStart;
-            _throwTrick.TrickEnded += OnTrickEnd;
+            yield return WaitForSaberModel(1);
+            _saberTrickModel = new SaberTrickModel(GetSaberModel());
 
-            _spinTrick = gameObject.AddComponent<SpinTrick>();
-            _spinTrick.MovementController = _movementController;
-            _spinTrick.SaberTrickManager = this;
-            _spinTrick.TrickStarted += OnTrickStart;
-            _spinTrick.TrickEnded += OnTrickEnd;
+            AddTrick<ThrowTrick>();
+            AddTrick<SpinTrick>();
+
+            Plugin.Log.Debug("Trick Manager initialized");
         }
 
-        private void Update()
+        private void OnTrickDeactivated(TrickAction trickAction)
         {
-            CheckButtons();
+            if (!IsDoingTrick(trickAction)) return;
+            _tricks[trickAction].EndTrick();
         }
 
-        private void CheckButtons()
+        private void OnTrickActivated(TrickAction trickAction, float val)
         {
-            if (_inputManager.CheckThrowAction() && !IsDoingTrick)
-                _throwTrick.StartTrick();
-
-            else if (_inputManager.CheckThrowActionUp())
-                _throwTrick.EndTrick();
-
-            else if (_inputManager.CheckSpinAction(out var val) && !IsDoingTrick)
-            {
-                _spinTrick.Value = val;
-                _spinTrick.StartTrick();
-            }
-
-            else if (_inputManager.CheckSpinActionUp())
-                _spinTrick.EndTrick();
+            var trick = _tricks[trickAction];
+            trick.Value = val;
+            if (IsDoingTrick(trickAction)) return;
+            if (GlobalTrickManager.Instance.AudioTimeSyncController.state == AudioTimeSyncController.State.Paused) return;
+            trick.StartTrick();
         }
 
-        private void OnTrickStart(string trickName)
+        private void OnTrickStart(TrickAction trickAction)
         {
-            IsDoingTrick = true;
-            if(!PluginConfig.Instance.EnableCuttingDuringTrick&&trickName!="Spin") Saber.disableCutting = true;
+            _activeTricks.Add(trickAction);
+            GlobalTrickManager.Instance.OnTrickStarted(trickAction);
         }
 
-        private void OnTrickEnd(string trickName)
+        private void OnTrickEnd(TrickAction trickAction)
         {
-            IsDoingTrick = false;
-            Saber.disableCutting = false;
+            _activeTricks.Remove(trickAction);
+            GlobalTrickManager.Instance.OnTrickEnded(trickAction);
         }
 
         public GameObject GetSaberModel()
@@ -99,6 +85,35 @@ namespace TrickSaber
             var model = Saber.transform.Find(Saber.name);
             if (model == null) model = Saber.transform.Find("BasicSaberModel(Clone)");
             return model.gameObject;
+        }
+
+        private IEnumerator WaitForSaberModel(int timeout)
+        {
+            float time = 0;
+            while (!transform.Find(Saber.name) && time < timeout)
+            {
+                time += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        private void AddTrick<T>() where T : Trick
+        {
+            var trick = gameObject.AddComponent<T>();
+            trick.Init(this, _movementController, _saberTrickModel);
+            trick.TrickStarted += OnTrickStart;
+            trick.TrickEnded += OnTrickEnd;
+            _tricks.Add(trick.TrickAction, trick);
+        }
+
+        public bool IsDoingTrick(TrickAction trickAction)
+        {
+            return _activeTricks.Contains(trickAction);
+        }
+
+        public bool IsDoingTrick()
+        {
+            return _activeTricks.Count > 0;
         }
     }
 }

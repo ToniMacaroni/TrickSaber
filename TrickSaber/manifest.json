@@ -5,7 +5,7 @@
   "gameVersion": "1.8.0",
   "id": "TrickSaber",
   "name": "TrickSaber",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "dependsOn": {
     "BS Utils": "^1.4.8",
     "BeatSaberMarkupLanguage": "^1.2.2"

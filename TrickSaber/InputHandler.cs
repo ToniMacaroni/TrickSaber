@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.XR;
-
-namespace TrickSaber
+﻿namespace TrickSaber
 {
     public abstract class InputHandler
     {
-        protected bool _isUpTriggered;
+        protected bool _isUpTriggered = true;
         protected float _threshold;
 
         protected InputHandler(float threshold)

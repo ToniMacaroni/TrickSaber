@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage.Attributes;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace TrickSaber.ViewControllers
 {
-    class ThresholdViewController : BSMLResourceViewController
+    internal class ThresholdViewController : BSMLResourceViewController
     {
         public override string ResourceName => "TrickSaber.Views.ThresholdView.bsml";
 

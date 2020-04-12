@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BeatSaberMarkupLanguage;
 using HMUI;
 using TrickSaber.ViewControllers;
@@ -11,22 +7,29 @@ namespace TrickSaber
 {
     internal class TrickSaberFlowCoordinator : FlowCoordinator
     {
+        private BindingsViewController bindingsViewController;
+        private MiscViewController miscViewController;
+        private ThresholdViewController thresholdViewController;
+
         public void Awake()
         {
-            if (!bindingsViewController) bindingsViewController = BeatSaberUI.CreateViewController<BindingsViewController>();
-            if (!thresholdViewController) thresholdViewController = BeatSaberUI.CreateViewController<ThresholdViewController>();
+            if (!bindingsViewController)
+                bindingsViewController = BeatSaberUI.CreateViewController<BindingsViewController>();
+            if (!thresholdViewController)
+                thresholdViewController = BeatSaberUI.CreateViewController<ThresholdViewController>();
             if (!miscViewController) miscViewController = BeatSaberUI.CreateViewController<MiscViewController>();
         }
 
-        protected override void DidActivate(bool firstActivation, FlowCoordinator.ActivationType activationType)
+        protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
             try
             {
                 if (firstActivation)
                 {
-                    base.title = "Trick Settings";
-                    base.showBackButton = true;
-                    base.ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController, null, null);
+                    title = "Trick Settings";
+                    showBackButton = true;
+                    ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController,
+                        null, null);
                 }
             }
             catch (Exception e)
@@ -39,9 +42,5 @@ namespace TrickSaber
         {
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, false);
         }
-
-        private BindingsViewController bindingsViewController;
-        private ThresholdViewController thresholdViewController;
-        private MiscViewController miscViewController;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.XR;
 
 namespace TrickSaber
 {
-    class ThumbstickHandler : InputHandler
+    internal class ThumbstickHandler : InputHandler
     {
         private readonly string _axisString;
 

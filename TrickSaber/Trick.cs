@@ -1,32 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TrickSaber
 {
     public abstract class Trick : MonoBehaviour
     {
-        public SaberTrickManager SaberTrickManager;
-        protected bool _trickStarted;
-        protected bool _endRequested;
-        protected bool _allowTrickStart = true;
+        protected MovementController MovementController;
+        protected SaberTrickManager SaberTrickManager;
+        protected SaberTrickModel SaberTrickModel;
 
-        void Start()
+        protected bool _allowTrickStart = true;
+        protected bool _endRequested;
+        protected bool _trickStarted;
+        public float Value;
+
+        public abstract TrickAction TrickAction { get; }
+        public string Name => TrickAction.ToString();
+
+        public event Action<TrickAction> TrickStarted;
+        public event Action<TrickAction> TrickEnded;
+
+        public void Init(SaberTrickManager saberTrickManager, MovementController movementController,
+            SaberTrickModel saberTrickModel)
         {
-            OnConstruct();
+            SaberTrickManager = saberTrickManager;
+            MovementController = movementController;
+            SaberTrickModel = saberTrickModel;
+            OnInit();
         }
 
         public bool StartTrick()
         {
             if (!_trickStarted && _allowTrickStart)
             {
-                SaberTrickManager.IsDoingTrick = true;
                 _allowTrickStart = false;
                 OnTrickStart();
                 _trickStarted = true;
+                TrickStarted?.Invoke(TrickAction);
                 return true;
             }
 
@@ -35,30 +45,28 @@ namespace TrickSaber
 
         public void EndTrick()
         {
-            if (_trickStarted)
-            {
-                _endRequested = true;
-            }
+            if (_trickStarted) _endRequested = true;
         }
 
         protected void Reset()
         {
             _endRequested = false;
             _allowTrickStart = true;
-            SaberTrickManager.IsDoingTrick = false;
+            TrickEnded?.Invoke(TrickAction);
         }
 
-        void Update()
+        private void Update()
         {
             if (_trickStarted)
-            {
-                if(!_endRequested)OnTrickUpdate();
+                if (!_endRequested)
+                {
+                    OnTrickUpdate();
+                }
                 else
                 {
                     _trickStarted = false;
                     OnTrickEndRequested();
                 }
-            }
         }
 
         public abstract void OnTrickStart();
@@ -67,6 +75,6 @@ namespace TrickSaber
 
         public abstract void OnTrickEndRequested();
 
-        public abstract void OnConstruct();
+        public abstract void OnInit();
     }
 }

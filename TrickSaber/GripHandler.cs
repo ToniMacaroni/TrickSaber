@@ -3,11 +3,10 @@ using UnityEngine.XR;
 
 namespace TrickSaber
 {
-    class GripHandler : InputHandler
+    internal class GripHandler : InputHandler
     {
-        private readonly Func<float> _valueFunc;
-
         private readonly OVRInput.Controller _oculusController;
+        private readonly Func<float> _valueFunc;
         private InputDevice _controllerInputDevice;
 
         public GripHandler(VrSystem vrSystem, OVRInput.Controller oculusController,
@@ -16,13 +15,9 @@ namespace TrickSaber
             _oculusController = oculusController;
             _controllerInputDevice = controllerInputDevice;
             if (vrSystem == VrSystem.Oculus)
-            {
                 _valueFunc = GetValueOculus;
-            }
             else
-            {
                 _valueFunc = GetValueSteam;
-            }
         }
 
         private float GetValueSteam()
@@ -59,6 +54,7 @@ namespace TrickSaber
                 _isUpTriggered = true;
                 return true;
             }
+
             return false;
         }
     }

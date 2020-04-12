@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 
 namespace TrickSaber.ViewControllers
 {
-    class MiscViewController : BSMLResourceViewController
+    internal class MiscViewController : BSMLResourceViewController
     {
+        [UIValue("SpinDirEnum-list")]
+        public List<object> SpinDirectionsList = Enum.GetNames(typeof(SpinDir)).ToList<object>();
+
+        [UIValue("DirEnum-list")]
+        public List<object> ThumbstickDirectionsList = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
+
         public override string ResourceName => "TrickSaber.Views.MiscView.bsml";
 
         [UIValue("ThumbDir-value")]
@@ -17,6 +21,13 @@ namespace TrickSaber.ViewControllers
         {
             get => PluginConfig.Instance.ThumstickDirection;
             set => PluginConfig.Instance.ThumstickDirection = value;
+        }
+
+        [UIValue("IsSpeedVelocityDependent-value")]
+        public bool IsSpeedVelocityDependent
+        {
+            get => PluginConfig.Instance.IsSpeedVelocityDependent;
+            set => PluginConfig.Instance.IsSpeedVelocityDependent = value;
         }
 
         [UIValue("SpinSpeed-value")]
@@ -47,17 +58,18 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ReturnSpeed = value;
         }
 
+        [UIValue("SlowmoDuringThrow-value")]
+        public bool SlowmoDuringThrow
+        {
+            get => PluginConfig.Instance.SlowmoDuringThrow;
+            set => PluginConfig.Instance.SlowmoDuringThrow = value;
+        }
+
         [UIValue("EnableCutting-value")]
         public bool EnableCutting
         {
             get => PluginConfig.Instance.EnableCuttingDuringTrick;
             set => PluginConfig.Instance.EnableCuttingDuringTrick = value;
         }
-
-        [UIValue("DirEnum-list")]
-        public List<object> ThumbstickDirectionsList = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
-
-        [UIValue("SpinDirEnum-list")]
-        public List<object> SpinDirectionsList = Enum.GetNames(typeof(SpinDir)).ToList<object>();
     }
 }

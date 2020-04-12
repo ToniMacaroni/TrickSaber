@@ -7,8 +7,10 @@ namespace TrickSaber
 {
     public class InputManager : MonoBehaviour
     {
-        readonly HashSet<InputHandler> _throwInputHandlers = new HashSet<InputHandler>();
-        readonly HashSet<InputHandler> _spinInputHandlers = new HashSet<InputHandler>();
+        private readonly TrickInputHandler _trickInputHandler = new TrickInputHandler();
+
+        public event Action<TrickAction, float> TrickActivated;
+        public event Action<TrickAction> TrickDeactivated;
 
         public void Init(SaberType type, VRControllersInputManager vrControllersInputManager)
         {
@@ -24,43 +26,39 @@ namespace TrickSaber
                 oculusController = OVRInput.Controller.RTouch;
                 node = XRNode.RightHand;
             }
+
             var controllerInputDevice = InputDevices.GetDeviceAtXRNode(node);
 
             var vrSystem = OVRInput.IsControllerConnected(oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
 
-            var dir = (ThumstickDir)Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
+            var dir = (ThumstickDir) Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
             var triggerHandler = new TriggerHandler(node, PluginConfig.Instance.TriggerThreshold);
             var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.GripThreshold);
             var thumbstickAction = new ThumbstickHandler(node, PluginConfig.Instance.ThumbstickThreshold, dir);
-            AddHandler(triggerHandler, PluginConfig.Instance.TriggerAction.GetTrickAction());
-            AddHandler(gripHandler, PluginConfig.Instance.GripAction.GetTrickAction());
-            AddHandler(thumbstickAction, PluginConfig.Instance.ThumbstickAction.GetTrickAction());
 
-            Plugin.Log.Debug("Started Input Manager using "+vrSystem);
+            _trickInputHandler.Add(PluginConfig.Instance.TriggerAction.GetTrickAction(), triggerHandler);
+            _trickInputHandler.Add(PluginConfig.Instance.GripAction.GetTrickAction(), gripHandler);
+            _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetTrickAction(), thumbstickAction);
+
+            Plugin.Log.Debug("Started Input Manager using " + vrSystem);
         }
 
-        private void AddHandler(InputHandler handler, TrickAction action)
+        private void Update()
         {
-            switch (action)
+            foreach (TrickAction trickAction in _trickInputHandler.TrickHandlerSets.Keys)
             {
-                case TrickAction.None:
-                    return;
-                case TrickAction.Throw:
-                    _throwInputHandlers.Add(handler);
-                    break;
-                case TrickAction.Spin:
-                    _spinInputHandlers.Add(handler);
-                    break;
-                default:
-                    return;
+                var handlers = _trickInputHandler.GetHandlers(trickAction);
+                if (CheckHandlersDown(handlers, out var val))
+                    TrickActivated?.Invoke(trickAction, val);
+                else if (CheckHandlersUp(handlers)) TrickDeactivated?.Invoke(trickAction);
             }
         }
 
         private bool CheckHandlersDown(HashSet<InputHandler> handlers, out float val)
         {
             val = 0;
-            if (handlers.Count == 0){ return false;}
+            if (handlers.Count == 0) return false;
             bool output = true;
             foreach (InputHandler handler in handlers)
             {
@@ -76,31 +74,37 @@ namespace TrickSaber
         private bool CheckHandlersUp(HashSet<InputHandler> handlers)
         {
             foreach (InputHandler handler in handlers)
-            {
-                if (handler.Up()) return true;
-            }
+                if (handler.Up())
+                    return true;
 
             return false;
         }
+    }
 
-        public bool CheckThrowAction()
+    public class TrickInputHandler
+    {
+        public Dictionary<TrickAction, HashSet<InputHandler>> TrickHandlerSets =
+            new Dictionary<TrickAction, HashSet<InputHandler>>();
+
+        public TrickInputHandler()
         {
-            return CheckHandlersDown(_throwInputHandlers, out var _);
+            foreach (object value in Enum.GetValues(typeof(TrickAction)))
+            {
+                var action = (TrickAction) value;
+                if (action == TrickAction.None) continue;
+                TrickHandlerSets.Add(action, new HashSet<InputHandler>());
+            }
         }
 
-        public bool CheckThrowActionUp()
+        public void Add(TrickAction action, InputHandler handler)
         {
-            return CheckHandlersUp(_throwInputHandlers);
+            if (action == TrickAction.None) return;
+            TrickHandlerSets[action].Add(handler);
         }
 
-        public bool CheckSpinAction(out float val)
+        public HashSet<InputHandler> GetHandlers(TrickAction action)
         {
-            return CheckHandlersDown(_spinInputHandlers, out val);
-        }
-
-        public bool CheckSpinActionUp()
-        {
-            return CheckHandlersUp(_spinInputHandlers);
+            return TrickHandlerSets[action];
         }
     }
 }

@@ -1,34 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace TrickSaber
 {
     public class MovementController : MonoBehaviour
     {
-        public VRController Controller;
-        public SaberTrickManager SaberTrickManager;
-
-        public Vector3 Velocity = Vector3.zero;
-        public Vector3 AngularVelocity = Vector3.zero;
-        public float SaberSpeed;
+        private Vector3[] _angularVelocityBuffer;
+        private int _currentProbeIndex;
 
         private Vector3 _prevPos = Vector3.zero;
-        private Vector3 _prevRot = Vector3.zero;
+        private Quaternion _prevRot = Quaternion.identity;
+
+        //Velocity calc
+        private Vector3[] _velocityBuffer;
+        public Vector3 AngularVelocity = Vector3.zero;
+        public VRController Controller;
 
         public Vector3 ControllerPosition = Vector3.zero;
         public Quaternion ControllerRotation = Quaternion.identity;
+        public SaberTrickManager SaberTrickManager;
 
-        //Velocity calc
-        private readonly Vector3[] _probedVelocities = new Vector3[8];
-        private int _currentProbeIndex;
+        public Vector3 Velocity = Vector3.zero;
+        public VRPlatformHelper VrPlatformHelper;
 
-        void Start()
+        public float SaberSpeed => Velocity.magnitude;
+
+        private void Start()
         {
+            _velocityBuffer = new Vector3[PluginConfig.Instance.VelocityBufferSize];
+            _angularVelocityBuffer = new Vector3[PluginConfig.Instance.VelocityBufferSize];
         }
 
         private void Update()
@@ -37,40 +37,64 @@ namespace TrickSaber
             if (Controller.enabled)
             {
                 var controllerPosition = Controller.position;
-                var currentProbe = (controllerPosition - _prevPos) / Time.deltaTime;
-                AddProbe(currentProbe);
-                Velocity = GetAverageVelocity();
-                SaberSpeed = currentProbe.magnitude;
-                var euler = ControllerRotation.eulerAngles;
-                AngularVelocity = (euler - _prevRot) / Time.deltaTime;
+                var controllerRotation = Controller.rotation;
+                Velocity = (controllerPosition - _prevPos) / Time.deltaTime;
+                AngularVelocity = GetAngularVelocity(_prevRot, controllerRotation);
+                AddProbe(Velocity, AngularVelocity);
                 _prevPos = controllerPosition;
-                _prevRot = euler;
+                _prevRot = controllerRotation;
             }
         }
 
-        void AddProbe(Vector3 vel)
+        private void AddProbe(Vector3 vel, Vector3 ang)
         {
-            if (_currentProbeIndex > _probedVelocities.Length - 1) _currentProbeIndex = 0;
-            _probedVelocities[_currentProbeIndex] = vel;
+            if (_currentProbeIndex > _velocityBuffer.Length - 1) _currentProbeIndex = 0;
+            _velocityBuffer[_currentProbeIndex] = vel;
+            _angularVelocityBuffer[_currentProbeIndex] = ang;
             _currentProbeIndex++;
         }
 
-        Vector3 GetAverageVelocity()
+        public Vector3 GetAverageVelocity()
         {
             Vector3 avg = Vector3.zero;
-            for (int i = 0; i < _probedVelocities.Length; i++)
-            {
-                avg += _probedVelocities[i];
-            }
+            for (int i = 0; i < _velocityBuffer.Length; i++) avg += _velocityBuffer[i];
 
-            return avg / _probedVelocities.Length;
+            return avg / _velocityBuffer.Length;
+        }
+
+        public Vector3 GetAverageAngularVelocity()
+        {
+            Vector3 avg = Vector3.zero;
+            for (int i = 0; i < _velocityBuffer.Length; i++) avg += _angularVelocityBuffer[i];
+
+            return avg / _velocityBuffer.Length;
         }
 
         private (Vector3, Quaternion) GetTrackingPos()
         {
-            var success = SaberTrickManager.VrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
+            var success = VrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
             if (!success) return (new Vector3(-0.2f, 0.05f, 0f), Quaternion.identity);
             return (pos, rot);
+        }
+
+        private Vector3 GetAngularVelocity(Quaternion foreLastFrameRotation, Quaternion lastFrameRotation)
+        {
+            var q = lastFrameRotation * Quaternion.Inverse(foreLastFrameRotation);
+            if (Math.Abs(q.w) > 1023.5f / 1024.0f)
+                return new Vector3(0, 0, 0);
+            float gain;
+            if (q.w < 0.0f)
+            {
+                var angle = Math.Acos(-q.w);
+                gain = (float) (-2.0f * angle / (Math.Sin(angle) * Time.deltaTime));
+            }
+            else
+            {
+                var angle = Math.Acos(q.w);
+                gain = (float) (2.0f * angle / (Math.Sin(angle) * Time.deltaTime));
+            }
+
+            return new Vector3(q.x * gain, q.y * gain, q.z * gain);
         }
     }
 }

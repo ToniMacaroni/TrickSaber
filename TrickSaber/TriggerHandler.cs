@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
 
 namespace TrickSaber
 {
-    class TriggerHandler : InputHandler
+    internal class TriggerHandler : InputHandler
     {
         private readonly string _inputString;
 
@@ -40,6 +35,7 @@ namespace TrickSaber
                 _isUpTriggered = true;
                 return true;
             }
+
             return false;
         }
     }
