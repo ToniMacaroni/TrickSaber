@@ -39,5 +39,7 @@ namespace TrickSaber.ViewControllers
         [UIValue("ShowIndexText")] public bool ShowIndexText => !Plugin.IsControllerSupported;
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
+
+        [UIValue("Version")] public string Version => Plugin.Version;
     }
 }
