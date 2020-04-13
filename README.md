@@ -1,4 +1,5 @@
 # Trick Saber
+![](Resources/LogoSmall.png)
 
 This mod allows you to perform various tricks like spinning / throwing your sabers,
 hence the name "Trick Saber".

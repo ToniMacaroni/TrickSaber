@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/beat-saber-modding-group/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "Toni Macaroni",
   "description": "A BeatSaber mod for performing tricks",
-  "gameVersion": "1.8.0",
+  "gameVersion": "1.9.0",
   "id": "TrickSaber",
   "name": "TrickSaber",
   "version": "0.2.0",
