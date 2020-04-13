@@ -40,7 +40,7 @@ namespace TrickSaber
         public override void OnTrickUpdate()
         {
             var vel = _spinVelocity;
-            if (!_isVelocityDependent) vel *= (float)Math.Pow(Value, 5);
+            if (!_isVelocityDependent) vel *= (float)Math.Pow(Value, 3);
             _saberModelTransform.Rotate(vel);
         }
 
