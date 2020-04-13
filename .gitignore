@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /TrickSaber/MODUI.cs
+/TrickSaber/UI/MODUI.cs
