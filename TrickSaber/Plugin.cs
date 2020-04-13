@@ -1,4 +1,6 @@
-﻿using BS_Utils.Utilities;
+﻿using System;
+using System.Reflection;
+using BS_Utils.Utilities;
 using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
@@ -20,6 +22,15 @@ namespace TrickSaber
             PluginConfig.Instance = config.Generated<PluginConfig>();
         }
 
+        public static string Version
+        {
+            get
+            {
+                Version ver = Assembly.GetExecutingAssembly().GetName().Version;
+                return ver.Major + "." + ver.Minor + "." + ver.Build;
+            }
+        }
+
         public static Logger Log { get; set; }
         public static Harmony Harmony { get; set; }
         public static bool IsControllerSupported => !ControllerModel.Contains("Knuckles");
@@ -30,7 +41,7 @@ namespace TrickSaber
             SettingsUI.CreateMenu();
             BSEvents.gameSceneLoaded += GameplayManager.OnGameSceneLoaded;
             BSEvents.menuSceneLoadedFresh += OnMenuSceneLoadedFresh;
-            Log.Debug("TrickSaber Started");
+            Log.Debug($"TrickSaber version {Version} started");
         }
 
         public static string GetControllerName()

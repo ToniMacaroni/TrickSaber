@@ -29,7 +29,7 @@ namespace TrickSaber
 
             var controllerInputDevice = InputDevices.GetDeviceAtXRNode(node);
 
-            var vrSystem = OVRInput.IsControllerConnected(oculusController) ? VrSystem.Oculus : VrSystem.SteamVR;
+            var vrSystem = OVRInput.IsControllerConnected(oculusController) ? VRSystem.Oculus : VRSystem.SteamVR;
 
             var dir = (ThumstickDir) Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
@@ -37,9 +37,9 @@ namespace TrickSaber
             var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.GripThreshold);
             var thumbstickAction = new ThumbstickHandler(node, PluginConfig.Instance.ThumbstickThreshold, dir);
 
-            _trickInputHandler.Add(PluginConfig.Instance.TriggerAction.GetTrickAction(), triggerHandler);
-            _trickInputHandler.Add(PluginConfig.Instance.GripAction.GetTrickAction(), gripHandler);
-            _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetTrickAction(), thumbstickAction);
+            _trickInputHandler.Add(PluginConfig.Instance.TriggerAction.GetEnumValue<TrickAction>(), triggerHandler);
+            _trickInputHandler.Add(PluginConfig.Instance.GripAction.GetEnumValue<TrickAction>(), gripHandler);
+            _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetEnumValue<TrickAction>(), thumbstickAction);
 
             Plugin.Log.Debug("Started Input Manager using " + vrSystem);
         }

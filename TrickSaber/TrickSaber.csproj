@@ -124,7 +124,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ButtonMapping.cs" />
     <Compile Include="CommonExtensions.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GameplayManager.cs" />

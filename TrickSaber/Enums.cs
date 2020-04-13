@@ -2,7 +2,7 @@
 
 namespace TrickSaber
 {
-    public enum VrSystem
+    public enum VRSystem
     {
         Oculus,
         SteamVR
@@ -29,9 +29,9 @@ namespace TrickSaber
 
     public static class EnumTools
     {
-        public static TrickAction GetTrickAction(this string name)
+        public static TEnum GetEnumValue<TEnum>(this string name)
         {
-            return (TrickAction) Enum.Parse(typeof(TrickAction), name, true);
+            return (TEnum) Enum.Parse(typeof(TEnum), name, true);
         }
     }
 }

@@ -9,12 +9,12 @@ namespace TrickSaber
         private readonly Func<float> _valueFunc;
         private InputDevice _controllerInputDevice;
 
-        public GripHandler(VrSystem vrSystem, OVRInput.Controller oculusController,
+        public GripHandler(VRSystem vrSystem, OVRInput.Controller oculusController,
             InputDevice controllerInputDevice, float threshold) : base(threshold)
         {
             _oculusController = oculusController;
             _controllerInputDevice = controllerInputDevice;
-            if (vrSystem == VrSystem.Oculus)
+            if (vrSystem == VRSystem.Oculus)
                 _valueFunc = GetValueOculus;
             else
                 _valueFunc = GetValueSteam;
