@@ -7,8 +7,7 @@ namespace TrickSaber
 {
     public class SaberTrickManager : MonoBehaviour
     {
-        private readonly Dictionary<TrickAction, Trick> _tricks = new Dictionary<TrickAction, Trick>();
-        private readonly List<TrickAction> _activeTricks = new List<TrickAction>();
+        public readonly Dictionary<TrickAction, Trick> Tricks = new Dictionary<TrickAction, Trick>();
 
         private InputManager _inputManager;
 
@@ -20,7 +19,6 @@ namespace TrickSaber
 
         public VRController Controller;
 
-        public Rigidbody Rigidbody;
         public Saber Saber;
 
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
@@ -55,28 +53,32 @@ namespace TrickSaber
 
         private void OnTrickDeactivated(TrickAction trickAction)
         {
-            if (!IsDoingTrick(trickAction)) return;
-            _tricks[trickAction].EndTrick();
+            var trick = Tricks[trickAction];
+            if (trick.State!=TrickState.Started) return;
+            trick.EndTrick();
         }
 
         private void OnTrickActivated(TrickAction trickAction, float val)
         {
-            var trick = _tricks[trickAction];
+            var trick = Tricks[trickAction];
             trick.Value = val;
-            if (IsDoingTrick(trickAction)) return;
+            if (trick.State!=TrickState.Inactive) return;
             if (GlobalTrickManager.Instance.AudioTimeSyncController.state == AudioTimeSyncController.State.Paused) return;
             trick.StartTrick();
         }
 
         private void OnTrickStart(TrickAction trickAction)
         {
-            _activeTricks.Add(trickAction);
             GlobalTrickManager.Instance.OnTrickStarted(trickAction);
+        }
+
+        private void OnTrickEnding(TrickAction trickAction)
+        {
+            GlobalTrickManager.Instance.OnTrickEndRequsted(trickAction);
         }
 
         private void OnTrickEnd(TrickAction trickAction)
         {
-            _activeTricks.Remove(trickAction);
             GlobalTrickManager.Instance.OnTrickEnded(trickAction);
         }
 
@@ -102,18 +104,14 @@ namespace TrickSaber
             var trick = gameObject.AddComponent<T>();
             trick.Init(this, _movementController, _saberTrickModel);
             trick.TrickStarted += OnTrickStart;
+            trick.TrickEnding += OnTrickEnding;
             trick.TrickEnded += OnTrickEnd;
-            _tricks.Add(trick.TrickAction, trick);
+            Tricks.Add(trick.TrickAction, trick);
         }
 
-        public bool IsDoingTrick(TrickAction trickAction)
+        public bool IsTrickInState(TrickAction trickAction, TrickState state)
         {
-            return _activeTricks.Contains(trickAction);
-        }
-
-        public bool IsDoingTrick()
-        {
-            return _activeTricks.Count > 0;
+            return Tricks[trickAction].State == state;
         }
     }
 }

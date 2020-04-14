@@ -23,7 +23,8 @@ namespace TrickSaber
             _saberRotSpeed = MovementController.SaberSpeed * _velocityMultiplier;
             if (MovementController.AngularVelocity.x > 0) _saberRotSpeed *= 150;
             else _saberRotSpeed *= -150;
-            SaberTrickModel.Rigidbody.angularVelocity = Vector3.zero;
+            //if (PluginConfig.Instance.SlowmoDuringThrow) _saberRotSpeed *= PluginConfig.Instance.SlowmoMultiplier;
+            //SaberTrickModel.Rigidbody.angularVelocity = Vector3.zero;
             SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * _saberRotSpeed, ForceMode.Acceleration);
         }
 
@@ -46,27 +47,18 @@ namespace TrickSaber
 
         public IEnumerator ReturnSaber(float speed)
         {
-            Vector3 position = SaberTrickModel.TrickModel.transform.localPosition;
+            Vector3 position = SaberTrickModel.TrickModel.transform.position;
             float distance = Vector3.Distance(position, MovementController.ControllerPosition);
             while (distance > _controllerSnapThreshold)
             {
                 distance = Vector3.Distance(position, MovementController.ControllerPosition);
-                if (distance > 1f)
-                {
-                    position = Vector3.Lerp(position, MovementController.ControllerPosition,
-                        Time.deltaTime * (speed * 0.8f));
-                }
-                else
-                {
-                    position = Vector3.MoveTowards(position, MovementController.ControllerPosition, Time.deltaTime * speed);
-                    Vector3 rotation = Quaternion.RotateTowards(SaberTrickModel.TrickModel.transform.rotation,
-                                                                MovementController.ControllerRotation, Time.deltaTime * speed).eulerAngles;
-                    Vector3 worldRotation = _vrGameCore.transform.TransformDirection(rotation);
-                    SaberTrickModel.Rigidbody.MoveRotation(Quaternion.Euler(worldRotation));
-                }
-
-                Vector3 worldPosition = _vrGameCore.transform.TransformPoint(position);
-                SaberTrickModel.Rigidbody.MovePosition(worldPosition);
+                var direction = MovementController.ControllerPosition - position;
+                float force;
+                if (distance < 1f) force = 10f;
+                else force = speed * distance;
+                force = Mathf.Clamp(force, 0, 200);
+                SaberTrickModel.Rigidbody.velocity = direction.normalized * force;
+                position = SaberTrickModel.TrickModel.transform.position;
                 yield return new WaitForEndOfFrame();
             }
 

@@ -9,15 +9,15 @@ namespace TrickSaber
         protected SaberTrickManager SaberTrickManager;
         protected SaberTrickModel SaberTrickModel;
 
-        protected bool _allowTrickStart = true;
         protected bool _endRequested;
-        protected bool _trickStarted;
         public float Value;
+        public TrickState State = TrickState.Inactive;
 
         public abstract TrickAction TrickAction { get; }
         public string Name => TrickAction.ToString();
 
         public event Action<TrickAction> TrickStarted;
+        public event Action<TrickAction> TrickEnding;
         public event Action<TrickAction> TrickEnded;
 
         public void Init(SaberTrickManager saberTrickManager, MovementController movementController,
@@ -31,11 +31,10 @@ namespace TrickSaber
 
         public bool StartTrick()
         {
-            if (!_trickStarted && _allowTrickStart)
+            if (State==TrickState.Inactive)
             {
-                _allowTrickStart = false;
+                State = TrickState.Started;
                 OnTrickStart();
-                _trickStarted = true;
                 TrickStarted?.Invoke(TrickAction);
                 return true;
             }
@@ -45,26 +44,27 @@ namespace TrickSaber
 
         public void EndTrick()
         {
-            if (_trickStarted) _endRequested = true;
+            if (State==TrickState.Started) _endRequested = true;
         }
 
         protected void Reset()
         {
+            State = TrickState.Inactive;
             _endRequested = false;
-            _allowTrickStart = true;
             TrickEnded?.Invoke(TrickAction);
         }
 
         private void Update()
         {
-            if (_trickStarted)
+            if (State==TrickState.Started)
                 if (!_endRequested)
                 {
                     OnTrickUpdate();
                 }
                 else
                 {
-                    _trickStarted = false;
+                    State = TrickState.Ending;
+                    TrickEnding?.Invoke(TrickAction);
                     OnTrickEndRequested();
                 }
         }

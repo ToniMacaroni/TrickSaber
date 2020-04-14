@@ -27,6 +27,13 @@ namespace TrickSaber
         Spin
     }
 
+    public enum TrickState
+    {
+        Inactive,
+        Started,
+        Ending
+    }
+
     public static class EnumTools
     {
         public static TEnum GetEnumValue<TEnum>(this string name)

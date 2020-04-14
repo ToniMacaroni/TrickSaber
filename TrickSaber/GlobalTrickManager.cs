@@ -29,17 +29,21 @@ namespace TrickSaber
             }
         }
 
-        public void OnTrickEnded(TrickAction trickAction)
+        public void OnTrickEndRequsted(TrickAction trickAction)
         {
             if (trickAction == TrickAction.Throw)
                 if (PluginConfig.Instance.SlowmoDuringThrow &&
-                    !LeftSaberSaberTrickManager.IsDoingTrick(trickAction) &&
-                    !RightSaberSaberTrickManager.IsDoingTrick(trickAction) && _slowmoApplied)
+                    !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
                     StopCoroutine(_slowmoCoroutine);
                     EndSlowmo();
                     _slowmoApplied = false;
                 }
+        }
+
+        public void OnTrickEnded(TrickAction trickAction)
+        {
+            
         }
 
         private IEnumerator ApplySlowmoSmooth(float multiplier)
@@ -66,9 +70,6 @@ namespace TrickSaber
 
         private IEnumerator EndSlowmoSmooth()
         {
-            if (_slowmoApplied)
-            {
-                _slowmoApplied = false;
                 float timeScale = AudioTimeSyncController.timeScale;
                 var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
                 while (timeScale<1f)
@@ -78,7 +79,6 @@ namespace TrickSaber
                     audioSource.pitch = timeScale;
                     yield return new WaitForFixedUpdate();
                 }
-            }
         }
 
         private void EndSlowmo()
@@ -86,6 +86,12 @@ namespace TrickSaber
             var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
             AudioTimeSyncController.SetField("_timeScale", 1f);
             audioSource.pitch = 1f;
+        }
+
+        public bool IsTrickInState(TrickAction trickAction, TrickState state)
+        {
+            return LeftSaberSaberTrickManager.IsTrickInState(trickAction, state) ||
+                   RightSaberSaberTrickManager.IsTrickInState(trickAction, state);
         }
     }
 }
