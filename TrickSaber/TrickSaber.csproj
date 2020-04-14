@@ -151,7 +151,7 @@
     <Compile Include="UI\SettingsUI.cs" />
     <Compile Include="InputHandling\ThumbstickHandler.cs" />
     <Compile Include="SaberTrickManager.cs" />
-    <Compile Include="UI\TrickSaberPlugin.cs" />
+    <Compile Include="TrickSaberPlugin.cs" />
     <Compile Include="VectorExtensions.cs" />
     <Compile Include="ViewControllers\BindingsViewController.cs" />
     <Compile Include="InputHandling\TriggerHandler.cs" />

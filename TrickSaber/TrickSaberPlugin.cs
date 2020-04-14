@@ -42,7 +42,7 @@ namespace TrickSaber.UI
                     JSONNode releases = JSON.Parse(www.downloadHandler.text);
                     JSONNode latestRelease = releases[0];
                     JSONNode jsonnode = latestRelease["tag_name"];
-                    string githubVerStr = (jsonnode != null) ? jsonnode.Value.Replace("-L", "") : null;
+                    string githubVerStr = (jsonnode != null) ? jsonnode.Value : null;
                     Version githubVer = new Version(githubVerStr);
                     IsNewestVersion = !new Range($">{Plugin.Version}").IsSatisfied(githubVer);
                 }

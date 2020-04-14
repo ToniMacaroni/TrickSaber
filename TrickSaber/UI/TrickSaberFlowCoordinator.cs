@@ -28,8 +28,7 @@ namespace TrickSaber
                 {
                     title = "Trick Settings";
                     showBackButton = true;
-                    ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController,
-                        null, null);
+                    ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController);
                 }
             }
             catch (Exception e)
