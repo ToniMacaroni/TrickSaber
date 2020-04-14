@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\OculusPlatform.dll</HintPath>
     </Reference>
+    <Reference Include="SemVer">
+      <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Libs\SemVer.dll</HintPath>
+    </Reference>
     <Reference Include="SteamVR, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\SteamVR.dll</HintPath>
@@ -115,6 +118,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.VRModule">
       <HintPath>E:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.VRModule.dll</HintPath>
     </Reference>
@@ -144,6 +151,7 @@
     <Compile Include="UI\SettingsUI.cs" />
     <Compile Include="InputHandling\ThumbstickHandler.cs" />
     <Compile Include="SaberTrickManager.cs" />
+    <Compile Include="UI\TrickSaberPlugin.cs" />
     <Compile Include="VectorExtensions.cs" />
     <Compile Include="ViewControllers\BindingsViewController.cs" />
     <Compile Include="InputHandling\TriggerHandler.cs" />

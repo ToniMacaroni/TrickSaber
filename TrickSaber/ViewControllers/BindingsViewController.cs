@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using TrickSaber.UI;
 
 namespace TrickSaber.ViewControllers
 {
@@ -40,6 +41,8 @@ namespace TrickSaber.ViewControllers
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
 
-        [UIValue("Version")] public string Version => Plugin.Version;
+        [UIValue("Version")] public string Version => Plugin.VersionString;
+
+        [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !TrickSaberPlugin.Instance.IsNewestVersion;
     }
 }

@@ -38,7 +38,8 @@ namespace TrickSaber
             _movementController.SaberTrickManager = this;
 
             _inputManager = gameObject.AddComponent<InputManager>();
-            _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
+            _inputManager.Init(Saber.saberType,
+                Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
             _inputManager.TrickActivated += OnTrickActivated;
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 
@@ -54,7 +55,7 @@ namespace TrickSaber
         private void OnTrickDeactivated(TrickAction trickAction)
         {
             var trick = Tricks[trickAction];
-            if (trick.State!=TrickState.Started) return;
+            if (trick.State != TrickState.Started) return;
             trick.EndTrick();
         }
 
@@ -62,8 +63,9 @@ namespace TrickSaber
         {
             var trick = Tricks[trickAction];
             trick.Value = val;
-            if (trick.State!=TrickState.Inactive) return;
-            if (GlobalTrickManager.Instance.AudioTimeSyncController.state == AudioTimeSyncController.State.Paused) return;
+            if (trick.State != TrickState.Inactive) return;
+            if (GlobalTrickManager.Instance.AudioTimeSyncController.state ==
+                AudioTimeSyncController.State.Paused) return;
             trick.StartTrick();
         }
 

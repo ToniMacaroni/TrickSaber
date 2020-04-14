@@ -5,13 +5,12 @@ namespace TrickSaber
 {
     public abstract class Trick : MonoBehaviour
     {
+        protected bool _endRequested;
         protected MovementController MovementController;
         protected SaberTrickManager SaberTrickManager;
         protected SaberTrickModel SaberTrickModel;
-
-        protected bool _endRequested;
-        public float Value;
         public TrickState State = TrickState.Inactive;
+        public float Value;
 
         public abstract TrickAction TrickAction { get; }
         public string Name => TrickAction.ToString();
@@ -31,7 +30,7 @@ namespace TrickSaber
 
         public bool StartTrick()
         {
-            if (State==TrickState.Inactive)
+            if (State == TrickState.Inactive)
             {
                 State = TrickState.Started;
                 OnTrickStart();
@@ -44,7 +43,7 @@ namespace TrickSaber
 
         public void EndTrick()
         {
-            if (State==TrickState.Started) _endRequested = true;
+            if (State == TrickState.Started) _endRequested = true;
         }
 
         protected void Reset()
@@ -56,7 +55,7 @@ namespace TrickSaber
 
         private void Update()
         {
-            if (State==TrickState.Started)
+            if (State == TrickState.Started)
                 if (!_endRequested)
                 {
                     OnTrickUpdate();

@@ -34,12 +34,14 @@ namespace TrickSaber
             var dir = (ThumstickDir) Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
             var triggerHandler = new TriggerHandler(node, PluginConfig.Instance.TriggerThreshold);
-            var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice, PluginConfig.Instance.GripThreshold);
+            var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice,
+                PluginConfig.Instance.GripThreshold);
             var thumbstickAction = new ThumbstickHandler(node, PluginConfig.Instance.ThumbstickThreshold, dir);
 
             _trickInputHandler.Add(PluginConfig.Instance.TriggerAction.GetEnumValue<TrickAction>(), triggerHandler);
             _trickInputHandler.Add(PluginConfig.Instance.GripAction.GetEnumValue<TrickAction>(), gripHandler);
-            _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetEnumValue<TrickAction>(), thumbstickAction);
+            _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetEnumValue<TrickAction>(),
+                thumbstickAction);
 
             Plugin.Log.Debug("Started Input Manager using " + vrSystem);
         }

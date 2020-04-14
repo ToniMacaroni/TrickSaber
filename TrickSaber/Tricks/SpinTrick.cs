@@ -6,9 +6,9 @@ namespace TrickSaber
 {
     public class SpinTrick : Trick
     {
+        private bool _isVelocityDependent;
         private Transform _saberModelTransform;
         private Vector3 _spinVelocity;
-        private bool _isVelocityDependent;
 
         public override TrickAction TrickAction => TrickAction.Spin;
 
@@ -23,7 +23,7 @@ namespace TrickSaber
             if (_isVelocityDependent)
             {
                 var angularVelocity = MovementController.GetAverageAngularVelocity();
-                _spinVelocity = new Vector3(Math.Abs(angularVelocity.x)+Math.Abs(angularVelocity.y), 0, 0);
+                _spinVelocity = new Vector3(Math.Abs(angularVelocity.x) + Math.Abs(angularVelocity.y), 0, 0);
                 angularVelocity = Quaternion.Inverse(MovementController.ControllerRotation) * angularVelocity;
                 if (angularVelocity.x < 0) _spinVelocity *= -1;
             }
@@ -40,19 +40,20 @@ namespace TrickSaber
         public override void OnTrickUpdate()
         {
             var vel = _spinVelocity;
-            if (!_isVelocityDependent) vel *= (float)Math.Pow(Value, 3);
+            if (!_isVelocityDependent) vel *= (float) Math.Pow(Value, 3);
             _saberModelTransform.Rotate(vel);
         }
 
-        IEnumerator LerpToOriginalRotation()
+        private IEnumerator LerpToOriginalRotation()
         {
             var rot = _saberModelTransform.localRotation;
-            while (Quaternion.Angle(rot, Quaternion.identity)>5f)
+            while (Quaternion.Angle(rot, Quaternion.identity) > 5f)
             {
                 rot = Quaternion.Lerp(rot, Quaternion.identity, Time.deltaTime * 20);
                 _saberModelTransform.localRotation = rot;
                 yield return new WaitForEndOfFrame();
             }
+
             _saberModelTransform.localRotation = Quaternion.identity;
             Reset();
         }

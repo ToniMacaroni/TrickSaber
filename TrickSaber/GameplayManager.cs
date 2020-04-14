@@ -15,7 +15,7 @@ namespace TrickSaber
             DisableScoreSubmissionIfNeeded();
 
             var globalTrickManager = new GameObject("GlobalTrickManager").AddComponent<GlobalTrickManager>();
-            globalTrickManager.AudioTimeSyncController = UnityEngine.Object.FindObjectOfType<AudioTimeSyncController>();
+            globalTrickManager.AudioTimeSyncController = Object.FindObjectOfType<AudioTimeSyncController>();
 
             GameObject leftSaber = GameObject.Find("GameCore/Origin/VRGameCore/LeftSaber");
             GameObject rightSaber = GameObject.Find("GameCore/Origin/VRGameCore/RightSaber");
