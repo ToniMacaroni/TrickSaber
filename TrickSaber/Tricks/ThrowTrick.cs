@@ -10,8 +10,6 @@ namespace TrickSaber
         private float _saberRotSpeed;
         private float _velocityMultiplier = 1;
 
-        private GameObject _vrGameCore;
-
         public override TrickAction TrickAction => TrickAction.Throw;
 
         public override void OnTrickStart()
@@ -23,8 +21,6 @@ namespace TrickSaber
             _saberRotSpeed = MovementController.SaberSpeed * _velocityMultiplier;
             if (MovementController.AngularVelocity.x > 0) _saberRotSpeed *= 150;
             else _saberRotSpeed *= -150;
-            //if (PluginConfig.Instance.SlowmoDuringThrow) _saberRotSpeed *= PluginConfig.Instance.SlowmoMultiplier;
-            //SaberTrickModel.Rigidbody.angularVelocity = Vector3.zero;
             SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * _saberRotSpeed, ForceMode.Acceleration);
         }
 
@@ -42,7 +38,6 @@ namespace TrickSaber
         {
             _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
             _velocityMultiplier = PluginConfig.Instance.ThrowVelocity;
-            _vrGameCore = GameObject.Find("VRGameCore");
         }
 
         public IEnumerator ReturnSaber(float speed)
