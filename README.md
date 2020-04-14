@@ -8,9 +8,9 @@ hence the name "Trick Saber".
 [Documentation](https://tonimacaroni.github.io/TrickSaber-Docs/)
 
 ## Installation
-1) download the latest release from here (the dll file): https://github.com/ToniMacaroni/TrickSaber/releases
+1) download the latest release from here (the zip file): https://github.com/ToniMacaroni/TrickSaber/releases
 2) make sure you have installed the dependencies listed in the release
-3) drop the downloaded  dll into your "Beat Saber/Plugins" directory
+3) drop the zip contents into your Beat Saber directory
 
 ## Usage
 *Buttons can be configured*
