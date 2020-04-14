@@ -18,6 +18,8 @@ namespace TrickSaber
 
         public Vector3 ControllerPosition = Vector3.zero;
         public Quaternion ControllerRotation = Quaternion.identity;
+        public Vector3 LocalControllerPosition => Controller.gameObject.transform.localPosition;
+        public Quaternion LocalControllerRotation => Controller.gameObject.transform.localRotation;
         public SaberTrickManager SaberTrickManager;
 
         public Vector3 Velocity = Vector3.zero;
@@ -33,16 +35,15 @@ namespace TrickSaber
 
         private void Update()
         {
-            (ControllerPosition, ControllerRotation) = GetTrackingPos();
             if (Controller.enabled)
             {
-                var controllerPosition = Controller.position;
-                var controllerRotation = Controller.rotation;
-                Velocity = (controllerPosition - _prevPos) / Time.deltaTime;
-                AngularVelocity = GetAngularVelocity(_prevRot, controllerRotation);
+                ControllerPosition = Controller.position;
+                ControllerRotation = Controller.rotation;
+                Velocity = (ControllerPosition - _prevPos) / Time.deltaTime;
+                AngularVelocity = GetAngularVelocity(_prevRot, ControllerRotation);
                 AddProbe(Velocity, AngularVelocity);
-                _prevPos = controllerPosition;
-                _prevRot = controllerRotation;
+                _prevPos = ControllerPosition;
+                _prevRot = ControllerRotation;
             }
         }
 
@@ -68,13 +69,6 @@ namespace TrickSaber
             for (int i = 0; i < _velocityBuffer.Length; i++) avg += _angularVelocityBuffer[i];
 
             return avg / _velocityBuffer.Length;
-        }
-
-        private (Vector3, Quaternion) GetTrackingPos()
-        {
-            var success = VrPlatformHelper.GetNodePose(Controller.node, Controller.nodeIdx, out var pos, out var rot);
-            if (!success) return (new Vector3(-0.2f, 0.05f, 0f), Quaternion.identity);
-            return (pos, rot);
         }
 
         private Vector3 GetAngularVelocity(Quaternion foreLastFrameRotation, Quaternion lastFrameRotation)

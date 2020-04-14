@@ -39,5 +39,7 @@
 
         //Advanced
         public int VelocityBufferSize { get; set; } = 5;
+
+        public float SlowmoStepAmount { get; set; } = 0.02f;
     }
 }

@@ -12,19 +12,25 @@ namespace TrickSaber
         public SaberTrickManager RightSaberSaberTrickManager;
 
         public AudioTimeSyncController AudioTimeSyncController;
-        private Coroutine _slowmoCoroutine;
+
+        private Coroutine _applySlowmoCoroutine;
+        private Coroutine _EndSlowmoCoroutine;
+
         private bool _slowmoApplied;
+        private float _slowmoStepAmount;
 
         void Awake()
         {
             Instance = this;
+            _slowmoStepAmount = PluginConfig.Instance.SlowmoStepAmount;
         }
 
         public void OnTrickStarted(TrickAction trickAction)
         {
             if (trickAction == TrickAction.Throw && PluginConfig.Instance.SlowmoDuringThrow && !_slowmoApplied)
             {
-                _slowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoMultiplier));
+                if(_EndSlowmoCoroutine!=null)StopCoroutine(_EndSlowmoCoroutine);
+                _applySlowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoMultiplier));
                 _slowmoApplied = true;
             }
         }
@@ -35,8 +41,8 @@ namespace TrickSaber
                 if (PluginConfig.Instance.SlowmoDuringThrow &&
                     !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
-                    StopCoroutine(_slowmoCoroutine);
-                    EndSlowmo();
+                    StopCoroutine(_applySlowmoCoroutine);
+                    _EndSlowmoCoroutine = StartCoroutine(EndSlowmoSmooth());
                     _slowmoApplied = false;
                 }
         }
@@ -52,7 +58,7 @@ namespace TrickSaber
                 var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
                 while (timeScale > multiplier)
                 {
-                    timeScale -= 0.02f;
+                    timeScale -= _slowmoStepAmount;
                     AudioTimeSyncController.SetField("_timeScale",timeScale);
                     audioSource.pitch = timeScale;
                     yield return new WaitForFixedUpdate();
@@ -74,7 +80,7 @@ namespace TrickSaber
                 var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
                 while (timeScale<1f)
                 {
-                    timeScale += 0.02f;
+                    timeScale += _slowmoStepAmount;
                     AudioTimeSyncController.SetField("_timeScale", timeScale);
                     audioSource.pitch = timeScale;
                     yield return new WaitForFixedUpdate();

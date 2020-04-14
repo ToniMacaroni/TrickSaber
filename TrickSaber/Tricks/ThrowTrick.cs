@@ -48,17 +48,19 @@ namespace TrickSaber
         public IEnumerator ReturnSaber(float speed)
         {
             Vector3 position = SaberTrickModel.TrickModel.transform.position;
-            float distance = Vector3.Distance(position, MovementController.ControllerPosition);
+            var controllerPos = MovementController.ControllerPosition;
+            float distance = Vector3.Distance(position, controllerPos);
             while (distance > _controllerSnapThreshold)
             {
-                distance = Vector3.Distance(position, MovementController.ControllerPosition);
-                var direction = MovementController.ControllerPosition - position;
+                distance = Vector3.Distance(position, controllerPos);
+                var direction = controllerPos - position;
                 float force;
                 if (distance < 1f) force = 10f;
                 else force = speed * distance;
                 force = Mathf.Clamp(force, 0, 200);
                 SaberTrickModel.Rigidbody.velocity = direction.normalized * force;
                 position = SaberTrickModel.TrickModel.transform.position;
+                controllerPos = MovementController.ControllerPosition;
                 yield return new WaitForEndOfFrame();
             }
 

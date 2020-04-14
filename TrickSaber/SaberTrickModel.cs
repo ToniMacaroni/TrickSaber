@@ -13,6 +13,7 @@ namespace TrickSaber
             OriginalSaberModel = SaberModel;
             TrickModel = Object.Instantiate(SaberModel);
             AddRigidbody();
+            TrickModel.transform.SetParent(GameObject.Find("VRGameCore").transform);
             TrickModel.SetActive(false);
         }
 
