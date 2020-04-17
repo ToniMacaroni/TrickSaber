@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using TrickSaber.UI;
 
 namespace TrickSaber.ViewControllers
 {
@@ -35,14 +34,14 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ThumbstickAction = value;
         }
 
-        [UIValue("BindingSupported")] public bool BindingSupported => Plugin.IsControllerSupported;
+        [UIValue("BindingSupported")] public bool BindingSupported => TrickSaberPlugin.IsControllerSupported;
 
-        [UIValue("ShowIndexText")] public bool ShowIndexText => !Plugin.IsControllerSupported;
+        [UIValue("ShowIndexText")] public bool ShowIndexText => !TrickSaberPlugin.IsControllerSupported;
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
 
-        [UIValue("Version")] public string Version => Plugin.VersionString;
+        [UIValue("Version")] public string Version => TrickSaberPlugin.VersionString;
 
-        [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !TrickSaberPlugin.Instance.IsNewestVersion;
+        [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !TrickSaberPlugin.IsNewestVersion;
     }
 }

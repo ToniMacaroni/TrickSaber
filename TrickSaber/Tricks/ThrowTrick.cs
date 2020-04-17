@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace TrickSaber
+namespace TrickSaber.Tricks
 {
     public class ThrowTrick : Trick
     {

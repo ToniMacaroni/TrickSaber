@@ -5,6 +5,8 @@ namespace TrickSaber
 {
     public class GameplayManager
     {
+        public static IDifficultyBeatmap CurrentDifficultyBeatmap;
+
         public static void DisableScoreSubmissionIfNeeded()
         {
             if (PluginConfig.Instance.SlowmoDuringThrow) ScoreSubmission.DisableSubmission("TrickSaber");
@@ -12,6 +14,9 @@ namespace TrickSaber
 
         public static void OnGameSceneLoaded()
         {
+            if (!BS_Utils.Plugin.LevelData.IsSet) Plugin.Log.Debug("LevelData not set!");
+            else CurrentDifficultyBeatmap = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
+
             DisableScoreSubmissionIfNeeded();
 
             var globalTrickManager = new GameObject("GlobalTrickManager").AddComponent<GlobalTrickManager>();

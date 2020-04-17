@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using IPA.Utilities;
+using TrickSaber.Tricks;
 using UnityEngine;
 
 namespace TrickSaber
@@ -29,8 +30,7 @@ namespace TrickSaber
             else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
             Collider = Saber.gameObject.GetComponent<BoxCollider>();
-            VRPlatformHelper vrPlatformHelper =
-                Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
+            VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
             _movementController = gameObject.AddComponent<MovementController>();
             _movementController.Controller = Controller;
@@ -38,8 +38,7 @@ namespace TrickSaber
             _movementController.SaberTrickManager = this;
 
             _inputManager = gameObject.AddComponent<InputManager>();
-            _inputManager.Init(Saber.saberType,
-                Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
+            _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
             _inputManager.TrickActivated += OnTrickActivated;
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 

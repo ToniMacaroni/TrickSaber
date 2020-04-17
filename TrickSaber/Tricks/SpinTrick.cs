@@ -2,13 +2,14 @@
 using System.Collections;
 using UnityEngine;
 
-namespace TrickSaber
+namespace TrickSaber.Tricks
 {
     public class SpinTrick : Trick
     {
         private bool _isVelocityDependent;
         private Transform _saberModelTransform;
-        private Vector3 _spinVelocity;
+        private float _spinSpeed;
+        private float _finalSpinSpeed;
 
         public override TrickAction TrickAction => TrickAction.Spin;
 
@@ -23,25 +24,27 @@ namespace TrickSaber
             if (_isVelocityDependent)
             {
                 var angularVelocity = MovementController.GetAverageAngularVelocity();
-                _spinVelocity = new Vector3(Math.Abs(angularVelocity.x) + Math.Abs(angularVelocity.y), 0, 0);
+                _spinSpeed = Math.Abs(angularVelocity.x) + Math.Abs(angularVelocity.y);
                 angularVelocity = Quaternion.Inverse(MovementController.ControllerRotation) * angularVelocity;
-                if (angularVelocity.x < 0) _spinVelocity *= -1;
+                if (angularVelocity.x < 0) _spinSpeed *= -1;
             }
             else
             {
                 var speed = 6;
                 if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) speed *= -speed;
-                _spinVelocity = new Vector3(speed, 0, 0);
+                _spinSpeed = speed;
             }
 
-            _spinVelocity *= PluginConfig.Instance.SpinSpeed;
+            _spinSpeed *= PluginConfig.Instance.SpinSpeed;
         }
 
         public override void OnTrickUpdate()
         {
-            var vel = _spinVelocity;
-            if (!_isVelocityDependent) vel *= (float) Math.Pow(Value, 3);
-            _saberModelTransform.Rotate(vel);
+            _finalSpinSpeed = _spinSpeed;
+            if (!_isVelocityDependent) _finalSpinSpeed *= (float) Math.Pow(Value, 3);
+            _saberModelTransform.Rotate(Vector3.right, _finalSpinSpeed);
+            _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
+            ModUI.Instance.SetText(angle.ToString());
         }
 
         private IEnumerator LerpToOriginalRotation()
@@ -58,9 +61,26 @@ namespace TrickSaber
             Reset();
         }
 
+        private IEnumerator CompleteRotation()
+        {
+            _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
+            var isNegative = _finalSpinSpeed < 0;
+            var multiplier = PluginConfig.Instance.SpinSpeed * 12;
+            while (Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity) > 2f)
+            {
+                angle = Mathf.Lerp(angle, 359.9f, Time.deltaTime * multiplier);
+                if (isNegative) _saberModelTransform.localRotation = Quaternion.Inverse(Quaternion.AngleAxis(angle, Vector3.right));
+                else _saberModelTransform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
+                yield return new WaitForEndOfFrame();
+            }
+
+            _saberModelTransform.localRotation = Quaternion.identity;
+            Reset();
+        }
+
         public override void OnTrickEndRequested()
         {
-            StartCoroutine(LerpToOriginalRotation());
+            StartCoroutine(PluginConfig.Instance.CompleteRotationMode ? CompleteRotation() : LerpToOriginalRotation());
         }
     }
 }

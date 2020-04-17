@@ -37,6 +37,8 @@
 
         public float SlowmoMultiplier { get; set; } = 0.7f;
 
+        public bool CompleteRotationMode { get; set; } = false;
+
         //Advanced
         public int VelocityBufferSize { get; set; } = 5;
 
