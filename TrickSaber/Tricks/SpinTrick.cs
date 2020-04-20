@@ -30,8 +30,8 @@ namespace TrickSaber.Tricks
             }
             else
             {
-                var speed = 6;
-                if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) speed *= -speed;
+                var speed = 30;
+                if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) speed *= -1;
                 _spinSpeed = speed;
             }
 
@@ -65,7 +65,7 @@ namespace TrickSaber.Tricks
         {
             _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
             var isNegative = _finalSpinSpeed < 0;
-            var multiplier = PluginConfig.Instance.SpinSpeed * 12;
+            var multiplier = PluginConfig.Instance.SpinSpeed * 15;
             while (Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity) > 2f)
             {
                 angle = Mathf.Lerp(angle, 359.9f, Time.deltaTime * multiplier);
