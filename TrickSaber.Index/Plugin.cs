@@ -1,9 +1,16 @@
-﻿using BS_Utils.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using BS_Utils.Utilities;
+using DynamicOpenVR;
 using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Config = IPA.Config.Config;
-using Logger = IPA.Logging.Logger;
+using Log = IPA.Logging.Logger;
 
 namespace TrickSaber.Index
 {
@@ -11,11 +18,13 @@ namespace TrickSaber.Index
     internal class Plugin
     {
 
-        public static Logger Log { get; set; }
+        public static Log Log { get; set; }
         public static Harmony Harmony { get; set; }
 
+        private readonly string _actionManifestPath = Path.Combine(Environment.CurrentDirectory, "DynamicOpenVR", "action_manifest.json");
+
         [Init]
-        public Plugin(Logger logger, Config config)
+        public Plugin(Log logger, Config config)
         {
             Log = logger;
             PluginConfig.Instance = config.Generated<PluginConfig>();
@@ -24,6 +33,21 @@ namespace TrickSaber.Index
         [OnStart]
         public void OnStart()
         {
+            try
+            {
+                OpenVRUtilities.Init();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to initialize OpenVR API");
+                Log.Error(ex);
+                return;
+            }
+            Log.Info("Successfully initialized OpenVR API");
+
+            if (!OpenVRActionManager.instance.initialized) OpenVRActionManager.instance.Initialize(_actionManifestPath);
+            Log.Info("Initialized ActionManager");
+
             TrickSaberPlugin.Create();
             SettingsUI.CreateMenu();
             BSEvents.gameSceneLoaded += GameplayManager.OnGameSceneLoaded;
@@ -32,11 +56,6 @@ namespace TrickSaber.Index
 
         public static void OnMenuSceneLoadedFresh()
         {
-            if (!TrickSaberPlugin.IsControllerSupported)
-            {
-                PluginConfig.Instance.GripAction = TrickAction.None.ToString();
-                PluginConfig.Instance.ThumbstickAction = TrickAction.None.ToString();
-            }
         }
     }
 }

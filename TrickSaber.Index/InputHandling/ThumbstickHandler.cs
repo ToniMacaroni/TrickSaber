@@ -1,4 +1,5 @@
 ﻿using System;
+using DynamicOpenVR.IO;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -6,22 +7,35 @@ namespace TrickSaber.Index
 {
     internal class ThumbstickHandler : InputHandler
     {
-        private readonly string _axisString;
+        private readonly Func<float> _valueFunc;
+        private readonly Vector2Input _input;
 
-        public ThumbstickHandler(XRNode node, float threshold, ThumstickDir thumstickDir) : base(threshold)
+        public ThumbstickHandler(XRNode node, float threshold, ThumstickDir thumstickDir) : base(node, threshold)
         {
-            _axisString = thumstickDir == ThumstickDir.Horizontal ? "Horizontal" : "Vertical";
-            _axisString += node == XRNode.LeftHand ? "LeftHand" : "RightHand";
+            if(node==XRNode.LeftHand) _input = new Vector2Input("/actions/main/in/leftthumbstickvalue");
+            else _input = new Vector2Input("/actions/main/in/rightthumbstickvalue");
+            if (thumstickDir == ThumstickDir.Horizontal) _valueFunc = GetValueHorizontal;
+            else _valueFunc = GetValueVertical;
+        }
+
+        private float GetValueHorizontal()
+        {
+            return _input.vector.x;
+        }
+
+        private float GetValueVertical()
+        {
+            return _input.vector.y;
         }
 
         public override float GetValue()
         {
-            return Input.GetAxis(_axisString);
+            return _valueFunc();
         }
 
         public override bool Pressed()
         {
-            if (Math.Abs(Input.GetAxis(_axisString)) > _threshold)
+            if (Math.Abs(GetValue()) > _threshold)
             {
                 _isUpTriggered = false;
                 return true;
@@ -32,7 +46,7 @@ namespace TrickSaber.Index
 
         public override bool Up()
         {
-            if (Math.Abs(Input.GetAxis(_axisString)) < _threshold && !_isUpTriggered)
+            if (Math.Abs(GetValue()) < _threshold && !_isUpTriggered)
             {
                 _isUpTriggered = true;
                 return true;

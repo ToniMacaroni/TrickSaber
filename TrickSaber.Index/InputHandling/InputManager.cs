@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace TrickSaber.Index
+namespace TrickSaber.Index.InputHandling
 {
     public class InputManager : MonoBehaviour
     {
@@ -14,28 +14,12 @@ namespace TrickSaber.Index
 
         public void Init(SaberType type, VRControllersInputManager vrControllersInputManager)
         {
-            OVRInput.Controller oculusController;
-            XRNode node;
-            if (type == SaberType.SaberA)
-            {
-                oculusController = OVRInput.Controller.LTouch;
-                node = XRNode.LeftHand;
-            }
-            else
-            {
-                oculusController = OVRInput.Controller.RTouch;
-                node = XRNode.RightHand;
-            }
-
-            var controllerInputDevice = InputDevices.GetDeviceAtXRNode(node);
-
-            var vrSystem = OVRInput.IsControllerConnected(oculusController) ? VRSystem.Oculus : VRSystem.SteamVR;
+            var node = type == SaberType.SaberA ? XRNode.LeftHand : XRNode.RightHand;
 
             var dir = (ThumstickDir) Enum.Parse(typeof(ThumstickDir), PluginConfig.Instance.ThumstickDirection, true);
 
             var triggerHandler = new TriggerHandler(node, PluginConfig.Instance.TriggerThreshold);
-            var gripHandler = new GripHandler(vrSystem, oculusController, controllerInputDevice,
-                PluginConfig.Instance.GripThreshold);
+            var gripHandler = new GripHandler(node, PluginConfig.Instance.GripThreshold);
             var thumbstickAction = new ThumbstickHandler(node, PluginConfig.Instance.ThumbstickThreshold, dir);
 
             _trickInputHandler.Add(PluginConfig.Instance.TriggerAction.GetEnumValue<TrickAction>(), triggerHandler);
@@ -43,7 +27,7 @@ namespace TrickSaber.Index
             _trickInputHandler.Add(PluginConfig.Instance.ThumbstickAction.GetEnumValue<TrickAction>(),
                 thumbstickAction);
 
-            Plugin.Log.Debug("Started Input Manager using " + vrSystem);
+            Plugin.Log.Debug("Started Input Manager using SteamVR");
         }
 
         private void Update()

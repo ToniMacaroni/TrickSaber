@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
+using TrickSaber.Index.UI;
 
 namespace TrickSaber.Index
 {

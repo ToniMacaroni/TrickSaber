@@ -1,12 +1,16 @@
-﻿namespace TrickSaber.Index
+﻿using UnityEngine.XR;
+
+namespace TrickSaber.Index
 {
     public abstract class InputHandler
     {
         protected bool _isUpTriggered = true;
         protected float _threshold;
+        protected XRNode _node;
 
-        protected InputHandler(float threshold)
+        protected InputHandler(XRNode node, float threshold)
         {
+            _node = node;
             _threshold = threshold;
         }
 

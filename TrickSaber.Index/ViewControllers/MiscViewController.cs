@@ -14,7 +14,7 @@ namespace TrickSaber.Index.ViewControllers
         [UIValue("DirEnum-list")]
         public List<object> ThumbstickDirectionsList = Enum.GetNames(typeof(ThumstickDir)).ToList<object>();
 
-        public override string ResourceName => "TrickSaber.Views.MiscView.bsml";
+        public override string ResourceName => "TrickSaber.Index.Views.MiscView.bsml";
 
         [UIValue("ThumbDir-value")]
         public string ThumbstickDir

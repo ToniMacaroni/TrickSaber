@@ -3,12 +3,13 @@ using System.Collections;
 using System.Reflection;
 using OVRSimpleJSON;
 using SemVer;
+using TrickSaber.Index;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.XR;
 using Version = SemVer.Version;
 
-namespace TrickSaber.Index
+namespace TrickSaber
 {
     class TrickSaberPlugin : MonoBehaviour
     {
@@ -19,7 +20,7 @@ namespace TrickSaber.Index
         public static bool IsControllerSupported => !ControllerModel.Contains("Knuckles");
 
         public static Version Version;
-        public static string VersionString;
+        public static Version RemoteVersion;
         public static bool IsNewestVersion = true;
 
         public static void Create()
@@ -34,17 +35,16 @@ namespace TrickSaber.Index
         {
             var ver = Assembly.GetExecutingAssembly().GetName().Version;
             Version = new Version(ver.Major, ver.Minor, ver.Build);
-            VersionString = Version.Major + "." + Version.Minor + "." + Version.Patch;
             yield return StartCoroutine(CheckVersion());
             ControllerModel = GetControllerName();
             Initialized = true;
-            Plugin.Log.Debug($"TrickSaber version {VersionString} started");
+            Plugin.Log.Debug($"TrickSaber version {Version.GetVersionString()} started");
         }
 
         public IEnumerator CheckVersion()
         {
             UnityWebRequest www = UnityWebRequest.Get("https://api.github.com/repos/ToniMacaroni/TrickSaber/releases");
-            www.SetRequestHeader("User-Agent", "TrickSaber-" + VersionString);
+            www.SetRequestHeader("User-Agent", "TrickSaber-" + Version.GetVersionString());
             www.timeout = 10;
             yield return www.SendWebRequest();
             try
@@ -55,8 +55,8 @@ namespace TrickSaber.Index
                     JSONNode latestRelease = releases[0];
                     JSONNode jsonnode = latestRelease["tag_name"];
                     string githubVerStr = (jsonnode != null) ? jsonnode.Value : null;
-                    Version githubVer = new Version(githubVerStr);
-                    IsNewestVersion = !new Range($">{Version}").IsSatisfied(githubVer);
+                    RemoteVersion = new Version(githubVerStr);
+                    IsNewestVersion = !new Range($">{Version}").IsSatisfied(RemoteVersion);
                 }
             }
             catch (Exception ex)

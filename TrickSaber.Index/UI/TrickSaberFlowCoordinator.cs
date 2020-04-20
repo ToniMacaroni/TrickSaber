@@ -1,9 +1,10 @@
 ﻿using System;
 using BeatSaberMarkupLanguage;
 using HMUI;
+using TrickSaber.Index.ViewControllers;
 using TrickSaber.ViewControllers;
 
-namespace TrickSaber.Index
+namespace TrickSaber.Index.UI
 {
     internal class TrickSaberFlowCoordinator : FlowCoordinator
     {

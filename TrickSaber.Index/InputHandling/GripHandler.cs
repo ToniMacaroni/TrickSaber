@@ -1,44 +1,27 @@
 ﻿using System;
+using DynamicOpenVR.IO;
 using UnityEngine.XR;
 
 namespace TrickSaber.Index
 {
     internal class GripHandler : InputHandler
     {
-        private readonly OVRInput.Controller _oculusController;
-        private readonly Func<float> _valueFunc;
-        private InputDevice _controllerInputDevice;
+        private readonly VectorInput _input;
 
-        public GripHandler(VRSystem vrSystem, OVRInput.Controller oculusController,
-            InputDevice controllerInputDevice, float threshold) : base(threshold)
+        public GripHandler(XRNode node, float threshold) : base(node, threshold)
         {
-            _oculusController = oculusController;
-            _controllerInputDevice = controllerInputDevice;
-            if (vrSystem == VRSystem.Oculus)
-                _valueFunc = GetValueOculus;
-            else
-                _valueFunc = GetValueSteam;
-        }
-
-        private float GetValueSteam()
-        {
-            if (_controllerInputDevice.TryGetFeatureValue(CommonUsages.grip, out var outvar)) return outvar;
-            return 0;
-        }
-
-        private float GetValueOculus()
-        {
-            return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, _oculusController);
+            if(node==XRNode.LeftHand) _input = new VectorInput("/actions/main/in/leftgripvalue");
+            else _input = new VectorInput("/actions/main/in/rightgripvalue");
         }
 
         public override float GetValue()
         {
-            return _valueFunc();
+            return _input.value;
         }
 
         public override bool Pressed()
         {
-            if (_valueFunc() > _threshold)
+            if (GetValue() > _threshold)
             {
                 _isUpTriggered = false;
                 return true;
@@ -49,7 +32,7 @@ namespace TrickSaber.Index
 
         public override bool Up()
         {
-            if (_valueFunc() < _threshold && !_isUpTriggered)
+            if (GetValue() < _threshold && !_isUpTriggered)
             {
                 _isUpTriggered = true;
                 return true;

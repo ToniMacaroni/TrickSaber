@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using TrickSaber.Index;
 
-namespace TrickSaber.Index.ViewControllers
+namespace TrickSaber.ViewControllers
 {
     internal class BindingsViewController : BSMLResourceViewController
     {
@@ -40,8 +41,10 @@ namespace TrickSaber.Index.ViewControllers
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
 
-        [UIValue("Version")] public string Version => TrickSaberPlugin.VersionString;
+        [UIValue("Version")] public string Version => TrickSaberPlugin.Version.GetVersionString();
 
         [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !TrickSaberPlugin.IsNewestVersion;
+
+        [UIValue("NewerVersionText")] public string NewerVersionText => "Newer version available on Github (" + TrickSaberPlugin.RemoteVersion.GetVersionString() + ")";
     }
 }

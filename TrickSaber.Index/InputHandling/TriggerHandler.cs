@@ -1,25 +1,27 @@
-﻿using UnityEngine;
+﻿using DynamicOpenVR.IO;
+using UnityEngine;
 using UnityEngine.XR;
 
 namespace TrickSaber.Index
 {
     internal class TriggerHandler : InputHandler
     {
-        private readonly string _inputString;
+        private readonly VectorInput _input;
 
-        public TriggerHandler(XRNode node, float threshold) : base(threshold)
+        public TriggerHandler(XRNode node, float threshold) : base(node, threshold)
         {
-            _inputString = node == XRNode.LeftHand ? "TriggerLeftHand" : "TriggerRightHand";
+            if (node == XRNode.LeftHand) _input = new VectorInput("/actions/main/in/lefttriggervalue");
+            else _input = new VectorInput("/actions/main/in/righttriggervalue");
         }
 
         public override float GetValue()
         {
-            return Input.GetAxis(_inputString);
+            return _input.value;
         }
 
         public override bool Pressed()
         {
-            if (Input.GetAxis(_inputString) > _threshold)
+            if (GetValue() > _threshold)
             {
                 _isUpTriggered = false;
                 return true;
@@ -30,7 +32,7 @@ namespace TrickSaber.Index
 
         public override bool Up()
         {
-            if (Input.GetAxis(_inputString) < _threshold && !_isUpTriggered)
+            if (GetValue() < _threshold && !_isUpTriggered)
             {
                 _isUpTriggered = true;
                 return true;

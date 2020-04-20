@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
+using TrickSaber.Index;
 using UnityEngine;
 
-namespace TrickSaber.Index.Tricks
+namespace TrickSaber.Tricks
 {
     public class SpinTrick : Trick
     {
@@ -30,8 +31,8 @@ namespace TrickSaber.Index.Tricks
             }
             else
             {
-                var speed = 6;
-                if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) speed *= -speed;
+                var speed = 30;
+                if (PluginConfig.Instance.SpinDirection == SpinDir.Backward.ToString()) speed *= -1;
                 _spinSpeed = speed;
             }
 

@@ -9,7 +9,7 @@
     <text text='More settings in TrickSaber.json' font-size='4.5' font-color='#FFFFFF44'/>
   </horizontal>
   <horizontal ignore-layout='true' anchor-pos-x='0' anchor-pos-y='-30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' active='~NewerVersionAvailable'>
-    <text text='Newer version available on Github' font-size='3.5' font-color='#bf4f3b44'/>
+    <text text='~NewerVersionText' font-size='3.5' font-color='#28e06677'/>
   </horizontal>
   <horizontal ignore-layout='true' anchor-pos-x='50' anchor-pos-y='-30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
     <text text='~ContactInfo' font-size='4.5' font-color='#FFFFFF44'/>
@@ -22,8 +22,8 @@
     <list-setting text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
     <list-setting text='Grip action' value='GripAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
     <list-setting text='Thumbstick action' value='ThumbAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
-    <horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
+    <!--<horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
       <text text='Only trigger binding is supported on Index for now. Check BSMG Discord for future releases.' font-color='yellow' align='Center'/>
-    </horizontal>
+    </horizontal>-->
   </vertical>
 </vertical>

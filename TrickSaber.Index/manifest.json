@@ -3,8 +3,8 @@
   "author": "Toni Macaroni",
   "description": "A BeatSaber mod for performing tricks",
   "gameVersion": "1.9.0",
-  "id": "TrickSaber",
-  "name": "TrickSaber",
+  "id": "TrickSaber.Index",
+  "name": "TrickSaber.Index",
   "version": "0.2.0",
   "dependsOn": {
     "BS Utils": "^1.4.8",
