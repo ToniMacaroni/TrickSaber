@@ -15,16 +15,22 @@ namespace TrickSaber.InputHandling
 
         public abstract float GetInputValue();
 
-        private float GetValue()
+        private float GetActivationValue(float val)
         {
-            if (IsReversed) return 1f - GetInputValue();
-            return GetInputValue();
+            float value = Math.Abs(val);
+            if (IsReversed) return 1f - value;
+            return value;
         }
 
-        public bool Pressed()
+        public bool Activated(out float val)
         {
-            if (Math.Abs(GetValue()) > Threshold)
+            var value = GetInputValue();
+            var activationValue = GetActivationValue(value);
+            val = 0;
+
+            if (activationValue > Threshold)
             {
+                val = IsReversed ? activationValue : value;
                 IsUpTriggered = false;
                 return true;
             }
@@ -32,9 +38,9 @@ namespace TrickSaber.InputHandling
             return false;
         }
 
-        public bool Up()
+        public bool Deactivated()
         {
-            if (Math.Abs(GetValue()) < Threshold && !IsUpTriggered)
+            if (GetActivationValue(GetInputValue()) < Threshold && !IsUpTriggered)
             {
                 IsUpTriggered = true;
                 return true;

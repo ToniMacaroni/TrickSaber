@@ -43,8 +43,6 @@ namespace TrickSaber.Tricks
             _finalSpinSpeed = _spinSpeed;
             if (!_isVelocityDependent) _finalSpinSpeed *= (float) Math.Pow(Value, 3);
             _saberModelTransform.Rotate(Vector3.right, _finalSpinSpeed);
-            _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
-            ModUI.Instance.SetText(angle.ToString());
         }
 
         private IEnumerator LerpToOriginalRotation()

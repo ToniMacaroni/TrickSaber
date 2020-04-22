@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using TrickSaber.InputHandling;
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace TrickSaber
+namespace TrickSaber.InputHandling
 {
     public class InputManager : MonoBehaviour
     {
@@ -54,6 +53,7 @@ namespace TrickSaber
                 var handlers = _trickInputHandler.GetHandlers(trickAction);
                 if (CheckHandlersDown(handlers, out var val))
                     TrickActivated?.Invoke(trickAction, val);
+                    
                 else if (CheckHandlersUp(handlers)) TrickDeactivated?.Invoke(trickAction);
             }
         }
@@ -65,8 +65,8 @@ namespace TrickSaber
             bool output = true;
             foreach (InputHandler handler in handlers)
             {
-                output &= handler.Pressed();
-                val += handler.GetInputValue();
+                output &= handler.Activated(out var handlerValue);
+                val += handlerValue;
             }
 
             if (output) val /= handlers.Count;
@@ -77,7 +77,7 @@ namespace TrickSaber
         private bool CheckHandlersUp(HashSet<InputHandler> handlers)
         {
             foreach (InputHandler handler in handlers)
-                if (handler.Up())
+                if (handler.Deactivated())
                     return true;
 
             return false;

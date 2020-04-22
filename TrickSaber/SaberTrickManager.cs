@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using IPA.Utilities;
+using TrickSaber.InputHandling;
 using TrickSaber.Tricks;
 using UnityEngine;
 
