@@ -38,7 +38,7 @@ namespace TrickSaber
             yield return StartCoroutine(CheckVersion());
             ControllerModel = GetControllerName();
             Initialized = true;
-            Plugin.Log.Debug($"TrickSaber version {Version.GetVersionString()} started");
+            Plugin.Log.Debug($"TrickSaber (DOVR) version {Version.GetVersionString()} started");
         }
 
         public IEnumerator CheckVersion()

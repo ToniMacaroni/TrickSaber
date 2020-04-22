@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.XR;
 
-namespace TrickSaber
+namespace TrickSaber.InputHandling
 {
     internal class TriggerHandler : InputHandler
     {
@@ -10,33 +10,13 @@ namespace TrickSaber
         public TriggerHandler(XRNode node, float threshold) : base(threshold)
         {
             _inputString = node == XRNode.LeftHand ? "TriggerLeftHand" : "TriggerRightHand";
+
+            IsReversed = PluginConfig.Instance.ReverseTrigger;
         }
 
-        public override float GetValue()
+        public override float GetInputValue()
         {
             return Input.GetAxis(_inputString);
-        }
-
-        public override bool Pressed()
-        {
-            if (Input.GetAxis(_inputString) > _threshold)
-            {
-                _isUpTriggered = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        public override bool Up()
-        {
-            if (Input.GetAxis(_inputString) < _threshold && !_isUpTriggered)
-            {
-                _isUpTriggered = true;
-                return true;
-            }
-
-            return false;
         }
     }
 }

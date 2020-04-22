@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TrickSaber.InputHandling;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -65,7 +66,7 @@ namespace TrickSaber
             foreach (InputHandler handler in handlers)
             {
                 output &= handler.Pressed();
-                val += handler.GetValue();
+                val += handler.GetInputValue();
             }
 
             if (output) val /= handlers.Count;

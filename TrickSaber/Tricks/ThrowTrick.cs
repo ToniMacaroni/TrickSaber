@@ -18,7 +18,7 @@ namespace TrickSaber.Tricks
             SaberTrickModel.Rigidbody.isKinematic = false;
 
             SaberTrickModel.Rigidbody.velocity = MovementController.GetAverageVelocity() * 3 * _velocityMultiplier;
-            _saberRotSpeed = MovementController.SaberSpeed * _velocityMultiplier;
+            _saberRotSpeed = SaberTrickModel.Rigidbody.velocity.magnitude;
             if (MovementController.AngularVelocity.x > 0) _saberRotSpeed *= 150;
             else _saberRotSpeed *= -150;
             SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * _saberRotSpeed, ForceMode.Acceleration);

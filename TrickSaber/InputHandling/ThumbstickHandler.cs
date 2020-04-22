@@ -1,8 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
 
-namespace TrickSaber
+namespace TrickSaber.InputHandling
 {
     internal class ThumbstickHandler : InputHandler
     {
@@ -12,33 +11,12 @@ namespace TrickSaber
         {
             _axisString = thumstickDir == ThumstickDir.Horizontal ? "Horizontal" : "Vertical";
             _axisString += node == XRNode.LeftHand ? "LeftHand" : "RightHand";
+            IsReversed = PluginConfig.Instance.ReverseThumbstick;
         }
 
-        public override float GetValue()
+        public override float GetInputValue()
         {
             return Input.GetAxis(_axisString);
-        }
-
-        public override bool Pressed()
-        {
-            if (Math.Abs(Input.GetAxis(_axisString)) > _threshold)
-            {
-                _isUpTriggered = false;
-                return true;
-            }
-
-            return false;
-        }
-
-        public override bool Up()
-        {
-            if (Math.Abs(Input.GetAxis(_axisString)) < _threshold && !_isUpTriggered)
-            {
-                _isUpTriggered = true;
-                return true;
-            }
-
-            return false;
         }
     }
 }

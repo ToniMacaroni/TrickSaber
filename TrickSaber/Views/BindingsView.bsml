@@ -19,9 +19,19 @@
   </horizontal>
   <vertical ignore-layout='true' pad-top='20' spacing='0.7'
             child-control-height='false' child-expand-height='false'>
-    <list-setting text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
-    <list-setting text='Grip action' value='GripAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
-    <list-setting text='Thumbstick action' value='ThumbAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
+
+    <horizontal horizontal-fit='PreferredSize' spacing='10'>
+      <list-setting preferred-width='70' text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseTrigger-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
+    <horizontal horizontal-fit='PreferredSize' spacing='10'>
+      <list-setting preferred-width='70' text='Grip action' value='GripAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseGrip-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
+    <horizontal horizontal-fit='PreferredSize' spacing='10'>
+      <list-setting preferred-width='70' text='Thumbstick action' value='ThumbAction-value' active='~BindingSupported' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseThumbstick-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
     <horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
       <text text='Only trigger binding is supported on Index for now. Check BSMG Discord for future releases.' font-color='yellow' align='Center'/>
     </horizontal>

@@ -34,6 +34,27 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ThumbstickAction = value;
         }
 
+        [UIValue("ReverseTrigger-value")]
+        public bool ReverseTrigger
+        {
+            get => PluginConfig.Instance.ReverseTrigger;
+            set => PluginConfig.Instance.ReverseTrigger = value;
+        }
+
+        [UIValue("ReverseGrip-value")]
+        public bool ReverseGrip
+        {
+            get => PluginConfig.Instance.ReverseGrip;
+            set => PluginConfig.Instance.ReverseGrip = value;
+        }
+
+        [UIValue("ReverseThumbstick-value")]
+        public bool ReverseThumbstick
+        {
+            get => PluginConfig.Instance.ReverseThumbstick;
+            set => PluginConfig.Instance.ReverseThumbstick = value;
+        }
+
         [UIValue("BindingSupported")] public bool BindingSupported => TrickSaberPlugin.IsControllerSupported;
 
         [UIValue("ShowIndexText")] public bool ShowIndexText => !TrickSaberPlugin.IsControllerSupported;

@@ -1,6 +1,6 @@
 ﻿<vertical child-control-height='false'>
   <horizontal ignore-layout='true' anchor-pos-x='-70' anchor-pos-y='30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
-    <image preserve-aspect='true' preferred-width='15' source='TrickSaber.Resources.LogoSmall.png'></image>
+    <image preserve-aspect='true' preferred-width='15' source='TrickSaber.DOVR.Resources.LogoSmall.png'></image>
   </horizontal>
   <horizontal ignore-layout='true' anchor-pos-x='-70' anchor-pos-y='24' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
     <text text='~Version' font-size='4' font-color='#FFFFFF66'/>

@@ -12,7 +12,7 @@ namespace TrickSaber.ViewControllers
         [UIValue("TrickActionEnum-list")]
         public List<object> TrickActionList = Enum.GetNames(typeof(TrickAction)).ToList<object>();
 
-        public override string ResourceName => "TrickSaber.Views.BindingsView.bsml";
+        public override string ResourceName => "TrickSaber.DOVR.Views.BindingsView.bsml";
 
         [UIValue("TriggerAction-value")]
         public string UseTrigger
