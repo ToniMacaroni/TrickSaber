@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using TMPro;
 
 namespace TrickSaber.ViewControllers
 {
@@ -14,24 +15,36 @@ namespace TrickSaber.ViewControllers
         public override string ResourceName => "TrickSaber.Views.BindingsView.bsml";
 
         [UIValue("TriggerAction-value")]
-        public string UseTrigger
+        public string TriggerAction
         {
             get => PluginConfig.Instance.TriggerAction;
-            set => PluginConfig.Instance.TriggerAction = value;
+            set
+            {
+                PluginConfig.Instance.TriggerAction = value;
+                CheckMultiBinding();
+            }
         }
 
         [UIValue("GripAction-value")]
         public string GripAction
         {
             get => PluginConfig.Instance.GripAction;
-            set => PluginConfig.Instance.GripAction = value;
+            set
+            {
+                PluginConfig.Instance.GripAction = value;
+                CheckMultiBinding();
+            }
         }
 
         [UIValue("ThumbAction-value")]
         public string ThumbAction
         {
             get => PluginConfig.Instance.ThumbstickAction;
-            set => PluginConfig.Instance.ThumbstickAction = value;
+            set
+            {
+                PluginConfig.Instance.ThumbstickAction = value;
+                CheckMultiBinding();
+            }
         }
 
         [UIValue("ReverseTrigger-value")]
@@ -55,9 +68,7 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.ReverseThumbstick = value;
         }
 
-        [UIValue("BindingSupported")] public bool BindingSupported => TrickSaberPlugin.IsControllerSupported;
-
-        [UIValue("ShowIndexText")] public bool ShowIndexText => !TrickSaberPlugin.IsControllerSupported;
+        [UIValue("ShowIndexText")] public bool ShowIndexText => TrickSaberPlugin.IsKnucklesController;
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
 
@@ -66,5 +77,29 @@ namespace TrickSaber.ViewControllers
         [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !TrickSaberPlugin.IsNewestVersion;
 
         [UIValue("NewerVersionText")] public string NewerVersionText => "Newer version available on Github (" + TrickSaberPlugin.RemoteVersion.GetVersionString() + ")";
+
+        [UIComponent("MultiBindingText")] public TextMeshProUGUI MultiBindingText;
+
+        void Start()
+        {
+            MultiBindingText.gameObject.SetActive(false);
+        }
+
+        void CheckMultiBinding()
+        {
+            List<string> boundActions = new List<string>();
+            bool isMultiBinding = false;
+
+            if (TriggerAction!="None" && boundActions.Contains(TriggerAction)) isMultiBinding = true;
+            else boundActions.Add(TriggerAction);
+
+            if (GripAction != "None" && boundActions.Contains(GripAction)) isMultiBinding = true;
+            else boundActions.Add(GripAction);
+
+            if (ThumbAction != "None" && boundActions.Contains(ThumbAction)) isMultiBinding = true;
+            else boundActions.Add(ThumbAction);
+
+            MultiBindingText.gameObject.SetActive(isMultiBinding);
+        }
     }
 }

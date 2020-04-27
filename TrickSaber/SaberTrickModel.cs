@@ -8,6 +8,7 @@ namespace TrickSaber
         public Rigidbody Rigidbody;
         public GameObject TrickModel;
 
+        //TODO: Fix the shader for standard sabers
         public SaberTrickModel(GameObject SaberModel)
         {
             OriginalSaberModel = SaberModel;

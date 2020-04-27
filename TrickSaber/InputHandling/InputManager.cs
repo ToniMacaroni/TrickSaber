@@ -91,6 +91,7 @@ namespace TrickSaber.InputHandling
 
         public TrickInputHandler()
         {
+            //Initialize TrickHandlerSets for every trick with an empty InputHandler HashSet
             foreach (object value in Enum.GetValues(typeof(TrickAction)))
             {
                 var action = (TrickAction) value;

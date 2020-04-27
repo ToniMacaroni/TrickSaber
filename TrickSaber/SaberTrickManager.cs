@@ -13,9 +13,9 @@ namespace TrickSaber
 
         private InputManager _inputManager;
 
-        private MovementController _movementController;
+        public MovementController MovementController;
 
-        private SaberTrickModel _saberTrickModel;
+        public SaberTrickModel SaberTrickModel;
 
         public BoxCollider Collider;
 
@@ -27,24 +27,28 @@ namespace TrickSaber
 
         private IEnumerator Start()
         {
+            Saber = gameObject.GetComponent<Saber>();
+            Controller = gameObject.GetComponent<VRController>();
+
             if (IsLeftSaber) GlobalTrickManager.Instance.LeftSaberSaberTrickManager = this;
             else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
             Collider = Saber.gameObject.GetComponent<BoxCollider>();
             VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
-            _movementController = gameObject.AddComponent<MovementController>();
-            _movementController.Controller = Controller;
-            _movementController.VrPlatformHelper = vrPlatformHelper;
-            _movementController.SaberTrickManager = this;
+            MovementController = gameObject.AddComponent<MovementController>();
+            MovementController.Controller = Controller;
+            MovementController.VrPlatformHelper = vrPlatformHelper;
+            MovementController.SaberTrickManager = this;
 
             _inputManager = gameObject.AddComponent<InputManager>();
             _inputManager.Init(Saber.saberType, Controller.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
             _inputManager.TrickActivated += OnTrickActivated;
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 
+            //We need to wait for CustomSabers to potentially change the saber models
             yield return WaitForSaberModel(1);
-            _saberTrickModel = new SaberTrickModel(GetSaberModel());
+            SaberTrickModel = new SaberTrickModel(GetSaberModel());
 
             AddTrick<ThrowTrick>();
             AddTrick<SpinTrick>();
@@ -69,8 +73,10 @@ namespace TrickSaber
             trick.StartTrick();
         }
 
+        #region Trick Events
         private void OnTrickStart(TrickAction trickAction)
         {
+            ToggleCollision(false);
             GlobalTrickManager.Instance.OnTrickStarted(trickAction);
         }
 
@@ -81,8 +87,10 @@ namespace TrickSaber
 
         private void OnTrickEnd(TrickAction trickAction)
         {
+            ToggleCollision(true);
             GlobalTrickManager.Instance.OnTrickEnded(trickAction);
         }
+        #endregion
 
         public GameObject GetSaberModel()
         {
@@ -104,7 +112,7 @@ namespace TrickSaber
         private void AddTrick<T>() where T : Trick
         {
             var trick = gameObject.AddComponent<T>();
-            trick.Init(this, _movementController, _saberTrickModel);
+            trick.Init(this);
             trick.TrickStarted += OnTrickStart;
             trick.TrickEnding += OnTrickEnding;
             trick.TrickEnded += OnTrickEnd;
@@ -114,6 +122,11 @@ namespace TrickSaber
         public bool IsTrickInState(TrickAction trickAction, TrickState state)
         {
             return Tricks[trickAction].State == state;
+        }
+
+        //TODO: Toggle Collision
+        void ToggleCollision(bool enable)
+        {
         }
     }
 }

@@ -45,6 +45,7 @@ namespace TrickSaber.Tricks
             _saberModelTransform.Rotate(Vector3.right, _finalSpinSpeed);
         }
 
+        #region Rotation end Coroutines
         private IEnumerator LerpToOriginalRotation()
         {
             var rot = _saberModelTransform.localRotation;
@@ -64,6 +65,7 @@ namespace TrickSaber.Tricks
             _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
             var isNegative = _finalSpinSpeed < 0;
             var multiplier = PluginConfig.Instance.SpinSpeed * 15;
+            //TODO: Use the already calculated angle
             while (Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity) > 2f)
             {
                 angle = Mathf.Lerp(angle, 359.9f, Time.deltaTime * multiplier);
@@ -75,6 +77,7 @@ namespace TrickSaber.Tricks
             _saberModelTransform.localRotation = Quaternion.identity;
             Reset();
         }
+        #endregion
 
         public override void OnTrickEndRequested()
         {

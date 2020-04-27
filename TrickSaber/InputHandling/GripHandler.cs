@@ -28,6 +28,7 @@ namespace TrickSaber.InputHandling
             return 0;
         }
 
+        //CommomUsages doesn't work well with Touch Controllers, so we need to use the Oculus function for them
         private float GetValueOculus()
         {
             return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, _oculusController);

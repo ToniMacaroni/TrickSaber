@@ -19,12 +19,11 @@ namespace TrickSaber
         public event Action<TrickAction> TrickEnding;
         public event Action<TrickAction> TrickEnded;
 
-        public void Init(SaberTrickManager saberTrickManager, MovementController movementController,
-            SaberTrickModel saberTrickModel)
+        public void Init(SaberTrickManager saberTrickManager)
         {
             SaberTrickManager = saberTrickManager;
-            MovementController = movementController;
-            SaberTrickModel = saberTrickModel;
+            MovementController = SaberTrickManager.MovementController;
+            SaberTrickModel = SaberTrickManager.SaberTrickModel;
             OnInit();
         }
 

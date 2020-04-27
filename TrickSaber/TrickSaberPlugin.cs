@@ -16,7 +16,7 @@ namespace TrickSaber
         public static bool Initialized;
 
         public static string ControllerModel;
-        public static bool IsControllerSupported => !ControllerModel.Contains("Knuckles");
+        public static bool IsKnucklesController => ControllerModel.Contains("Knuckles");
 
         public static Version Version;
         public static Version RemoteVersion;

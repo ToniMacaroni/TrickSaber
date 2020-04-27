@@ -12,7 +12,6 @@ namespace TrickSaber
     {
 
         public static Logger Log { get; set; }
-        public static Harmony Harmony { get; set; }
 
         [Init]
         public Plugin(Logger logger, Config config)
@@ -27,16 +26,6 @@ namespace TrickSaber
             TrickSaberPlugin.Create();
             SettingsUI.CreateMenu();
             BSEvents.gameSceneLoaded += GameplayManager.OnGameSceneLoaded;
-            BSEvents.menuSceneLoadedFresh += OnMenuSceneLoadedFresh;
-        }
-
-        public static void OnMenuSceneLoadedFresh()
-        {
-            if (!TrickSaberPlugin.IsControllerSupported)
-            {
-                PluginConfig.Instance.GripAction = TrickAction.None.ToString();
-                PluginConfig.Instance.ThumbstickAction = TrickAction.None.ToString();
-            }
         }
     }
 }
