@@ -5,10 +5,6 @@ VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrickSaber", "TrickSaber\TrickSaber.csproj", "{9246546F-BDAE-4371-8252-513E78A8791F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrickSaber.DOVR", "TrickSaber.DOVR\TrickSaber.DOVR.csproj", "{7F2255A1-8573-4304-8228-673B2BB7D733}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrickSaberInstaller", "TrickSaberInstaller\TrickSaberInstaller.csproj", "{2B9C95C4-E063-40E6-A3F0-5F0C15A1DB3C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,14 +15,6 @@ Global
 		{9246546F-BDAE-4371-8252-513E78A8791F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9246546F-BDAE-4371-8252-513E78A8791F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9246546F-BDAE-4371-8252-513E78A8791F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F2255A1-8573-4304-8228-673B2BB7D733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F2255A1-8573-4304-8228-673B2BB7D733}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F2255A1-8573-4304-8228-673B2BB7D733}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F2255A1-8573-4304-8228-673B2BB7D733}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B9C95C4-E063-40E6-A3F0-5F0C15A1DB3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B9C95C4-E063-40E6-A3F0-5F0C15A1DB3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B9C95C4-E063-40E6-A3F0-5F0C15A1DB3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B9C95C4-E063-40E6-A3F0-5F0C15A1DB3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

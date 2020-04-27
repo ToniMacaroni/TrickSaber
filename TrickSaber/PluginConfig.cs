@@ -35,7 +35,7 @@
 
         public bool SlowmoDuringThrow { get; set; } = false;
 
-        public float SlowmoMultiplier { get; set; } = 0.7f;
+        public float SlowmoAmount { get; set; } = 0.2f;
 
         public bool CompleteRotationMode { get; set; } = false;
 

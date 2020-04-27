@@ -13,8 +13,19 @@ namespace TrickSaber
 
         private bool _slowmoApplied;
         private float _slowmoStepAmount;
+        private float _originalTimeScale;
 
         public AudioTimeSyncController AudioTimeSyncController;
+        private AudioSource _audioSource;
+        public AudioSource AudioSource
+        {
+            get
+            {
+                if(_audioSource==null)
+                    _audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
+                return _audioSource;
+            }
+        }
 
         public SaberTrickManager LeftSaberSaberTrickManager;
         public SaberTrickManager RightSaberSaberTrickManager;
@@ -30,7 +41,7 @@ namespace TrickSaber
             if (trickAction == TrickAction.Throw && PluginConfig.Instance.SlowmoDuringThrow && !_slowmoApplied)
             {
                 if (_EndSlowmoCoroutine != null) StopCoroutine(_EndSlowmoCoroutine);
-                _applySlowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoMultiplier));
+                _applySlowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoAmount));
                 _slowmoApplied = true;
             }
         }
@@ -51,46 +62,40 @@ namespace TrickSaber
         {
         }
 
-        private IEnumerator ApplySlowmoSmooth(float multiplier)
+        private IEnumerator ApplySlowmoSmooth(float amount)
         {
-            float timeScale = 1;
-            var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
-            while (timeScale > multiplier)
+            _originalTimeScale = AudioTimeSyncController.timeScale;
+            float timeScale = _originalTimeScale;
+            float targetTimeScale = timeScale - amount;
+            if (targetTimeScale < 0.1f) targetTimeScale = 0.1f;
+            while (timeScale > targetTimeScale)
             {
                 timeScale -= _slowmoStepAmount;
-                AudioTimeSyncController.SetField("_timeScale", timeScale);
-                audioSource.pitch = timeScale;
+                SetTimescale(timeScale);
                 yield return new WaitForFixedUpdate();
             }
-        }
 
-        private void ApplySlowmo(float multiplier)
-        {
-            if (_slowmoApplied) return;
-            var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
-            AudioTimeSyncController.SetField("_timeScale", multiplier);
-            audioSource.pitch = multiplier;
-            _slowmoApplied = true;
+            SetTimescale(targetTimeScale);
         }
 
         private IEnumerator EndSlowmoSmooth()
         {
             float timeScale = AudioTimeSyncController.timeScale;
-            var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
-            while (timeScale < 1f)
+            float targetTimeScale = _originalTimeScale;
+            while (timeScale < targetTimeScale)
             {
                 timeScale += _slowmoStepAmount;
-                AudioTimeSyncController.SetField("_timeScale", timeScale);
-                audioSource.pitch = timeScale;
+                SetTimescale(timeScale);
                 yield return new WaitForFixedUpdate();
             }
+
+            SetTimescale(targetTimeScale);
         }
 
-        private void EndSlowmo()
+        void SetTimescale(float timescale)
         {
-            var audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
-            AudioTimeSyncController.SetField("_timeScale", 1f);
-            audioSource.pitch = 1f;
+            AudioTimeSyncController.SetField("_timeScale", timescale);
+            AudioSource.pitch = timescale;
         }
 
         public bool IsTrickInState(TrickAction trickAction, TrickState state)
