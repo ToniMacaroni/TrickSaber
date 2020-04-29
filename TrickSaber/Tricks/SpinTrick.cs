@@ -9,6 +9,7 @@ namespace TrickSaber.Tricks
         private bool _isVelocityDependent;
         private Transform _saberModelTransform;
         private float _spinSpeed;
+        private float _largestSpinSpeed;
         private float _finalSpinSpeed;
 
         public override TrickAction TrickAction => TrickAction.Spin;
@@ -21,6 +22,7 @@ namespace TrickSaber.Tricks
 
         public override void OnTrickStart()
         {
+            _largestSpinSpeed = 0;
             if (_isVelocityDependent)
             {
                 var angularVelocity = MovementController.GetAverageAngularVelocity();
@@ -42,10 +44,11 @@ namespace TrickSaber.Tricks
         {
             _finalSpinSpeed = _spinSpeed;
             if (!_isVelocityDependent) _finalSpinSpeed *= (float) Math.Pow(Value, 3);
-            _saberModelTransform.Rotate(Vector3.right, _finalSpinSpeed);
+            if (Math.Abs(_finalSpinSpeed) > Math.Abs(_largestSpinSpeed)) _largestSpinSpeed = _finalSpinSpeed;
+            _saberModelTransform.Rotate(Vector3.right * _finalSpinSpeed);
         }
 
-        #region Rotation end Coroutines
+        #region Rotation-end Coroutines
         private IEnumerator LerpToOriginalRotation()
         {
             var rot = _saberModelTransform.localRotation;
@@ -62,15 +65,21 @@ namespace TrickSaber.Tricks
 
         private IEnumerator CompleteRotation()
         {
-            _saberModelTransform.localRotation.ToAngleAxis(out var angle, out _);
-            var isNegative = _finalSpinSpeed < 0;
-            var multiplier = PluginConfig.Instance.SpinSpeed * 15;
-            //TODO: Use the already calculated angle
-            while (Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity) > 2f)
+            var minSpeed = 8;
+            var largestSpinSpeed = _largestSpinSpeed;
+
+            if (Mathf.Abs(largestSpinSpeed) < minSpeed)
             {
-                angle = Mathf.Lerp(angle, 359.9f, Time.deltaTime * multiplier);
-                if (isNegative) _saberModelTransform.localRotation = Quaternion.Inverse(Quaternion.AngleAxis(angle, Vector3.right));
-                else _saberModelTransform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
+                largestSpinSpeed = largestSpinSpeed < 0 ? -minSpeed : minSpeed;
+            }
+
+            var threshold = Mathf.Abs(largestSpinSpeed) + 0.1f;
+            var angle = Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity);
+
+            while (angle > threshold)
+            {
+                _saberModelTransform.Rotate(Vector3.right * largestSpinSpeed);
+                angle = Quaternion.Angle(_saberModelTransform.localRotation, Quaternion.identity);
                 yield return new WaitForEndOfFrame();
             }
 
