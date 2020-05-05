@@ -9,9 +9,10 @@ namespace TrickSaber
         public static GlobalTrickManager Instance;
 
         private Coroutine _applySlowmoCoroutine;
-        private Coroutine _EndSlowmoCoroutine;
+        private Coroutine _endSlowmoCoroutine;
 
         private bool _slowmoApplied;
+        private float _endSlowmoTarget;
         private float _slowmoStepAmount;
         private float _originalTimeScale;
 
@@ -30,42 +31,52 @@ namespace TrickSaber
         public SaberTrickManager LeftSaberSaberTrickManager;
         public SaberTrickManager RightSaberSaberTrickManager;
 
+        public SaberClashChecker SaberClashChecker;
+
         private void Awake()
         {
             Instance = this;
             _slowmoStepAmount = PluginConfig.Instance.SlowmoStepAmount;
+            SaberClashChecker = FindObjectOfType<SaberClashChecker>();
         }
 
         public void OnTrickStarted(TrickAction trickAction)
         {
+            SaberClashChecker.enabled = false;
             if (trickAction == TrickAction.Throw && PluginConfig.Instance.SlowmoDuringThrow && !_slowmoApplied)
             {
-                if (_EndSlowmoCoroutine != null) StopCoroutine(_EndSlowmoCoroutine);
-                _applySlowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoAmount));
+                var timeScale = AudioTimeSyncController.timeScale;
+                if (_endSlowmoCoroutine != null)
+                {
+                    StopCoroutine(_endSlowmoCoroutine);
+                    timeScale = _endSlowmoTarget;
+                }
+                _applySlowmoCoroutine = StartCoroutine(ApplySlowmoSmooth(PluginConfig.Instance.SlowmoAmount, timeScale));
                 _slowmoApplied = true;
             }
         }
 
-        public void OnTrickEndRequsted(TrickAction trickAction)
+        public void OnTrickEndRequested(TrickAction trickAction)
         {
             if (trickAction == TrickAction.Throw)
                 if (PluginConfig.Instance.SlowmoDuringThrow &&
                     !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
-                    StopCoroutine(_applySlowmoCoroutine);
-                    _EndSlowmoCoroutine = StartCoroutine(EndSlowmoSmooth());
+                    if(_applySlowmoCoroutine!=null)StopCoroutine(_applySlowmoCoroutine);
+                    _endSlowmoCoroutine = StartCoroutine(EndSlowmoSmooth());
                     _slowmoApplied = false;
                 }
         }
 
         public void OnTrickEnded(TrickAction trickAction)
         {
+            if(!IsDoingTrick()) SaberClashChecker.enabled = true;
         }
 
-        private IEnumerator ApplySlowmoSmooth(float amount)
+        private IEnumerator ApplySlowmoSmooth(float amount, float startTimescale)
         {
-            _originalTimeScale = AudioTimeSyncController.timeScale;
-            float timeScale = _originalTimeScale;
+            float timeScale = startTimescale;
+            _originalTimeScale = startTimescale;
             float targetTimeScale = timeScale - amount;
             if (targetTimeScale < 0.1f) targetTimeScale = 0.1f;
             while (timeScale > targetTimeScale)
@@ -82,6 +93,7 @@ namespace TrickSaber
         {
             float timeScale = AudioTimeSyncController.timeScale;
             float targetTimeScale = _originalTimeScale;
+            _endSlowmoTarget = targetTimeScale;
             while (timeScale < targetTimeScale)
             {
                 timeScale += _slowmoStepAmount;
@@ -102,6 +114,11 @@ namespace TrickSaber
         {
             return LeftSaberSaberTrickManager.IsTrickInState(trickAction, state) ||
                    RightSaberSaberTrickManager.IsTrickInState(trickAction, state);
+        }
+
+        public bool IsDoingTrick()
+        {
+            return LeftSaberSaberTrickManager.IsDoingTrick() || RightSaberSaberTrickManager.IsDoingTrick();
         }
     }
 }
