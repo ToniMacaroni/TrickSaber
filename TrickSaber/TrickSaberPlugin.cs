@@ -55,7 +55,7 @@ namespace TrickSaber
                     JSONNode jsonnode = latestRelease["tag_name"];
                     string githubVerStr = (jsonnode != null) ? jsonnode.Value : null;
                     RemoteVersion = new Version(githubVerStr);
-                    IsNewestVersion = !new Range($">{Version}").IsSatisfied(RemoteVersion);
+                    IsNewestVersion = new Range($"<={Version}").IsSatisfied(RemoteVersion);
                 }
             }
             catch (Exception ex)

@@ -1,7 +1,7 @@
 ﻿using BS_Utils.Utilities;
-using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
+using TrickSaber.UI;
 using Config = IPA.Config.Config;
 using Logger = IPA.Logging.Logger;
 

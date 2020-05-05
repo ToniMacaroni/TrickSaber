@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace TrickSaber
+namespace TrickSaber.Tricks
 {
     public abstract class Trick : MonoBehaviour
     {
@@ -29,20 +29,26 @@ namespace TrickSaber
 
         public bool StartTrick()
         {
-            if (State == TrickState.Inactive)
-            {
-                State = TrickState.Started;
-                OnTrickStart();
-                TrickStarted?.Invoke(TrickAction);
-                return true;
-            }
+            if (State != TrickState.Inactive) return false;
 
-            return false;
+            enabled = true;
+            State = TrickState.Started;
+            OnTrickStart();
+            TrickStarted?.Invoke(TrickAction);
+            return true;
+
         }
 
         public void EndTrick()
         {
-            if (State == TrickState.Started) _endRequested = true;
+            if (State == TrickState.Started)
+            {
+                enabled = false;
+                _endRequested = true;
+                State = TrickState.Ending;
+                TrickEnding?.Invoke(TrickAction);
+                OnTrickEndRequested();
+            }
         }
 
         protected void Reset()
@@ -52,24 +58,7 @@ namespace TrickSaber
             TrickEnded?.Invoke(TrickAction);
         }
 
-        private void Update()
-        {
-            if (State == TrickState.Started)
-                if (!_endRequested)
-                {
-                    OnTrickUpdate();
-                }
-                else
-                {
-                    State = TrickState.Ending;
-                    TrickEnding?.Invoke(TrickAction);
-                    OnTrickEndRequested();
-                }
-        }
-
         public abstract void OnTrickStart();
-
-        public abstract void OnTrickUpdate();
 
         public abstract void OnTrickEndRequested();
 

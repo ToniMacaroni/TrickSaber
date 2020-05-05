@@ -17,8 +17,6 @@ namespace TrickSaber
 
         public SaberTrickModel SaberTrickModel;
 
-        public BoxCollider Collider;
-
         public VRController Controller;
 
         public Saber Saber;
@@ -33,7 +31,6 @@ namespace TrickSaber
             if (IsLeftSaber) GlobalTrickManager.Instance.LeftSaberSaberTrickManager = this;
             else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
-            Collider = Saber.gameObject.GetComponent<BoxCollider>();
             VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
 
             MovementController = gameObject.AddComponent<MovementController>();
@@ -76,18 +73,16 @@ namespace TrickSaber
         #region Trick Events
         private void OnTrickStart(TrickAction trickAction)
         {
-            ToggleCollision(false);
             GlobalTrickManager.Instance.OnTrickStarted(trickAction);
         }
 
         private void OnTrickEnding(TrickAction trickAction)
         {
-            GlobalTrickManager.Instance.OnTrickEndRequsted(trickAction);
+            GlobalTrickManager.Instance.OnTrickEndRequested(trickAction);
         }
 
         private void OnTrickEnd(TrickAction trickAction)
         {
-            ToggleCollision(true);
             GlobalTrickManager.Instance.OnTrickEnded(trickAction);
         }
         #endregion
@@ -124,9 +119,14 @@ namespace TrickSaber
             return Tricks[trickAction].State == state;
         }
 
-        //TODO: Toggle Collision
-        void ToggleCollision(bool enable)
+        public bool IsDoingTrick()
         {
+            foreach (var trick in Tricks.Values)
+            {
+                if (trick.State != TrickState.Inactive) return true;
+            }
+
+            return false;
         }
     }
 }

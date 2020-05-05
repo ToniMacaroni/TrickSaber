@@ -3,7 +3,7 @@ using BeatSaberMarkupLanguage;
 using HMUI;
 using TrickSaber.ViewControllers;
 
-namespace TrickSaber
+namespace TrickSaber.UI
 {
     internal class TrickSaberFlowCoordinator : FlowCoordinator
     {

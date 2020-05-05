@@ -21,7 +21,7 @@
         public float ControllerSnapThreshold { get; set; } = 0.3f;
 
 
-        public bool IsSpeedVelocityDependent { get; set; } = true;
+        public bool IsSpeedVelocityDependent { get; set; } = false;
 
         public float SpinSpeed { get; set; } = 1f;
 

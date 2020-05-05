@@ -1,7 +1,7 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
 
-namespace TrickSaber
+namespace TrickSaber.UI
 {
     internal class SettingsUI
     {

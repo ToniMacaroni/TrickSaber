@@ -40,7 +40,7 @@ namespace TrickSaber.Tricks
             _spinSpeed *= PluginConfig.Instance.SpinSpeed;
         }
 
-        public override void OnTrickUpdate()
+        void Update()
         {
             _finalSpinSpeed = _spinSpeed;
             if (!_isVelocityDependent) _finalSpinSpeed *= (float) Math.Pow(Value, 3);

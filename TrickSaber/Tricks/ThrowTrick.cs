@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.ComponentModel;
 using UnityEngine;
 
 namespace TrickSaber.Tricks
@@ -25,10 +24,6 @@ namespace TrickSaber.Tricks
             SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * _saberRotSpeed, ForceMode.Acceleration);
         }
 
-        public override void OnTrickUpdate()
-        {
-        }
-
         public override void OnTrickEndRequested()
         {
             SaberTrickModel.Rigidbody.velocity = Vector3.zero;
@@ -43,6 +38,7 @@ namespace TrickSaber.Tricks
 
         public IEnumerator ReturnSaber(float speed)
         {
+            SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * speed, ForceMode.Acceleration);
             Vector3 position = SaberTrickModel.TrickModel.transform.position;
             var controllerPos = MovementController.ControllerPosition;
             float distance = Vector3.Distance(position, controllerPos);

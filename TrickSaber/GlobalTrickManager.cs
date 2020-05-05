@@ -73,11 +73,11 @@ namespace TrickSaber
             if(!IsDoingTrick()) SaberClashChecker.enabled = true;
         }
 
-        private IEnumerator ApplySlowmoSmooth(float amount, float startTimescale)
+        private IEnumerator ApplySlowmoSmooth(float amount, float originalTimescale)
         {
-            float timeScale = startTimescale;
-            _originalTimeScale = startTimescale;
-            float targetTimeScale = timeScale - amount;
+            float timeScale = AudioTimeSyncController.timeScale;
+            _originalTimeScale = originalTimescale;
+            float targetTimeScale = _originalTimeScale - amount;
             if (targetTimeScale < 0.1f) targetTimeScale = 0.1f;
             while (timeScale > targetTimeScale)
             {

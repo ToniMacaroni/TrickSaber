@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TrickSaber
 {
-    public class GameplayManager
+    internal class GameplayManager
     {
         public static IDifficultyBeatmap CurrentDifficultyBeatmap;
 
@@ -15,6 +15,9 @@ namespace TrickSaber
 
         public static void OnGameSceneLoaded()
         {
+            //UI for debugging purposes
+            //ModUI.Create();
+
             if (!BS_Utils.Plugin.LevelData.IsSet) Plugin.Log.Debug("LevelData not set!");
             else CurrentDifficultyBeatmap = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap;
 
