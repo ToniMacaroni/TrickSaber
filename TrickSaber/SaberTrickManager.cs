@@ -9,6 +9,7 @@ namespace TrickSaber
 {
     public class SaberTrickManager : MonoBehaviour
     {
+        static public readonly string BasicSaberModelName = "BasicSaberModel(Clone)";
         public readonly Dictionary<TrickAction, Trick> Tricks = new Dictionary<TrickAction, Trick>();
 
         private InputManager _inputManager;
@@ -90,7 +91,7 @@ namespace TrickSaber
         public GameObject GetSaberModel()
         {
             var model = Saber.transform.Find(Saber.name);
-            if (model == null) model = Saber.transform.Find("BasicSaberModel(Clone)");
+            if (model == null) model = Saber.transform.Find(BasicSaberModelName);
             return model.gameObject;
         }
 
