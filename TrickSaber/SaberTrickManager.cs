@@ -21,6 +21,8 @@ namespace TrickSaber
 
         public Saber Saber;
 
+        public bool Enabled = true;
+
         public bool IsLeftSaber => Saber.saberType == SaberType.SaberA;
 
         private IEnumerator Start()
@@ -62,6 +64,7 @@ namespace TrickSaber
 
         private void OnTrickActivated(TrickAction trickAction, float val)
         {
+            if (!Enabled) return;
             var trick = Tricks[trickAction];
             trick.Value = val;
             if (trick.State != TrickState.Inactive) return;

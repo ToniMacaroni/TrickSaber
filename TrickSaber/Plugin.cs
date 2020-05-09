@@ -7,10 +7,10 @@ using Logger = IPA.Logging.Logger;
 
 namespace TrickSaber
 {
+
     [Plugin(RuntimeOptions.SingleStartInit)]
     internal class Plugin
     {
-
         public static Logger Log { get; set; }
 
         [Init]

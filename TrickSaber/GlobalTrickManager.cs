@@ -31,6 +31,16 @@ namespace TrickSaber
         public SaberTrickManager LeftSaberSaberTrickManager;
         public SaberTrickManager RightSaberSaberTrickManager;
 
+        public bool Enabled
+        {
+            get => LeftSaberSaberTrickManager.Enabled || RightSaberSaberTrickManager.Enabled;
+            set
+            {
+                LeftSaberSaberTrickManager.Enabled = value;
+                RightSaberSaberTrickManager.Enabled = value;
+            }
+        }
+
         public SaberClashChecker SaberClashChecker;
 
         private void Awake()

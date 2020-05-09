@@ -39,7 +39,7 @@ namespace TrickSaber.UI
 
         protected override void BackButtonWasPressed(ViewController topViewController)
         {
-            BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, false);
+            BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this);
         }
     }
 }
