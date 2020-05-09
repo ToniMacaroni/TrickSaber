@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using BS_Utils.Utilities;
 
 namespace TrickSaber
 {
@@ -8,14 +9,38 @@ namespace TrickSaber
         public Rigidbody Rigidbody;
         public GameObject TrickModel;
 
-        //TODO: Fix the shader for standard sabers
         public SaberTrickModel(GameObject SaberModel)
         {
             OriginalSaberModel = SaberModel;
             TrickModel = Object.Instantiate(SaberModel);
             AddRigidbody();
             TrickModel.transform.SetParent(GameObject.Find("VRGameCore").transform);
+            if (SaberModel.name == SaberTrickManager.BasicSaberModelName)
+                FixBasicTrickSaber();
             TrickModel.SetActive(false);
+        }
+
+        public void FixBasicTrickSaber()
+        {
+            var originalGlow = OriginalSaberModel.GetComponentInChildren<SetSaberGlowColor>();
+            var colorMgr = originalGlow.GetField<ColorManager>("_colorManager");
+            var saberType = originalGlow.GetField<SaberType>("_saberType");
+
+            var saberModelController = TrickModel.GetComponent<BasicSaberModelController>();
+            saberModelController.SetField("_colorManager", colorMgr);
+            var glows = saberModelController.GetField<SetSaberGlowColor[]>("_setSaberGlowColors");
+            foreach (var glow in glows)
+            {
+                glow.SetField("_colorManager", colorMgr);
+            }
+            var fakeGlows = saberModelController.GetField<SetSaberFakeGlowColor[]>(
+                "_setSaberFakeGlowColors");
+            foreach (var fakeGlow in fakeGlows)
+            {
+                fakeGlow.SetField("_colorManager", colorMgr);
+            }
+
+            saberModelController.Init(TrickModel.transform.parent, saberType);
         }
 
         public void AddRigidbody()
