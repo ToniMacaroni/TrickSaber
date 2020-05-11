@@ -1,9 +1,4 @@
-﻿<vertical child-control-height='false'>
-  <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
-    <text text='Misc' align='Center' font-size='7'></text>
-  </horizontal>
-  <vertical ignore-layout='true' pad-top='14' spacing='0.7'
-            child-control-height='false' child-expand-height='false'>
+﻿<scrollable-settings-container id="scrollable" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
     <list-setting text='Thumbstick direction' value='ThumbDir-value' options='DirEnum-list' apply-on-change='true'
                   hover-hint='In which direction do I need to move the thumbstick to spin you saber' />
     <checkbox-setting text='Is spin speed velocity dependent' value='IsSpeedVelocityDependent-value'
@@ -21,6 +16,6 @@
                        integer-only='false' apply-on-change='true' hover-hint='How fast does the saber return' />
     <checkbox-setting text='Slowmo during throw' value='SlowmoDuringThrow-value' apply-on-change='true'
                       hover-hint='!DISABLES SCORE SUBMISSION!' />
-    <!--<checkbox-setting text='Hit blocks during trick' font-color='red' value='EnableCutting-value' apply-on-change='true' hover-hint='!DISABLES SCORE SUBMISSION!'/>-->
-  </vertical>
-</vertical>
+  <checkbox-setting text='Disable if notes on screen' value='DisableIfNotesOnScreen-value' apply-on-change='true'
+                    hover-hint='Automatically disable Tricksaber when notes are on screen and enable it when there are none' />
+</scrollable-settings-container>

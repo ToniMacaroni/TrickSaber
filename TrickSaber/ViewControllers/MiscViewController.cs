@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using HMUI;
+using UnityEngine;
 
 namespace TrickSaber.ViewControllers
 {
     internal class MiscViewController : BSMLResourceViewController
     {
+        [UIComponent("scrollable")] private Transform Scrollable;
+
         [UIValue("SpinDirEnum-list")]
         public List<object> SpinDirectionsList = Enum.GetNames(typeof(SpinDir)).ToList<object>();
 
@@ -65,11 +70,30 @@ namespace TrickSaber.ViewControllers
             set => PluginConfig.Instance.SlowmoDuringThrow = value;
         }
 
+        [UIValue("DisableIfNotesOnScreen-value")]
+        public bool DisableIfNotesOnScreen
+        {
+            get => PluginConfig.Instance.DisableIfNotesOnScreen;
+            set => PluginConfig.Instance.DisableIfNotesOnScreen = value;
+        }
+
         [UIValue("EnableCutting-value")]
         public bool EnableCutting
         {
             get => PluginConfig.Instance.EnableCuttingDuringTrick;
             set => PluginConfig.Instance.EnableCuttingDuringTrick = value;
+        }
+
+        [UIAction("#post-parse")]
+        public void Setup()
+        {
+            var viewport = Scrollable.parent.parent as RectTransform;
+            var container = viewport.parent as RectTransform;
+            
+            container.anchoredPosition = new Vector2(0, 0);
+            container.sizeDelta = new Vector2(-4, -4);
+
+            viewport.sizeDelta = new Vector2(90, 55);
         }
     }
 }
