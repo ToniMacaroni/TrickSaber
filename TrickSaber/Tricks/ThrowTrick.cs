@@ -38,7 +38,7 @@ namespace TrickSaber.Tricks
 
         public IEnumerator ReturnSaber(float speed)
         {
-            SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * speed * 1.5f, ForceMode.VelocityChange);
+            SaberTrickModel.Rigidbody.AddRelativeTorque(Vector3.right * speed * (_saberRotSpeed<0?-1:1) * PluginConfig.Instance.ReturnSpinMultiplier, ForceMode.VelocityChange);
             Vector3 position = SaberTrickModel.TrickModel.transform.position;
             var controllerPos = MovementController.ControllerPosition;
             float distance = Vector3.Distance(position, controllerPos);

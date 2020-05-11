@@ -5,6 +5,8 @@ namespace TrickSaber
 {
     public class SaberTrickModel
     {
+        public static readonly string BasicSaberModelName = "BasicSaberModel(Clone)";
+
         public GameObject OriginalSaberModel;
         public Rigidbody Rigidbody;
         public GameObject TrickModel;
@@ -15,7 +17,7 @@ namespace TrickSaber
             TrickModel = Object.Instantiate(SaberModel);
             AddRigidbody();
             TrickModel.transform.SetParent(GameObject.Find("VRGameCore").transform);
-            if (SaberModel.name == SaberTrickManager.BasicSaberModelName)
+            if (SaberModel.name == BasicSaberModelName)
                 FixBasicTrickSaber();
             TrickModel.SetActive(false);
         }

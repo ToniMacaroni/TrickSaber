@@ -28,6 +28,9 @@ namespace TrickSaber
             }
         }
 
+        public BeatmapObjectManager BeatmapObjectManager;
+        private float _timeSinceLastNote;
+
         public SaberTrickManager LeftSaberSaberTrickManager;
         public SaberTrickManager RightSaberSaberTrickManager;
 
@@ -48,6 +51,9 @@ namespace TrickSaber
             Instance = this;
             _slowmoStepAmount = PluginConfig.Instance.SlowmoStepAmount;
             SaberClashChecker = FindObjectOfType<SaberClashChecker>();
+            BeatmapObjectManager = FindObjectOfType<BeatmapObjectManager>();
+            BeatmapObjectManager.noteWasSpawnedEvent += OnNoteWasSpawned;
+            if (PluginConfig.Instance.DisableIfNotesOnScreen) StartCoroutine(NoteSpawnTimer());
         }
 
         public void OnTrickStarted(TrickAction trickAction)
@@ -118,6 +124,27 @@ namespace TrickSaber
         {
             AudioTimeSyncController.SetField("_timeScale", timescale);
             AudioSource.pitch = timescale;
+        }
+
+        IEnumerator NoteSpawnTimer()
+        {
+            while (true)
+            {
+                _timeSinceLastNote += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        public bool CanDoTrick()
+        {
+            if (!PluginConfig.Instance.DisableIfNotesOnScreen) return true;
+            if (_timeSinceLastNote > 20/GameplayManager.CurrentDifficultyBeatmap.noteJumpMovementSpeed) return true;
+            return false;
+        }
+
+        void OnNoteWasSpawned(NoteController noteController)
+        {
+            _timeSinceLastNote = 0;
         }
 
         public bool IsTrickInState(TrickAction trickAction, TrickState state)

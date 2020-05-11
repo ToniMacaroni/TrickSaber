@@ -31,6 +31,8 @@
 
         public float ReturnSpeed { get; set; } = 10f;
 
+        public float ReturnSpinMultiplier { get; set; } = 1f;
+
         public bool EnableCuttingDuringTrick { get; set; } = false;
 
         public bool SlowmoDuringThrow { get; set; } = false;
@@ -38,6 +40,8 @@
         public float SlowmoAmount { get; set; } = 0.2f;
 
         public bool CompleteRotationMode { get; set; } = false;
+
+        public bool DisableIfNotesOnScreen { get; set; } = false;
 
         //Advanced
         public int VelocityBufferSize { get; set; } = 5;
