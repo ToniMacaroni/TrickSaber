@@ -131,7 +131,7 @@ namespace TrickSaber
             while (true)
             {
                 _timeSinceLastNote += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
+                yield return null;
             }
         }
 
