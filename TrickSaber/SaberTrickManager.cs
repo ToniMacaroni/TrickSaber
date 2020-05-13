@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using BeatSaberMarkupLanguage;
 using IPA.Utilities;
 using TrickSaber.InputHandling;
 using TrickSaber.Tricks;
@@ -51,6 +52,14 @@ namespace TrickSaber
 
             AddTrick<ThrowTrick>();
             AddTrick<SpinTrick>();
+
+            BS_Utils.Utilities.BSEvents.songUnpaused += delegate
+            {
+                foreach (var trick in Tricks.Values)
+                {
+                    trick.EndTrick();
+                }
+            };
 
             Plugin.Log.Debug("Trick Manager initialized");
         }
