@@ -87,8 +87,8 @@ namespace TrickSaber.ViewControllers
         [UIAction("#post-parse")]
         public void Setup()
         {
-            //_scrollable = BSMLScrollableSettingsContainer
-            if (_scrollable)
+            //align the scrollable, so it uses the whole screen
+            if (_scrollable && _scrollable.name == "BSMLScrollableSettingsContainer")
             {
                 var rect = _scrollable as RectTransform;
                 rect.anchoredPosition = new Vector2(0, 0);

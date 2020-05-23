@@ -37,23 +37,19 @@ namespace TrickSaber
         public static void CreateCheckbox()
         {
             var canvas = GameObject.Find("Wrapper/PauseMenu/Wrapper/UI/Canvas").GetComponent<Canvas>();
-            GameObject go = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(res => res.name == "Toggle");
-            go = Object.Instantiate(go, canvas.transform, false);
-            Object.Destroy(go.GetComponentInChildren<LocalizedTextMeshProUGUI>());
-            RectTransform rect = go.transform as RectTransform;
+            if (!canvas) return;
+
+            GameObject toggleObject = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(res => res.name == "Toggle");
+            toggleObject = Object.Instantiate(toggleObject, canvas.transform, false);
+            Object.Destroy(toggleObject.GetComponentInChildren<LocalizedTextMeshProUGUI>());
+            RectTransform rect = toggleObject.transform as RectTransform;
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(40, 35);
-            go.GetComponentInChildren<TextMeshProUGUI>().text = "Tricksaber Enabled";
-            var toggle = go.GetComponentInChildren<Toggle>();
-            toggle.isOn = true;
-            toggle.onValueChanged.AddListener(enabled =>
-            {
-                if (GlobalTrickManager.Instance)
-                {
-                    GlobalTrickManager.Instance.Enabled = enabled;
-                }
-            });
+            toggleObject.GetComponentInChildren<TextMeshProUGUI>().text = "Tricksaber Enabled";
+            var toggle = toggleObject.GetComponentInChildren<Toggle>();
+            toggle.isOn = PluginConfig.Instance.TrickSaberEnabled;
+            toggle.onValueChanged.AddListener(enabled => { PluginConfig.Instance.TrickSaberEnabled = enabled; });
         }
     }
 }

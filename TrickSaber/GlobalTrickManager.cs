@@ -36,9 +36,14 @@ namespace TrickSaber
 
         public bool Enabled
         {
-            get => LeftSaberSaberTrickManager.Enabled || RightSaberSaberTrickManager.Enabled;
+            get
+            {
+                if (!LeftSaberSaberTrickManager || !RightSaberSaberTrickManager) return false;
+                return LeftSaberSaberTrickManager.Enabled || RightSaberSaberTrickManager.Enabled;
+            }
             set
             {
+                if (!LeftSaberSaberTrickManager || !RightSaberSaberTrickManager) return;
                 LeftSaberSaberTrickManager.Enabled = value;
                 RightSaberSaberTrickManager.Enabled = value;
             }

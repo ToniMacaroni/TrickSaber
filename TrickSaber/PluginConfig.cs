@@ -4,6 +4,8 @@
     {
         public static PluginConfig Instance { get; set; }
 
+        public bool TrickSaberEnabled { get; set; } = true;
+
         public string TriggerAction { get; set; } = TrickAction.Throw.ToString();
         public string GripAction { get; set; } = TrickAction.None.ToString();
         public string ThumbstickAction { get; set; } = TrickAction.Spin.ToString();

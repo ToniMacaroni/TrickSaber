@@ -73,8 +73,7 @@ namespace TrickSaber
 
         private void OnTrickActivated(TrickAction trickAction, float val)
         {
-            if (!Enabled) return;
-            if (!GlobalTrickManager.Instance.CanDoTrick()) return;
+            if (!CanDoTrick()) return;
             var trick = Tricks[trickAction];
             trick.Value = val;
             if (trick.State != TrickState.Inactive) return;
@@ -140,6 +139,13 @@ namespace TrickSaber
             }
 
             return false;
+        }
+
+        private bool CanDoTrick()
+        {
+            return PluginConfig.Instance.TrickSaberEnabled &&
+                   Enabled &&
+                   GlobalTrickManager.Instance.CanDoTrick();
         }
     }
 }

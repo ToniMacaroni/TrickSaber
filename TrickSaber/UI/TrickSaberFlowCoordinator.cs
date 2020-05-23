@@ -7,17 +7,17 @@ namespace TrickSaber.UI
 {
     internal class TrickSaberFlowCoordinator : FlowCoordinator
     {
-        private BindingsViewController bindingsViewController;
-        private MiscViewController miscViewController;
-        private ThresholdViewController thresholdViewController;
+        private BindingsViewController _bindingsViewController;
+        private MiscViewController _miscViewController;
+        private ThresholdViewController _thresholdViewController;
 
         public void Awake()
         {
-            if (!bindingsViewController)
-                bindingsViewController = BeatSaberUI.CreateViewController<BindingsViewController>();
-            if (!thresholdViewController)
-                thresholdViewController = BeatSaberUI.CreateViewController<ThresholdViewController>();
-            if (!miscViewController) miscViewController = BeatSaberUI.CreateViewController<MiscViewController>();
+            if (!_bindingsViewController)
+                _bindingsViewController = BeatSaberUI.CreateViewController<BindingsViewController>();
+            if (!_thresholdViewController)
+                _thresholdViewController = BeatSaberUI.CreateViewController<ThresholdViewController>();
+            if (!_miscViewController) _miscViewController = BeatSaberUI.CreateViewController<MiscViewController>();
         }
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -28,7 +28,7 @@ namespace TrickSaber.UI
                 {
                     title = "Trick Settings";
                     showBackButton = true;
-                    ProvideInitialViewControllers(bindingsViewController, miscViewController, thresholdViewController);
+                    ProvideInitialViewControllers(_bindingsViewController, _miscViewController, _thresholdViewController);
                 }
             }
             catch (Exception e)
