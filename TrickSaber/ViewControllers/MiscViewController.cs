@@ -11,7 +11,7 @@ namespace TrickSaber.ViewControllers
 {
     internal class MiscViewController : BSMLResourceViewController
     {
-        [UIComponent("scrollable")] private Transform Scrollable;
+        [UIComponent("scrollable")] private Transform _scrollable;
 
         [UIValue("SpinDirEnum-list")]
         public List<object> SpinDirectionsList = Enum.GetNames(typeof(SpinDir)).ToList<object>();
@@ -87,13 +87,13 @@ namespace TrickSaber.ViewControllers
         [UIAction("#post-parse")]
         public void Setup()
         {
-            var viewport = Scrollable.parent.parent as RectTransform;
-            var container = viewport.parent as RectTransform;
-            
-            container.anchoredPosition = new Vector2(0, 0);
-            container.sizeDelta = new Vector2(-4, -4);
-
-            viewport.sizeDelta = new Vector2(90, 55);
+            //_scrollable = BSMLScrollableSettingsContainer
+            if (_scrollable)
+            {
+                var rect = _scrollable as RectTransform;
+                rect.anchoredPosition = new Vector2(0, 0);
+                rect.sizeDelta = new Vector2(-4, -4);
+            }
         }
     }
 }
