@@ -101,8 +101,9 @@ namespace TrickSaber
 
         public GameObject GetSaberModel()
         {
-            var model = Saber.transform.Find(Saber.name);
-            if (model == null) model = Saber.transform.Find(SaberTrickModel.BasicSaberModelName);
+            var model = Saber.transform.Find("SFSaber"); // Saber Factory
+            if (model == null) model = Saber.transform.Find(Saber.name); // Custom Sabers
+            if (model == null) model = Saber.transform.Find(SaberTrickModel.BasicSaberModelName); // Default Saber
             return model.gameObject;
         }
 

@@ -17,8 +17,7 @@ namespace TrickSaber
             TrickModel = Object.Instantiate(SaberModel);
             AddRigidbody();
             TrickModel.transform.SetParent(GameObject.Find("VRGameCore").transform);
-            if (SaberModel.name == BasicSaberModelName)
-                FixBasicTrickSaber();
+            if (SaberModel.name == BasicSaberModelName) FixBasicTrickSaber();
             TrickModel.SetActive(false);
         }
 
