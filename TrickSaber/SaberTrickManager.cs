@@ -48,18 +48,24 @@ namespace TrickSaber
 
             //We need to wait for CustomSabers to potentially change the saber models
             yield return WaitForSaberModel(1);
+
+            GameObject saberModel = GetSaberModel();
+            if(saberModel) Plugin.Log.Debug($"Got saber model ({saberModel.name})");
+            else
+            {
+                Plugin.Log.Debug("Couldn't get saber model");
+                Destroy(gameObject);
+                yield break;
+            }
+
             SaberTrickModel = new SaberTrickModel(GetSaberModel());
 
             AddTrick<ThrowTrick>();
             AddTrick<SpinTrick>();
 
-            BS_Utils.Utilities.BSEvents.songUnpaused += delegate
-            {
-                foreach (var trick in Tricks.Values)
-                {
-                    trick.EndTrick();
-                }
-            };
+            Plugin.Log.Debug($"{Tricks.Count} tricks initialized");
+
+            BS_Utils.Utilities.BSEvents.songUnpaused += EndAllTricks;
 
             Plugin.Log.Debug("Trick Manager initialized");
         }
@@ -104,7 +110,8 @@ namespace TrickSaber
             var model = Saber.transform.Find("SFSaber"); // Saber Factory
             if (model == null) model = Saber.transform.Find(Saber.name); // Custom Sabers
             if (model == null) model = Saber.transform.Find(SaberTrickModel.BasicSaberModelName); // Default Saber
-            return model.gameObject;
+            if (model != null) return model.gameObject;
+            return null;
         }
 
         private IEnumerator WaitForSaberModel(int timeout)
@@ -140,6 +147,14 @@ namespace TrickSaber
             }
 
             return false;
+        }
+
+        public void EndAllTricks()
+        {
+            foreach (var trick in Tricks.Values)
+            {
+                trick.OnTrickEndImmediately();
+            }
         }
 
         private bool CanDoTrick()

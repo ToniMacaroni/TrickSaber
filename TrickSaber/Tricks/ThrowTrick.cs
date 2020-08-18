@@ -30,6 +30,12 @@ namespace TrickSaber.Tricks
             StartCoroutine(ReturnSaber(PluginConfig.Instance.ReturnSpeed));
         }
 
+        public override void OnTrickEndImmediately()
+        {
+            StopAllCoroutines();
+            ThrowEnd();
+        }
+
         public override void OnInit()
         {
             _controllerSnapThreshold = PluginConfig.Instance.ControllerSnapThreshold;
@@ -53,6 +59,7 @@ namespace TrickSaber.Tricks
                 SaberTrickModel.Rigidbody.velocity = direction.normalized * force;
                 position = SaberTrickModel.TrickModel.transform.position;
                 controllerPos = MovementController.ControllerPosition;
+                Plugin.Log.Debug(controllerPos.ToString());
                 yield return new WaitForEndOfFrame();
             }
 

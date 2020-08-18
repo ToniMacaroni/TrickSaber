@@ -25,6 +25,7 @@ namespace TrickSaber.Tricks
             MovementController = SaberTrickManager.MovementController;
             SaberTrickModel = SaberTrickManager.SaberTrickModel;
             OnInit();
+            Plugin.Log.Debug($"Trick: {Name} initialized");
         }
 
         public bool StartTrick()
@@ -61,6 +62,8 @@ namespace TrickSaber.Tricks
         public abstract void OnTrickStart();
 
         public abstract void OnTrickEndRequested();
+
+        public abstract void OnTrickEndImmediately();
 
         public abstract void OnInit();
     }

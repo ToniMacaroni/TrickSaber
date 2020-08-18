@@ -92,5 +92,11 @@ namespace TrickSaber.Tricks
         {
             StartCoroutine(PluginConfig.Instance.CompleteRotationMode ? CompleteRotation() : LerpToOriginalRotation());
         }
+
+        public override void OnTrickEndImmediately()
+        {
+            _saberModelTransform.localRotation = Quaternion.identity;
+            Reset();
+        }
     }
 }
