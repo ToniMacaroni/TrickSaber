@@ -31,6 +31,12 @@ namespace TrickSaber
             Saber = gameObject.GetComponent<Saber>();
             Controller = gameObject.GetComponent<VRController>();
 
+            if (!Controller)
+            {
+                Destroy(gameObject);
+                yield break;
+            }
+
             if (IsLeftSaber) GlobalTrickManager.Instance.LeftSaberSaberTrickManager = this;
             else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
@@ -58,7 +64,7 @@ namespace TrickSaber
                 yield break;
             }
 
-            SaberTrickModel = new SaberTrickModel(GetSaberModel());
+            SaberTrickModel = new SaberTrickModel(saberModel);
 
             AddTrick<ThrowTrick>();
             AddTrick<SpinTrick>();
