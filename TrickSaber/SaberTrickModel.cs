@@ -27,7 +27,7 @@ namespace TrickSaber
             var colorMgr = originalGlow.GetField<ColorManager>("_colorManager");
             var saberType = originalGlow.GetField<SaberType>("_saberType");
 
-            var saberModelController = TrickModel.GetComponent<BasicSaberModelController>();
+            var saberModelController = TrickModel.GetComponent<SaberModelController>();
             saberModelController.SetField("_colorManager", colorMgr);
             var glows = saberModelController.GetField<SetSaberGlowColor[]>("_setSaberGlowColors");
             foreach (var glow in glows)
@@ -41,7 +41,7 @@ namespace TrickSaber
                 fakeGlow.SetField("_colorManager", colorMgr);
             }
 
-            saberModelController.Init(TrickModel.transform.parent, saberType);
+            //saberModelController.Init(TrickModel.transform.parent, saberModelController);
         }
 
         public void AddRigidbody()

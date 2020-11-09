@@ -1,9 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using BeatSaberMarkupLanguage.Components.Settings;
+using BeatSaberMarkupLanguage.Tags;
 using BS_Utils.Gameplay;
+using HMUI;
 using Polyglot;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace TrickSaber
 {
@@ -31,25 +36,28 @@ namespace TrickSaber
 
             Object.FindObjectsOfType<Saber>().ToList().ForEach(saber=>saber.gameObject.AddComponent<SaberTrickManager>());
 
-            CreateCheckbox();
+            try
+            {
+                CreateCheckbox();
+            }
+            catch{}
         }
 
         public static void CreateCheckbox()
         {
-            var canvas = GameObject.Find("Wrapper/PauseMenu/Wrapper/UI/Canvas").GetComponent<Canvas>();
+            var canvas = GameObject.Find("Wrapper/StandardGameplay/PauseMenu/Wrapper/MenuWrapper/Canvas").GetComponent<Canvas>();
             if (!canvas) return;
 
-            GameObject toggleObject = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(res => res.name == "Toggle");
-            toggleObject = Object.Instantiate(toggleObject, canvas.transform, false);
-            Object.Destroy(toggleObject.GetComponentInChildren<LocalizedTextMeshProUGUI>());
-            RectTransform rect = toggleObject.transform as RectTransform;
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(40, 35);
-            toggleObject.GetComponentInChildren<TextMeshProUGUI>().text = "Tricksaber Enabled";
-            var toggle = toggleObject.GetComponentInChildren<Toggle>();
-            toggle.isOn = PluginConfig.Instance.TrickSaberEnabled;
-            toggle.onValueChanged.AddListener(enabled => { PluginConfig.Instance.TrickSaberEnabled = enabled; });
+            var toggleObject = new ToggleSettingTag().CreateObject(canvas.transform);
+
+            (toggleObject.transform as RectTransform).anchoredPosition = new Vector2(26, -15);
+            (toggleObject.transform as RectTransform).sizeDelta = new Vector2(-130, 7);
+
+            toggleObject.transform.Find("NameText").GetComponent<CurvedTextMeshPro>().text = "Tricksaber Enabled";
+
+            var toggleSetting = toggleObject.GetComponent<ToggleSetting>();
+            toggleSetting.Value = PluginConfig.Instance.TrickSaberEnabled;
+            toggleSetting.toggle.onValueChanged.AddListener(enabled => { PluginConfig.Instance.TrickSaberEnabled = enabled; });
         }
     }
 }

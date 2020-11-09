@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using IPA.Utilities;
 using UnityEngine;
 
@@ -49,21 +50,23 @@ namespace TrickSaber
             }
         }
 
-        public SaberClashChecker SaberClashChecker;
+        public bool SaberClashCheckerEnabled = true;
 
         private void Awake()
         {
             Instance = this;
             _slowmoStepAmount = PluginConfig.Instance.SlowmoStepAmount;
-            SaberClashChecker = FindObjectOfType<SaberClashChecker>();
-            BeatmapObjectManager = FindObjectOfType<BeatmapObjectManager>();
-            BeatmapObjectManager.noteWasSpawnedEvent += OnNoteWasSpawned;
-            if (PluginConfig.Instance.DisableIfNotesOnScreen) StartCoroutine(NoteSpawnTimer());
+
+            //var scoreController = FindObjectsOfType<ScoreController>().FirstOrDefault();
+            //BeatmapObjectManager = scoreController.GetField<BeatmapObjectManager, ScoreController>("_beatmapObjectManager");
+
+            //BeatmapObjectManager.noteWasSpawnedEvent += OnNoteWasSpawned;
+            //if (PluginConfig.Instance.DisableIfNotesOnScreen) StartCoroutine(NoteSpawnTimer());
         }
 
         public void OnTrickStarted(TrickAction trickAction)
         {
-            SaberClashChecker.enabled = false;
+            SaberClashCheckerEnabled = false;
             if (trickAction == TrickAction.Throw && PluginConfig.Instance.SlowmoDuringThrow && !_slowmoApplied)
             {
                 var timeScale = AudioTimeSyncController.timeScale;
@@ -91,7 +94,7 @@ namespace TrickSaber
 
         public void OnTrickEnded(TrickAction trickAction)
         {
-            if(!IsDoingTrick()) SaberClashChecker.enabled = true;
+            if(!IsDoingTrick()) SaberClashCheckerEnabled = true;
         }
 
         private IEnumerator ApplySlowmoSmooth(float amount, float originalTimescale)

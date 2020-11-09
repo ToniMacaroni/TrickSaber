@@ -20,13 +20,13 @@ namespace TrickSaber.UI
             if (!_miscViewController) _miscViewController = BeatSaberUI.CreateViewController<MiscViewController>();
         }
 
-        protected override void DidActivate(bool firstActivation, ActivationType activationType)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             try
             {
                 if (firstActivation)
                 {
-                    title = "Trick Settings";
+                    SetTitle("Trick Settings");
                     showBackButton = true;
                     ProvideInitialViewControllers(_bindingsViewController, _miscViewController, _thresholdViewController);
                 }

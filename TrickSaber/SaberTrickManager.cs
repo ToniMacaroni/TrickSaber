@@ -40,11 +40,8 @@ namespace TrickSaber
             if (IsLeftSaber) GlobalTrickManager.Instance.LeftSaberSaberTrickManager = this;
             else GlobalTrickManager.Instance.RightSaberSaberTrickManager = this;
 
-            VRPlatformHelper vrPlatformHelper = Controller.GetField<VRPlatformHelper, VRController>("_vrPlatformHelper");
-
             MovementController = gameObject.AddComponent<MovementController>();
             MovementController.Controller = Controller;
-            MovementController.VrPlatformHelper = vrPlatformHelper;
             MovementController.SaberTrickManager = this;
 
             _inputManager = gameObject.AddComponent<InputManager>();
@@ -53,7 +50,7 @@ namespace TrickSaber
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 
             //We need to wait for CustomSabers to potentially change the saber models
-            yield return WaitForSaberModel(1);
+            //yield return WaitForSaberModel(1);
 
             GameObject saberModel = GetSaberModel();
             if(saberModel) Plugin.Log.Debug($"Got saber model ({saberModel.name})");
@@ -114,7 +111,7 @@ namespace TrickSaber
         public GameObject GetSaberModel()
         {
             var model = Saber.transform.Find("SFSaber"); // Saber Factory
-            if (model == null) model = Saber.transform.Find(Saber.name); // Custom Sabers
+            //if (model == null) model = Saber.transform.Find(Saber.name); // Custom Sabers
             if (model == null) model = Saber.transform.Find(SaberTrickModel.BasicSaberModelName); // Default Saber
             if (model != null) return model.gameObject;
             return null;
@@ -123,7 +120,8 @@ namespace TrickSaber
         private IEnumerator WaitForSaberModel(int timeout)
         {
             float time = 0;
-            while (!transform.Find(Saber.name) && time < timeout)
+            string saberName = Saber.name;
+            while (!transform.Find(saberName) && time < timeout)
             {
                 time += Time.deltaTime;
                 yield return null;

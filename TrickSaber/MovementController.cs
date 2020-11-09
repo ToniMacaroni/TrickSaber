@@ -21,7 +21,6 @@ namespace TrickSaber
         public SaberTrickManager SaberTrickManager;
 
         public Vector3 Velocity = Vector3.zero;
-        public VRPlatformHelper VrPlatformHelper;
         public Vector3 LocalControllerPosition => Controller.gameObject.transform.localPosition;
         public Quaternion LocalControllerRotation => Controller.gameObject.transform.localRotation;
 
