@@ -1,0 +1,20 @@
+﻿<vertical child-control-height='false'>
+  <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
+    <text text='Thresholds' align='Center' font-size='7'></text>
+  </horizontal>
+  <vertical ignore-layout='true' pad-top='14' spacing='0.7'
+            child-control-height='false' child-expand-height='false'>
+    <increment-setting text='Trigger threshold' value='TriggerThresh-value' min='0.05' max='0.95' increment='0.05'
+                       integer-only='false' apply-on-change='true'
+                       hover-hint='How much do I need to press the trigger to throw the saber' />
+    <increment-setting text='Grip threshold' value='GripThresh-value' min='0.05' max='0.95' increment='0.05'
+                       integer-only='false' apply-on-change='true'
+                       hover-hint='How much do I need to press the grip to throw the saber' />
+    <increment-setting text='Thumbstick threshold' value='ThumbThresh-value' min='0.05' max='0.95' increment='0.05'
+                       integer-only='false' apply-on-change='true'
+                       hover-hint='How much do I need to move the thumbstick to spin the saber' />
+    <increment-setting text='Snap back threshold' value='ControllerSnapThresh-value' min='0' max='1' increment='0.02'
+                       integer-only='false' apply-on-change='true'
+                       hover-hint='The minimum distance between the controller and saber for the saber to snap back to the controller after a throw' />
+  </vertical>
+</vertical>

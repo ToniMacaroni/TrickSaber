@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrickSaber", "TrickSaber\TrickSaber.csproj", "{3A1C32C3-01D5-4F4A-A224-4301DAC9ABF6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A1C32C3-01D5-4F4A-A224-4301DAC9ABF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A1C32C3-01D5-4F4A-A224-4301DAC9ABF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A1C32C3-01D5-4F4A-A224-4301DAC9ABF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A1C32C3-01D5-4F4A-A224-4301DAC9ABF6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0552AB0E-DF5A-4645-9185-C42020934ACF}
+	EndGlobalSection
+EndGlobal

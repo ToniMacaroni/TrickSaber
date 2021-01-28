@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "TrickSaber",
+  "name": "TrickSaber",
+  "author": "Toni Macaroni",
+  "version": "1.0.0",
+  "description": "A BeatSaber mod for performing tricks",
+  "gameVersion": "1.13.2",
+  "dependsOn": {
+    "BSIPA": "^4.0.5"
+  }
+}
