@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage;
+﻿using System.Collections.Generic;
 using IPA.Utilities;
-using SiraUtil.Services;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using TrickSaber.InputHandling;

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
-using UnityEngine;
 using UnityEngine.XR;
-using Zenject;
 
 namespace TrickSaber.InputHandling
 {

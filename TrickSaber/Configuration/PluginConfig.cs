@@ -48,8 +48,7 @@ namespace TrickSaber.Configuration
 
         public float ReturnSpinMultiplier { get; set; } = 1f;
 
-        public bool EnableCuttingDuringTrick { get; set; } = false;
-
+        [DisablesScoring]
         public bool SlowmoDuringThrow { get; set; } = false;
 
         public float SlowmoAmount { get; set; } = 0.2f;
@@ -58,6 +57,7 @@ namespace TrickSaber.Configuration
 
         public bool DisableIfNotesOnScreen { get; set; } = false;
 
+        [DisablesScoring(Reason = "Hit Em")]
         public bool HitNotesDuringTrick { get; set; } = false;
 
         //Advanced

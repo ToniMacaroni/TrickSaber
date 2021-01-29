@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using IPA.Utilities;
 using TrickSaber.Configuration;
 using UnityEngine;

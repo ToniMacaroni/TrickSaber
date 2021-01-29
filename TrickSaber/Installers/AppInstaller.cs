@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IPA.Logging;
+﻿using IPA.Logging;
 using SiraUtil;
 using TrickSaber.Configuration;
 using Zenject;

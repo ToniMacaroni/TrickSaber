@@ -1,5 +1,4 @@
-﻿using System;
-using BeatSaberMarkupLanguage;
+﻿using BeatSaberMarkupLanguage;
 using HMUI;
 using TrickSaber.ViewControllers;
 using Zenject;

@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SemVer;
 using SiraUtil;
 using SiraUtil.Tools;
-using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.XR;
 using Zenject;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 using Version = SemVer.Version;
 
 namespace TrickSaber

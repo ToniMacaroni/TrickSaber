@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
-using IPA.Utilities;
 using SiraUtil.Sabers;
 using TrickSaber.Configuration;
-using Zenject;
 
 namespace TrickSaber
 {

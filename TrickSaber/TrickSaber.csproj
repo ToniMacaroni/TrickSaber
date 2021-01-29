@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonExtensions.cs" />
+    <Compile Include="DisablesScoringAttribute.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GameplayManager.cs" />
     <Compile Include="GlobalTrickManager.cs" />

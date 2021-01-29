@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.Tags;
 using HMUI;
+using SiraUtil.Services;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
-using Object = UnityEngine.Object;
 
 namespace TrickSaber
 {
@@ -17,16 +15,40 @@ namespace TrickSaber
     {
         private readonly PluginConfig _config;
         private readonly SiraLog _logger;
+        private readonly Submission _submission;
 
-        public GameplayManager(PluginConfig config, SiraLog logger)
+        public GameplayManager(PluginConfig config, SiraLog logger, Submission submission)
         {
             _config = config;
             _logger = logger;
+            _submission = submission;
         }
 
         public void DisableScoreSubmissionIfNeeded()
         {
-            // TODO: if (_config.SlowmoDuringThrow) disable score submission
+            foreach (var propertyInfo in typeof(PluginConfig).GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if(propertyInfo.PropertyType!=typeof(bool)) continue;
+
+                var attr = Attribute.GetCustomAttribute(
+                            propertyInfo,
+                            typeof(DisablesScoringAttribute))
+                    as DisablesScoringAttribute;
+
+                if(attr==null) continue;
+
+                DisableScore(
+                    (bool)propertyInfo.GetValue(_config),
+                    string.IsNullOrEmpty(attr.Reason)
+                        ? propertyInfo.Name
+                        : attr.Reason);
+            }
+        }
+
+        public void DisableScore(bool disable, string reason)
+        {
+            if (!disable) return;
+            _submission.DisableScoreSubmission("Tricksaber", reason);
         }
 
         public void Initialize()

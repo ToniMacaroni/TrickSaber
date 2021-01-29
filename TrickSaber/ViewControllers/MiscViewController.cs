@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
-using HMUI;
 using TrickSaber.Configuration;
-using TrickSaber.InputHandling;
 using UnityEngine;
 using Zenject;
 
@@ -80,13 +77,6 @@ namespace TrickSaber.ViewControllers
         {
             get => _config.DisableIfNotesOnScreen;
             set => _config.DisableIfNotesOnScreen = value;
-        }
-
-        [UIValue("EnableCutting-value")]
-        public bool EnableCutting
-        {
-            get => _config.EnableCuttingDuringTrick;
-            set => _config.EnableCuttingDuringTrick = value;
         }
 
         [UIValue("HitNotesDuringTrick-value")]

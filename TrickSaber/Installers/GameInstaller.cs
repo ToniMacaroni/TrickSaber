@@ -1,7 +1,4 @@
 ﻿using System;
-using IPA.Utilities;
-using ModestTree;
-using SiraUtil;
 using SiraUtil.Tools;
 using TrickSaber.InputHandling;
 using TrickSaber.Tricks;
