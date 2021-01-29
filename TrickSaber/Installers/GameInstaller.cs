@@ -1,5 +1,6 @@
 ﻿using System;
 using IPA.Utilities;
+using ModestTree;
 using SiraUtil;
 using SiraUtil.Tools;
 using TrickSaber.InputHandling;
@@ -21,45 +22,49 @@ namespace TrickSaber.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<GameplayManager>().AsSingle();
-            Container.Bind<GlobalTrickManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GlobalTrickManager>().AsSingle();
 
             Container.Bind<MovementController>().FromNewComponentSibling().AsTransient();
             Container.Bind<InputManager>().AsTransient();
 
-            Container.Bind<SpinTrick>().FromNewComponentSibling().AsTransient();
-            Container.Bind<ThrowTrick>().FromNewComponentSibling().AsTransient();
+            Container.BindFactory<Type, GameObject, Trick, Trick.Factory>().FromFactory<Trick.CustomFactory>();
 
-            if (!Container.HasBinding<SaberManager>() || !Container.HasBinding<PlayerVRControllersManager>())
+            Container.Bind<SaberControllerBearer>().AsSingle();
+
+            //TODO: make SaberTrickManagers non-Monobehaviours
+
+            BindTrickManager(SaberType.SaberA);
+            BindTrickManager(SaberType.SaberB);
+
+            Container.Bind<SaberTrickModel>().AsTransient();
+
+            _logger.Info("Installed Everything");
+        }
+
+        private void BindTrickManager(SaberType saberType)
+        {
+            Container
+                .Bind<SaberTrickManager>()
+                .WithId(saberType)
+                .FromNewComponentOn(GetSaber).AsCached()
+                .WithArguments(saberType);
+        }
+
+        private GameObject GetSaber(InjectContext ctx)
+        {
+            var saberManager = ctx.Container.Resolve<SaberManager>();
+
+            if (!saberManager)
             {
-                _logger.Error("Saber or Cotroller not bound");
-                return;
+                _logger.Error("Couldn't resolve SaberManager");
+                return null;
             }
 
-            var saberManager = Container.Resolve<SaberManager>();
-            var controllers = Container.Resolve<PlayerVRControllersManager>();
+            var saberType = (SaberType) ctx.Identifier;
 
-            var leftController =
-                controllers.GetField<VRController, PlayerVRControllersManager>("_leftHandVRController");
-            var rightController =
-                controllers.GetField<VRController, PlayerVRControllersManager>("_rightHandVRController");
-
-            if (!leftController || !rightController)
-            {
-                _logger.Error("controllers not assigned");
-                return;
-            }
-
-            Container
-                .BindInterfacesAndSelfTo<SaberTrickManager>()
-                .FromNewComponentOn(saberManager.leftSaber.gameObject).AsCached()
-                .WithConcreteId(SaberType.SaberA)
-                .WithArguments(saberManager.leftSaber, leftController);
-
-            Container
-                .BindInterfacesAndSelfTo<SaberTrickManager>()
-                .FromNewComponentOn(saberManager.rightSaber.gameObject).AsCached()
-                .WithConcreteId(SaberType.SaberB)
-                .WithArguments(saberManager.rightSaber, rightController);
+            return saberType == SaberType.SaberA
+                ? saberManager.leftSaber.gameObject
+                : saberManager.rightSaber.gameObject;
         }
     }
 }

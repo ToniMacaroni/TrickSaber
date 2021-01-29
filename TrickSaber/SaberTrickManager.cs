@@ -13,7 +13,7 @@ using Zenject;
 
 namespace TrickSaber
 {
-    internal class SaberTrickManager : MonoBehaviour, IInitializable
+    internal class SaberTrickManager : MonoBehaviour
     {
         public readonly Dictionary<TrickAction, Trick> Tricks = new Dictionary<TrickAction, Trick>();
 
@@ -33,38 +33,41 @@ namespace TrickSaber
         private PauseController _pauseController;
         private MovementController _movementController;
         private InputManager _inputManager;
+        private AudioTimeSyncController _audioTimeSyncController;
 
-        private SpinTrick _spinTrick;
-        private ThrowTrick _throwTrick;
+        private Trick.Factory _trickFactory;
 
         [Inject]
         private void Construct(
             PluginConfig config,
-            GlobalTrickManager globalTrickManager,
             SiraLog logger,
             PauseController pauseController,
             MovementController movementController,
             InputManager inputManager,
-            Saber saber,
-            VRController vrController,
-            SpinTrick spinTrick,
-            ThrowTrick throwTrick)
+            SaberControllerBearer saberControllerBearer,
+            SaberType saberType,
+            SaberTrickModel saberTrickModel,
+            AudioTimeSyncController audioTimeSyncController,
+            Trick.Factory trickFactory)
         {
             _config = config;
-            _globalTrickManager = globalTrickManager;
             _logger = logger;
             _pauseController = pauseController;
             _movementController = movementController;
             _inputManager = inputManager;
-            _saber = saber;
-            _vrController = vrController;
+            _audioTimeSyncController = audioTimeSyncController;
+            SaberTrickModel = saberTrickModel;
 
-            _spinTrick = spinTrick;
-            _throwTrick = throwTrick;
+            _saber = saberControllerBearer[saberType].Saber;
+            _vrController = saberControllerBearer[saberType].VRController;
+
+            _trickFactory = trickFactory;
         }
 
-        public async void Initialize()
+        public async void Init(GlobalTrickManager globalTrickManager)
         {
+            _globalTrickManager = globalTrickManager;
+
             _logger.Debug($"Instantiated on {gameObject.name}");
 
             if (!_vrController)
@@ -74,8 +77,8 @@ namespace TrickSaber
                 return;
             }
 
-            if (IsLeftSaber) _globalTrickManager.LeftSaberSaberTrickManager = this;
-            else _globalTrickManager.RightSaberSaberTrickManager = this;
+            if (IsLeftSaber) _globalTrickManager.LeftSaberTrickManager = this;
+            else _globalTrickManager.RightSaberTrickManager = this;
 
             _movementController.Init(_vrController, this);
 
@@ -83,8 +86,8 @@ namespace TrickSaber
             _inputManager.TrickActivated += OnTrickActivated;
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 
-            GameObject saberModel = await GetSaberModel();
-            if (saberModel) _logger.Info($"Got saber model ({saberModel.name})");
+            var success = await SaberTrickModel.Init(_saber);
+            if (success) _logger.Info($"Got saber model");
             else
             {
                 _logger.Error("Couldn't get saber model");
@@ -92,10 +95,8 @@ namespace TrickSaber
                 return;
             }
 
-            SaberTrickModel = new SaberTrickModel(saberModel);
-
-            AddTrick(_spinTrick);
-            AddTrick(_throwTrick);
+            AddTrick<SpinTrick>();
+            AddTrick<ThrowTrick>();
 
             _logger.Info($"{Tricks.Count} tricks initialized");
 
@@ -133,7 +134,7 @@ namespace TrickSaber
             var trick = Tricks[trickAction];
             trick.Value = val;
             if (trick.State != TrickState.Inactive) return;
-            if (_globalTrickManager.AudioTimeSyncController.state ==
+            if (_audioTimeSyncController.state ==
                 AudioTimeSyncController.State.Paused) return;
             trick.StartTrick();
         }
@@ -157,30 +158,9 @@ namespace TrickSaber
 
         #endregion
 
-        public async Task<GameObject> GetSaberModel()
+        private void AddTrick<T>() where T : Trick
         {
-            Transform result = null;
-
-            var timeout = 2000;
-            var interval = 300;
-            var time = 0;
-
-            while (result==null)
-            {
-                result = _saber.transform.Find("SF Saber"); // Saber Factory
-                if (!result) result = _saber.transform.Find(SaberTrickModel.BasicSaberModelName); // Default Saber
-
-                if (time > timeout) return null;
-
-                time += interval;
-                await Task.Delay(interval);
-            }
-
-            return result.gameObject;
-        }
-
-        private void AddTrick(Trick trick)
-        {
+            var trick = _trickFactory.Create(typeof(T), gameObject);
             trick.Init(this, _movementController);
             trick.TrickStarted += OnTrickStart;
             trick.TrickEnding += OnTrickEnding;

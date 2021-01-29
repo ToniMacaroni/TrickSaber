@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using UnityEngine;
@@ -83,5 +84,22 @@ namespace TrickSaber.Tricks
         public abstract void OnTrickEndImmediately();
 
         public abstract void OnInit();
+
+        internal class Factory : PlaceholderFactory<Type, GameObject, Trick> { }
+
+        internal class CustomFactory : IFactory<Type, GameObject, Trick>
+        {
+            private readonly DiContainer _container;
+
+            private CustomFactory(DiContainer container)
+            {
+                _container = container;
+            }
+
+            public Trick Create(Type trickType, GameObject gameObject)
+            {
+                return (Trick) _container.InstantiateComponent(trickType, gameObject);
+            }
+        }
     }
 }

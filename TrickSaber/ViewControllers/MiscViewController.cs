@@ -89,6 +89,13 @@ namespace TrickSaber.ViewControllers
             set => _config.EnableCuttingDuringTrick = value;
         }
 
+        [UIValue("HitNotesDuringTrick-value")]
+        public bool HitNotesDuringTrick
+        {
+            get => _config.HitNotesDuringTrick;
+            set => _config.HitNotesDuringTrick = value;
+        }
+
         [UIAction("#post-parse")]
         public void Setup()
         {

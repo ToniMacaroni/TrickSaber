@@ -7,44 +7,45 @@ using Zenject;
 
 namespace TrickSaber
 {
-    internal class GlobalTrickManager
+    internal class GlobalTrickManager : IInitializable
     {
-        public AudioTimeSyncController AudioTimeSyncController;
-
         public AudioSource AudioSource
         {
             get
             {
                 if(_audioSource==null)
-                    _audioSource = AudioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
+                    _audioSource = _audioTimeSyncController.GetField<AudioSource, AudioTimeSyncController>("_audioSource");
                 return _audioSource;
             }
         }
 
+
         public BeatmapObjectManager BeatmapObjectManager;
 
-        public SaberTrickManager LeftSaberSaberTrickManager;
-        public SaberTrickManager RightSaberSaberTrickManager;
+        public SaberTrickManager LeftSaberTrickManager;
+        public SaberTrickManager RightSaberTrickManager;
 
         public bool Enabled
         {
             get
             {
-                if (!LeftSaberSaberTrickManager || !RightSaberSaberTrickManager) return false;
-                return LeftSaberSaberTrickManager.Enabled || RightSaberSaberTrickManager.Enabled;
+                if (!LeftSaberTrickManager || !RightSaberTrickManager) return false;
+                return LeftSaberTrickManager.Enabled || RightSaberTrickManager.Enabled;
             }
             set
             {
-                if (!LeftSaberSaberTrickManager || !RightSaberSaberTrickManager) return;
-                LeftSaberSaberTrickManager.Enabled = value;
-                RightSaberSaberTrickManager.Enabled = value;
+                if (!LeftSaberTrickManager || !RightSaberTrickManager) return;
+                LeftSaberTrickManager.Enabled = value;
+                RightSaberTrickManager.Enabled = value;
             }
         }
+
 
         public bool SaberClashCheckerEnabled = true;
 
         private readonly PluginConfig _config;
         private readonly IDifficultyBeatmap _iDifficultyBeatmap;
+        private readonly AudioTimeSyncController _audioTimeSyncController;
 
         private readonly float _slowmoStepAmount;
 
@@ -57,31 +58,44 @@ namespace TrickSaber
         private AudioSource _audioSource;
         private float _timeSinceLastNote;
 
-        private GlobalTrickManager(PluginConfig config, AudioTimeSyncController audioTimeSyncController, GameplayCoreSceneSetupData gameplayCoreSceneSetup)
+        private GlobalTrickManager(
+            PluginConfig config,
+            AudioTimeSyncController audioTimeSyncController,
+            GameplayCoreSceneSetupData gameplayCoreSceneSetup,
+            [Inject(Id = SaberType.SaberA)] SaberTrickManager leftTrickManager,
+            [Inject(Id = SaberType.SaberB)] SaberTrickManager rightTrickManager)
         {
             _config = config;
-            AudioTimeSyncController = audioTimeSyncController;
+            _audioTimeSyncController = audioTimeSyncController;
 
             _iDifficultyBeatmap = gameplayCoreSceneSetup.difficultyBeatmap;
 
             _slowmoStepAmount = _config.SlowmoStepAmount;
+
+            LeftSaberTrickManager = leftTrickManager;
+            RightSaberTrickManager = rightTrickManager;
         }
 
-        private void Awake()
+        public void Initialize()
         {
-            //var scoreController = FindObjectsOfType<ScoreController>().FirstOrDefault();
-            //BeatmapObjectManager = scoreController.GetField<BeatmapObjectManager, ScoreController>("_beatmapObjectManager");
-
-            //BeatmapObjectManager.noteWasSpawnedEvent += OnNoteWasSpawned;
-            //if (PluginConfig.Instance.DisableIfNotesOnScreen) StartCoroutine(NoteSpawnTimer());
+            LeftSaberTrickManager.Init(this);
+            RightSaberTrickManager.Init(this);
         }
+
+        //private void Awake()
+        //{
+        //    //var scoreController = FindObjectsOfType<ScoreController>().FirstOrDefault();
+        //    //BeatmapObjectManager = scoreController.GetField<BeatmapObjectManager, ScoreController>("_beatmapObjectManager");
+        //    //BeatmapObjectManager.noteWasSpawnedEvent += OnNoteWasSpawned;
+        //    //if (PluginConfig.Instance.DisableIfNotesOnScreen) StartCoroutine(NoteSpawnTimer());
+        //}
 
         public void OnTrickStarted(TrickAction trickAction)
         {
             SaberClashCheckerEnabled = false;
             if (trickAction == TrickAction.Throw && _config.SlowmoDuringThrow && !_slowmoApplied)
             {
-                var timeScale = AudioTimeSyncController.timeScale;
+                var timeScale = _audioTimeSyncController.timeScale;
                 if (_endSlowmoCoroutine != null)
                 {
                     SharedCoroutineStarter.instance.StopCoroutine(_endSlowmoCoroutine);
@@ -111,7 +125,7 @@ namespace TrickSaber
 
         private IEnumerator ApplySlowmoSmooth(float amount, float originalTimescale)
         {
-            float timeScale = AudioTimeSyncController.timeScale;
+            float timeScale = _audioTimeSyncController.timeScale;
             _originalTimeScale = originalTimescale;
             float targetTimeScale = _originalTimeScale - amount;
             if (targetTimeScale < 0.1f) targetTimeScale = 0.1f;
@@ -127,7 +141,7 @@ namespace TrickSaber
 
         private IEnumerator EndSlowmoSmooth()
         {
-            float timeScale = AudioTimeSyncController.timeScale;
+            float timeScale = _audioTimeSyncController.timeScale;
             float targetTimeScale = _originalTimeScale;
             _endSlowmoTarget = targetTimeScale;
             while (timeScale < targetTimeScale)
@@ -142,7 +156,7 @@ namespace TrickSaber
 
         void SetTimescale(float timescale)
         {
-            AudioTimeSyncController.SetField("_timeScale", timescale);
+            _audioTimeSyncController.SetField("_timeScale", timescale);
             AudioSource.pitch = timescale;
         }
 
@@ -169,13 +183,13 @@ namespace TrickSaber
 
         public bool IsTrickInState(TrickAction trickAction, TrickState state)
         {
-            return LeftSaberSaberTrickManager.IsTrickInState(trickAction, state) ||
-                   RightSaberSaberTrickManager.IsTrickInState(trickAction, state);
+            return LeftSaberTrickManager.IsTrickInState(trickAction, state) ||
+                   RightSaberTrickManager.IsTrickInState(trickAction, state);
         }
 
         public bool IsDoingTrick()
         {
-            return LeftSaberSaberTrickManager.IsDoingTrick() || RightSaberSaberTrickManager.IsDoingTrick();
+            return LeftSaberTrickManager.IsDoingTrick() || RightSaberTrickManager.IsDoingTrick();
         }
     }
 }

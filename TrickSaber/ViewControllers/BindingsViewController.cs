@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
@@ -83,11 +84,17 @@ namespace TrickSaber.ViewControllers
 
         [UIValue("NewerVersionText")] public string NewerVersionText => "Newer version available on Github (" + _pluginInfo.RemoteVersion.GetVersionString() + ")";
 
-        [UIComponent("MultiBindingText")] public TextMeshProUGUI MultiBindingText;
+        private bool _multiBindingTextActive;
 
-        void Start()
+        [UIComponent("MultiBindingTextActive")]
+        public bool MultiBindingTextActive
         {
-            MultiBindingText.gameObject.SetActive(false);
+            get => _multiBindingTextActive;
+            set
+            {
+                _multiBindingTextActive = value;
+                NotifyPropertyChanged();
+            }
         }
 
         void CheckMultiBinding()
@@ -104,7 +111,7 @@ namespace TrickSaber.ViewControllers
             if (ThumbAction != "None" && boundActions.Contains(ThumbAction)) isMultiBinding = true;
             else boundActions.Add(ThumbAction);
 
-            MultiBindingText.gameObject.SetActive(isMultiBinding);
+            MultiBindingTextActive = isMultiBinding;
         }
     }
 }

@@ -58,6 +58,8 @@ namespace TrickSaber.Configuration
 
         public bool DisableIfNotesOnScreen { get; set; } = false;
 
+        public bool HitNotesDuringTrick { get; set; } = false;
+
         //Advanced
         public int VelocityBufferSize { get; set; } = 5;
 

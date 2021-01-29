@@ -196,6 +196,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaberControllerBearer.cs" />
     <Compile Include="SaberTrickManager.cs" />
     <Compile Include="SaberTrickModel.cs" />
     <Compile Include="TrickSaberPlugin.cs" />

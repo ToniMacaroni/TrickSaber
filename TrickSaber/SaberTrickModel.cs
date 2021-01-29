@@ -1,5 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using IPA.Utilities;
+using SiraUtil.Sabers;
+using TrickSaber.Configuration;
 using Zenject;
 
 namespace TrickSaber
@@ -8,46 +11,52 @@ namespace TrickSaber
     {
         public static readonly string BasicSaberModelName = "BasicSaberModel(Clone)";
 
-        public GameObject OriginalSaberModel;
-        public Rigidbody Rigidbody;
-        public GameObject TrickModel;
+        public Rigidbody Rigidbody { get; private set; }
+        public GameObject OriginalSaberModel { get; private set; }
+        public GameObject TrickModel { get; private set; }
 
-        public SaberTrickModel(GameObject SaberModel)
+        private readonly PluginConfig _config;
+        private readonly SiraSaber.Factory _saberFactory;
+        private SiraSaber _siraSaber;
+        private Transform _saberTransform;
+
+        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory)
         {
-            OriginalSaberModel = SaberModel;
-            TrickModel = Object.Instantiate(SaberModel);
-            AddRigidbody();
-            TrickModel.transform.SetParent(GameObject.Find("VRGameCore").transform);
-            if (SaberModel.name == BasicSaberModelName) FixBasicTrickSaber();
-            TrickModel.SetActive(false);
+            _config = config;
+            _saberFactory = saberFactory;
         }
 
-        public void FixBasicTrickSaber()
+        public async Task<bool> Init(Saber saber)
         {
-            var originalGlow = OriginalSaberModel.GetComponentInChildren<SetSaberGlowColor>();
-            var colorMgr = originalGlow.GetField<ColorManager, SetSaberGlowColor>("_colorManager");
-            var saberType = originalGlow.GetField<SaberType, SetSaberGlowColor>("_saberType");
+            OriginalSaberModel = await GetSaberModel(saber);
 
-            var saberModelController = TrickModel.GetComponent<SaberModelController>();
-            saberModelController.SetField("_colorManager", colorMgr);
-            var glows = saberModelController.GetField<SetSaberGlowColor[], SaberModelController>("_setSaberGlowColors");
-            foreach (var glow in glows)
+            if (!OriginalSaberModel)
             {
-                glow.SetField("_colorManager", colorMgr);
-            }
-            var fakeGlows = saberModelController.GetField<SetSaberFakeGlowColor[], SaberModelController>(
-                "_setSaberFakeGlowColors");
-            foreach (var fakeGlow in fakeGlows)
-            {
-                fakeGlow.SetField("_colorManager", colorMgr);
+                return false;
             }
 
-            //saberModelController.Init(TrickModel.transform.parent, saberModelController);
+            _siraSaber = _saberFactory.Create();
+            _siraSaber.ChangeType(saber.saberType);
+
+            TrickModel = _siraSaber.gameObject;
+            _saberTransform = _siraSaber.transform;
+
+            TrickModel.name = $"TrickModel {saber.saberType}";
+            AddRigidbody(TrickModel);
+
+            _siraSaber.gameObject.SetActive(false);
+
+            if (!_config.HitNotesDuringTrick)
+            {
+                _siraSaber.Saber.enabled = false;
+            }
+
+            return true;
         }
 
-        public void AddRigidbody()
+        public void AddRigidbody(GameObject saberObject)
         {
-            Rigidbody = TrickModel.AddComponent<Rigidbody>();
+            Rigidbody = saberObject.AddComponent<Rigidbody>();
             Rigidbody.useGravity = false;
             Rigidbody.isKinematic = true;
             Rigidbody.detectCollisions = false;
@@ -58,8 +67,8 @@ namespace TrickSaber
         public void ChangeToTrickModel()
         {
             TrickModel.SetActive(true);
-            TrickModel.transform.position = OriginalSaberModel.transform.position;
-            TrickModel.transform.rotation = OriginalSaberModel.transform.rotation;
+            _saberTransform.position = OriginalSaberModel.transform.position;
+            _saberTransform.rotation = OriginalSaberModel.transform.rotation;
             OriginalSaberModel.SetActive(false);
         }
 
@@ -67,6 +76,28 @@ namespace TrickSaber
         {
             OriginalSaberModel.SetActive(true);
             TrickModel.SetActive(false);
+        }
+
+        private async Task<GameObject> GetSaberModel(Saber saber)
+        {
+            Transform result = null;
+
+            var timeout = 2000;
+            var interval = 300;
+            var time = 0;
+
+            while (result == null)
+            {
+                result = saber.transform.Find("SF Saber"); // Saber Factory
+                if (!result) result = saber.transform.Find(BasicSaberModelName); // Default Saber
+
+                if (time > timeout) return null;
+
+                time += interval;
+                await Task.Delay(interval);
+            }
+
+            return result.gameObject;
         }
     }
 }
