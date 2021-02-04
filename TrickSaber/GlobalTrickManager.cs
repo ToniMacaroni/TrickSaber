@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using IPA.Utilities;
 using SiraUtil.Sabers;
 using SiraUtil.Tools;
@@ -50,6 +51,7 @@ namespace TrickSaber
         private readonly AudioTimeSyncController _audioTimeSyncController;
 
         private readonly float _slowmoStepAmount;
+        private readonly bool _isMultiplayer;
 
         private Coroutine _applySlowmoCoroutine;
         private Coroutine _endSlowmoCoroutine;
@@ -66,7 +68,8 @@ namespace TrickSaber
             AudioTimeSyncController audioTimeSyncController,
             GameplayCoreSceneSetupData gameplayCoreSceneSetup,
             [Inject(Id = SaberType.SaberA)] SaberTrickManager leftTrickManager,
-            [Inject(Id = SaberType.SaberB)] SaberTrickManager rightTrickManager)
+            [Inject(Id = SaberType.SaberB)] SaberTrickManager rightTrickManager,
+            [InjectOptional] MultiplayerPlayersManager multiplayerPlayersManager)
         {
             _logger = logger;
             _config = config;
@@ -78,6 +81,8 @@ namespace TrickSaber
 
             LeftSaberTrickManager = leftTrickManager;
             RightSaberTrickManager = rightTrickManager;
+
+            _isMultiplayer = multiplayerPlayersManager != null;
         }
 
         public void Initialize()
@@ -97,7 +102,7 @@ namespace TrickSaber
         public void OnTrickStarted(TrickAction trickAction)
         {
             SaberClashCheckerEnabled = false;
-            if (trickAction == TrickAction.Throw && _config.SlowmoDuringThrow && !_slowmoApplied)
+            if (trickAction == TrickAction.Throw && _config.SlowmoDuringThrow && !_isMultiplayer && !_slowmoApplied)
             {
                 var timeScale = _audioTimeSyncController.timeScale;
                 if (_endSlowmoCoroutine != null)
@@ -113,7 +118,7 @@ namespace TrickSaber
         public void OnTrickEndRequested(TrickAction trickAction)
         {
             if (trickAction == TrickAction.Throw)
-                if (_config.SlowmoDuringThrow &&
+                if (_config.SlowmoDuringThrow && !_isMultiplayer &&
                     !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
                     if(_applySlowmoCoroutine!=null)SharedCoroutineStarter.instance.StopCoroutine(_applySlowmoCoroutine);

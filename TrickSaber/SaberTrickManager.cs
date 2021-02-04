@@ -92,6 +92,8 @@ namespace TrickSaber
                 return;
             }
 
+            _movementController.enabled = true;
+
             AddTrick<SpinTrick>();
             AddTrick<ThrowTrick>();
 

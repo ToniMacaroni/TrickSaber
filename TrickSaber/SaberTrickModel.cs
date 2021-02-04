@@ -5,6 +5,7 @@ using UnityEngine;
 using SiraUtil.Sabers;
 using SiraUtil.Services;
 using TrickSaber.Configuration;
+using Zenject;
 using Object = UnityEngine.Object;
 
 namespace TrickSaber
@@ -21,11 +22,15 @@ namespace TrickSaber
         private SiraSaber _siraSaber;
         private Transform _saberTransform;
 
-        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory, ColorManager colorManager)
+        private readonly bool _isMultiplayer;
+
+        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory, ColorManager colorManager, [InjectOptional] MultiplayerPlayersManager multiplayerPlayersManager)
         {
             _config = config;
             _saberFactory = saberFactory;
             _colorManager = colorManager;
+
+            _isMultiplayer = multiplayerPlayersManager != null;
         }
 
         public async Task<bool> Init(Saber saber)
@@ -51,7 +56,7 @@ namespace TrickSaber
 
             TrickModel.SetActive(false);
 
-            if (!_config.HitNotesDuringTrick)
+            if (!_config.HitNotesDuringTrick || _isMultiplayer)
             {
                 Object.DestroyImmediate(_siraSaber.Saber);
                 Object.DestroyImmediate(_siraSaber);
