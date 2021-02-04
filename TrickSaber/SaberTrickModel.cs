@@ -1,40 +1,47 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using SiraUtil;
 using UnityEngine;
 using SiraUtil.Sabers;
+using SiraUtil.Services;
 using TrickSaber.Configuration;
+using Object = UnityEngine.Object;
 
 namespace TrickSaber
 {
     public class SaberTrickModel
     {
-        public static readonly string BasicSaberModelName = "BasicSaberModel(Clone)";
-
         public Rigidbody Rigidbody { get; private set; }
         public GameObject OriginalSaberModel { get; private set; }
         public GameObject TrickModel { get; private set; }
 
         private readonly PluginConfig _config;
         private readonly SiraSaber.Factory _saberFactory;
+        private readonly ColorManager _colorManager;
         private SiraSaber _siraSaber;
         private Transform _saberTransform;
 
-        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory)
+        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory, ColorManager colorManager)
         {
             _config = config;
             _saberFactory = saberFactory;
+            _colorManager = colorManager;
         }
 
         public async Task<bool> Init(Saber saber)
         {
+            _siraSaber = _saberFactory.Create();
+
             OriginalSaberModel = await GetSaberModel(saber);
 
             if (!OriginalSaberModel)
             {
+                Object.DestroyImmediate(_siraSaber.gameObject);
                 return false;
             }
 
-            _siraSaber = _saberFactory.Create();
             _siraSaber.ChangeType(saber.saberType);
+            _siraSaber.Saber.ChangeColorInstant(_colorManager.ColorForSaberType(saber.saberType));
 
             TrickModel = _siraSaber.gameObject;
             _saberTransform = _siraSaber.transform;
@@ -42,11 +49,12 @@ namespace TrickSaber
             TrickModel.name = $"TrickModel {saber.saberType}";
             AddRigidbody(TrickModel);
 
-            _siraSaber.gameObject.SetActive(false);
+            TrickModel.SetActive(false);
 
             if (!_config.HitNotesDuringTrick)
             {
-                _siraSaber.Saber.enabled = false;
+                Object.DestroyImmediate(_siraSaber.Saber);
+                Object.DestroyImmediate(_siraSaber);
             }
 
             return true;
@@ -78,16 +86,18 @@ namespace TrickSaber
 
         private async Task<GameObject> GetSaberModel(Saber saber)
         {
-            Transform result = null;
+            //return saber.GetComponentInChildren<SaberModelController>()?.gameObject;
+            SaberModelController smc = null;
 
             var timeout = 2000;
             var interval = 300;
             var time = 0;
 
-            while (result == null)
+            while (!smc)
             {
-                result = saber.transform.Find("SF Saber"); // Saber Factory
-                if (!result) result = saber.transform.Find(BasicSaberModelName); // Default Saber
+                smc = saber.GetComponentInChildren<SaberModelController>();
+
+                if (smc) return smc.gameObject;
 
                 if (time > timeout) return null;
 
@@ -95,7 +105,7 @@ namespace TrickSaber
                 await Task.Delay(interval);
             }
 
-            return result.gameObject;
+            return null;
         }
     }
 }

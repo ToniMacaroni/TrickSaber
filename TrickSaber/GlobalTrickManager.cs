@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using IPA.Utilities;
+using SiraUtil.Sabers;
+using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using UnityEngine;
 using Zenject;
@@ -42,6 +44,7 @@ namespace TrickSaber
 
         public bool SaberClashCheckerEnabled = true;
 
+        private readonly SiraLog _logger;
         private readonly PluginConfig _config;
         private readonly IDifficultyBeatmap _iDifficultyBeatmap;
         private readonly AudioTimeSyncController _audioTimeSyncController;
@@ -58,12 +61,14 @@ namespace TrickSaber
         private float _timeSinceLastNote;
 
         private GlobalTrickManager(
+            SiraLog logger,
             PluginConfig config,
             AudioTimeSyncController audioTimeSyncController,
             GameplayCoreSceneSetupData gameplayCoreSceneSetup,
             [Inject(Id = SaberType.SaberA)] SaberTrickManager leftTrickManager,
             [Inject(Id = SaberType.SaberB)] SaberTrickManager rightTrickManager)
         {
+            _logger = logger;
             _config = config;
             _audioTimeSyncController = audioTimeSyncController;
 

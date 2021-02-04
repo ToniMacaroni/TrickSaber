@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using IPA.Utilities;
+using SiraUtil.Sabers;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using TrickSaber.InputHandling;
@@ -37,7 +38,7 @@ namespace TrickSaber
         private void Construct(
             PluginConfig config,
             SiraLog logger,
-            PauseController pauseController,
+            [InjectOptional] PauseController pauseController,
             MovementController movementController,
             InputManager inputManager,
             SaberControllerBearer saberControllerBearer,
@@ -96,7 +97,10 @@ namespace TrickSaber
 
             _logger.Info($"{Tricks.Count} tricks initialized");
 
-            _pauseController.didResumeEvent += EndAllTricks;
+            if (_pauseController)
+            {
+                _pauseController.didResumeEvent += EndAllTricks;
+            }
 
             _logger.Info("Trick Manager initialized");
         }

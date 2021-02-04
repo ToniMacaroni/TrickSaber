@@ -34,8 +34,6 @@ namespace TrickSaber.Installers
             BindTrickManager(SaberType.SaberB);
 
             Container.Bind<SaberTrickModel>().AsTransient();
-
-            _logger.Info("Installed Everything");
         }
 
         private void BindTrickManager(SaberType saberType)

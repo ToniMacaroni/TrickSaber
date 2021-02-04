@@ -57,7 +57,7 @@ namespace TrickSaber.Configuration
 
         public bool DisableIfNotesOnScreen { get; set; } = false;
 
-        [DisablesScoring(Reason = "Hit Em")]
+        [DisablesScoring]
         public bool HitNotesDuringTrick { get; set; } = false;
 
         //Advanced
