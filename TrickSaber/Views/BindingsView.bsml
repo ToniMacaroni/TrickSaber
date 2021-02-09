@@ -1,0 +1,44 @@
+﻿<vertical child-control-height='false'>
+  <horizontal ignore-layout='true' anchor-pos-x='-70' anchor-pos-y='30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <image preserve-aspect='true' preferred-width='15' source='TrickSaber.Resources.LogoSmall.png'></image>
+  </horizontal>
+  
+  <horizontal bg='panel-top' pad-left='10' pad-right='10' horizontal-fit='PreferredSize'>
+    <text text='Bindings' align='Center' font-size='7'></text>
+  </horizontal>
+
+  <horizontal ignore-layout='true' anchor-pos-x='-70' anchor-pos-y='24' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <text text='~Version' font-size='4' font-color='#FFFFFF66'/>
+  </horizontal>
+  <horizontal ignore-layout='true' anchor-pos-x='-50' anchor-pos-y='-30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <text text='More settings in TrickSaber.json' font-size='4.5' font-color='#FFFFFF44'/>
+  </horizontal>
+  <horizontal ignore-layout='true' anchor-pos-x='0' anchor-pos-y='-30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' active='~NewerVersionAvailable'>
+    <text text='~NewerVersionText' font-size='3.5' font-color='#28e06677'/>
+  </horizontal>
+  <horizontal ignore-layout='true' anchor-pos-x='50' anchor-pos-y='-30' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <text text='~ContactInfo' font-size='4.5' font-color='#FFFFFF44'/>
+  </horizontal>
+  <horizontal ignore-layout='true' active='~MultiBindingTextActive' anchor-pos-x='0' anchor-pos-y='24' horizontal-fit='PreferredSize' vertical-fit='PreferredSize'>
+    <text text='Multi Binding active' id='MultiBindingText' font-size='4.5' font-color='#e86113ff' hover-hint='You have set two inputs to the same Action, in order to perform this Action you have to press the two inputs simultaneously'/>
+  </horizontal>
+
+  <vertical ignore-layout='true' pad-top='20' spacing='0.7'
+            child-control-height='false' child-expand-height='false'>
+    <horizontal horizontal-fit='PreferredSize' spacing='12'>
+      <list-setting preferred-width='70' text='Trigger action' value='TriggerAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on trigger press'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseTrigger-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
+    <horizontal horizontal-fit='PreferredSize' spacing='12'>
+      <list-setting preferred-width='70' text='Grip action' value='GripAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on grip press'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseGrip-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
+    <horizontal horizontal-fit='PreferredSize' spacing='10'>
+      <list-setting preferred-width='70' text='Thumbstick action' value='ThumbAction-value' options='TrickActionEnum-list' apply-on-change='true' hover-hint='What happens on thumbstick move'/>
+      <checkbox-setting preferred-width='20' text='Reverse' value='ReverseThumbstick-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
+    </horizontal>
+    <horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
+      <text text='If you encounter any problems with input on the Index, send me a message.' font-color='yellow' align='Center'/>
+    </horizontal>
+  </vertical>
+</vertical>

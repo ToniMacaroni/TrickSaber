@@ -1,0 +1,24 @@
+﻿<scrollable-settings-container id="scrollable" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                               xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+	<list-setting text='Thumbstick direction' value='ThumbDir-value' options='DirEnum-list' apply-on-change='true'
+	              hover-hint='In which direction do I need to move the thumbstick to spin you saber' />
+	<checkbox-setting text='Is spin speed velocity dependent' value='IsSpeedVelocityDependent-value'
+	                  apply-on-change='true'
+	                  hover-hint='Is the spin speed/direction determined by how the controller was moved' />
+	<increment-setting text='Spin speed' value='SpinSpeed-value' min='0.1' max='2' increment='0.05'
+	                   integer-only='false' apply-on-change='true'
+	                   hover-hint='Multiplies the spin speed with the value' />
+	<list-setting text='Spin Direction' value='SpinDir-value' options='SpinDirEnum-list' apply-on-change='true'
+	              hover-hint='In which direction does the saber spin' />
+	<increment-setting text='Throw velocity' value='ThrowVelocity-value' min='0.1' max='2' increment='0.05'
+	                   integer-only='false' apply-on-change='true'
+	                   hover-hint='Multiplies the throw velocity with the value' />
+	<increment-setting text='Saber return speed' value='ReturnSpeed-value' min='1' max='100' increment='0.5'
+	                   integer-only='false' apply-on-change='true' hover-hint='How fast does the saber return' />
+	<checkbox-setting text='Slowmo during throw' value='SlowmoDuringThrow-value' apply-on-change='true'
+	                  hover-hint='!DISABLES SCORE SUBMISSION!' />
+	<checkbox-setting text='Disable if notes on screen' value='DisableIfNotesOnScreen-value' apply-on-change='true'
+	                  hover-hint='Automatically disable Tricksaber when notes are on screen and enable it when there are none' />
+	<checkbox-setting text='Hit notes during trick' value='HitNotesDuringTrick-value' apply-on-change='true'
+	                  hover-hint='!DISABLES SCORE SUBMISSION!' />
+</scrollable-settings-container>
