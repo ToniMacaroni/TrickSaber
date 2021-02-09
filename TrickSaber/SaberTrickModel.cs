@@ -58,8 +58,7 @@ namespace TrickSaber
 
             if (!_config.HitNotesDuringTrick || _isMultiplayer)
             {
-                Object.DestroyImmediate(_siraSaber.Saber);
-                Object.DestroyImmediate(_siraSaber);
+                _siraSaber.Saber.disableCutting = true;
             }
 
             return true;
