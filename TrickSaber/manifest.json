@@ -3,7 +3,7 @@
   "id": "TrickSaber",
   "name": "TrickSaber",
   "author": "Toni Macaroni",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A BeatSaber mod for performing tricks",
   "gameVersion": "1.13.2",
   "dependsOn": {
