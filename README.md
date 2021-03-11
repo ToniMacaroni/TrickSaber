@@ -31,3 +31,8 @@ You can configure most of the Plugin by going into the "Mods" tab on the left pa
 For more stuff and in-depth explanation see [Configuration](https://tonimacaroni.github.io/TrickSaber-Docs/Configuration.html)
 
 **Preview: https://www.youtube.com/watch?v=6xxpupYYjoQ**
+
+## Having issues?
+
+Come join the [Saber Factory server!](https://discord.gg/PjD7WcChH3)
+Remember to read the rules and use the channels accordingly.
