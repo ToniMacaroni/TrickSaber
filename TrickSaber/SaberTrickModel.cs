@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SiraUtil;
 using UnityEngine;
 using SiraUtil.Sabers;
-using SiraUtil.Services;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using Zenject;

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using HMUI;
-using SiraUtil.Sabers;
 using SiraUtil.Tools;
 using TrickSaber.InputHandling;
 using TrickSaber.Tricks;

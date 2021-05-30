@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using IPA.Utilities;
-using SiraUtil.Sabers;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using TrickSaber.InputHandling;

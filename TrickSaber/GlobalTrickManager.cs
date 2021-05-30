@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using IPA.Utilities;
-using SiraUtil.Sabers;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using UnityEngine;
