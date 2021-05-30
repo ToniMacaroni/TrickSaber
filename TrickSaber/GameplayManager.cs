@@ -19,7 +19,7 @@ namespace TrickSaber
         private readonly Submission _submission;
         private readonly PauseMenuManager _pauseMenuManager;
 
-        public GameplayManager(PluginConfig config, SiraLog logger, Submission submission, PauseMenuManager pauseMenuManager)
+        public GameplayManager(PluginConfig config, SiraLog logger, Submission submission, [InjectOptional] PauseMenuManager pauseMenuManager)
         {
             _config = config;
             _logger = logger;
@@ -70,6 +70,8 @@ namespace TrickSaber
 
         public void CreateCheckbox()
         {
+            if (_pauseMenuManager == null) return;
+
             var canvas = _pauseMenuManager.GetField<LevelBar, PauseMenuManager>("_levelBar")
                 .transform
                 .parent
