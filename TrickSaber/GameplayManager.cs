@@ -3,6 +3,7 @@ using System.Reflection;
 using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.Tags;
 using HMUI;
+using IPA.Utilities;
 using SiraUtil.Services;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
@@ -16,12 +17,14 @@ namespace TrickSaber
         private readonly PluginConfig _config;
         private readonly SiraLog _logger;
         private readonly Submission _submission;
+        private readonly PauseMenuManager _pauseMenuManager;
 
-        public GameplayManager(PluginConfig config, SiraLog logger, Submission submission)
+        public GameplayManager(PluginConfig config, SiraLog logger, Submission submission, PauseMenuManager pauseMenuManager)
         {
             _config = config;
             _logger = logger;
             _submission = submission;
+            _pauseMenuManager = pauseMenuManager;
         }
 
         public void DisableScoreSubmissionIfNeeded()
@@ -67,7 +70,11 @@ namespace TrickSaber
 
         public void CreateCheckbox()
         {
-            var canvas = GameObject.Find("Wrapper/StandardGameplay/PauseMenu/Wrapper/MenuWrapper/Canvas").GetComponent<Canvas>();
+            var canvas = _pauseMenuManager.GetField<LevelBar, PauseMenuManager>("_levelBar")
+                .transform
+                .parent
+                .parent
+                .GetComponent<Canvas>();
             if (!canvas) return;
 
             var toggleObject = new ToggleSettingTag().CreateObject(canvas.transform);
