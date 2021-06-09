@@ -18,7 +18,7 @@ namespace TrickSaber
             var pluginConfig = conf.Generated<PluginConfig>();
 
             zenjector.OnApp<AppInstaller>().WithParameters(pluginConfig, logger);
-            zenjector.OnMenu<Installers.MenuInstaller>();
+            zenjector.OnMenu<MenuInstaller>();
             zenjector.OnGame<GameInstaller>(false);
         }
 
