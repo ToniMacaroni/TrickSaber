@@ -4,7 +4,9 @@ using BeatSaberMarkupLanguage.Components.Settings;
 using BeatSaberMarkupLanguage.Tags;
 using HMUI;
 using IPA.Utilities;
+using SiraUtil.Logging;
 using SiraUtil.Services;
+using SiraUtil.Submissions;
 using SiraUtil.Tools;
 using TrickSaber.Configuration;
 using UnityEngine;
@@ -64,7 +66,7 @@ namespace TrickSaber
             }
             catch
             {
-                _logger.Warning($"No checkbox for you sir");
+                _logger.Warn($"No checkbox for you sir");
             }
         }
 

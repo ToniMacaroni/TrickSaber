@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SiraUtil;
+using SiraUtil.Logging;
 using UnityEngine;
 using SiraUtil.Sabers;
 using SiraUtil.Tools;
@@ -16,7 +17,7 @@ namespace TrickSaber
         public GameObject TrickModel { get; private set; }
 
         private readonly PluginConfig _config;
-        private readonly SiraSaber.Factory _saberFactory;
+        private readonly SiraSaberFactory _saberFactory;
         private readonly ColorManager _colorManager;
         private readonly SiraLog _logger;
         private SiraSaber _siraSaber;
@@ -24,7 +25,7 @@ namespace TrickSaber
 
         private readonly bool _isMultiplayer;
 
-        private SaberTrickModel(PluginConfig config, SiraSaber.Factory saberFactory, ColorManager colorManager, [InjectOptional] MultiplayerPlayersManager multiplayerPlayersManager, SiraLog logger)
+        private SaberTrickModel(PluginConfig config, SiraSaberFactory saberFactory, ColorManager colorManager, [InjectOptional] MultiplayerPlayersManager multiplayerPlayersManager, SiraLog logger)
         {
             _config = config;
             _saberFactory = saberFactory;
@@ -36,7 +37,7 @@ namespace TrickSaber
 
         public async Task<bool> Init(Saber saber)
         {
-            _siraSaber = _saberFactory.Create();
+            _siraSaber = _saberFactory.Spawn(saber.saberType);
 
             OriginalSaberModel = await GetSaberModel(saber);
 
@@ -46,8 +47,7 @@ namespace TrickSaber
                 return false;
             }
 
-            _siraSaber.ChangeType(saber.saberType);
-            _siraSaber.Saber.ChangeColorInstant(_colorManager.ColorForSaberType(saber.saberType));
+            _siraSaber.SetColor(_colorManager.ColorForSaberType(saber.saberType));
 
             TrickModel = _siraSaber.gameObject;
             _saberTransform = _siraSaber.transform;
