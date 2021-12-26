@@ -18,6 +18,7 @@ namespace TrickSaber
             var pluginConfig = conf.Generated<PluginConfig>();
 
             zenjector.UseLogger(logger);
+            zenjector.UseHttpService();
             zenjector.Install<AppInstaller>(Location.App, pluginConfig);
             zenjector.Install<MenuInstaller>(Location.Menu);
             zenjector.Install<GameInstaller>(Location.StandardPlayer);
