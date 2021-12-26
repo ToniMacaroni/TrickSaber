@@ -76,11 +76,11 @@ namespace TrickSaber.ViewControllers
 
         [UIValue("ContactInfo")] public string ContactInfo => "My Discord : Toni Macaroni#8970";
 
-        [UIValue("Version")] public string Version => _pluginInfo.Version.GetVersionString();
+        [UIValue("Version")] public string Version => _pluginInfo.Version.ToString();
 
         [UIValue("NewerVersionAvailable")] public bool NewerVersionAvailable => !_pluginInfo.IsNewestVersion;
 
-        [UIValue("NewerVersionText")] public string NewerVersionText => "Newer version available on Github (" + _pluginInfo.RemoteVersion.GetVersionString() + ")";
+        [UIValue("NewerVersionText")] public string NewerVersionText => "Newer version available on Github (" + _pluginInfo.RemoteVersion + ")";
 
         private bool _multiBindingTextActive;
 
