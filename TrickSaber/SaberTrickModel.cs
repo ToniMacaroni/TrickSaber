@@ -59,7 +59,7 @@ namespace TrickSaber
 
             if (!_config.HitNotesDuringTrick || _isMultiplayer)
             {
-                _siraSaber.Saber.disableCutting = true;
+                _siraSaber.Saber.enabled = false;
             }
 
             return true;
