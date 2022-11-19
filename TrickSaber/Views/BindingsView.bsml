@@ -38,7 +38,7 @@
       <checkbox-setting preferred-width='20' text='Reverse' value='ReverseThumbstick-value' apply-on-change='true' hover-hint='Activate action when input is released rather than pressed' />
     </horizontal>
     <horizontal preferred-width='50' pad-left='9' pad-right='9' pad-top='4' pad-bottom='4' bg='round-rect-panel' active='~ShowIndexText'>
-      <text text='If you encounter any problems with input on the Index, send me a message.' font-color='yellow' align='Center'/>
+      <text text='Make sure you choose a tricksaber controller binding (instructions are on the tricksaber github page)' font-color='yellow' align='Center'/>
     </horizontal>
   </vertical>
 </vertical>
