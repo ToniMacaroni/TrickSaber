@@ -12,6 +12,9 @@ hence the name "Trick Saber".
 2) Make sure you have installed the dependencies listed in the release
 3) Drop the zip contents into your Beat Saber directory
 
+**If you use index controllers you HAVE to choose a compatible SteamVR binding**  
+*Take a look [here](https://www.youtube.com/watch?v=e3NI0mjVM0s) on how to do that*
+
 ## Usage
 *Buttons can be configured*
 
