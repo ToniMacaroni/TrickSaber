@@ -120,7 +120,7 @@ namespace TrickSaber
                 if (_config.SlowmoDuringThrow && !_isMultiplayer &&
                     !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
-                    if(_applySlowmoCoroutine!=null)SharedCoroutineStarter.instance.StopCoroutine(_applySlowmoCoroutine);
+                    if(_applySlowmoCoroutine!=null) SharedCoroutineStarter.instance.StopCoroutine(_applySlowmoCoroutine);
                     _endSlowmoCoroutine = SharedCoroutineStarter.instance.StartCoroutine(EndSlowmoSmooth());
                     _slowmoApplied = false;
                 }

@@ -4,6 +4,7 @@ using IPA.Config.Stores;
 using SiraUtil.Zenject;
 using TrickSaber.Configuration;
 using TrickSaber.Installers;
+using Zenject;
 using IPALogger = IPA.Logging.Logger;
 
 namespace TrickSaber
@@ -11,7 +12,6 @@ namespace TrickSaber
     [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
-
         [Init]
         public Plugin(IPALogger logger, Config conf, Zenjector zenjector)
         {
