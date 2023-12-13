@@ -79,7 +79,7 @@ namespace TrickSaber
 
             _movementController.Init(_vrController, this);
 
-            _inputManager.Init(_saber.saberType, _vrController.GetField<VRControllersInputManager, VRController>("_vrControllersInputManager"));
+            _inputManager.Init(_saber.saberType);
             _inputManager.TrickActivated += OnTrickActivated;
             _inputManager.TrickDeactivated += OnTrickDeactivated;
 

@@ -24,7 +24,7 @@ namespace TrickSaber.InputHandling
             _trickInputHandler = new TrickInputHandler();
         }
 
-        public void Init(SaberType type, VRControllersInputManager vrControllersInputManager)
+        public void Init(SaberType type)
         {
             OVRInput.Controller oculusController;
             XRNode node;

@@ -106,10 +106,10 @@ namespace TrickSaber
                 var timeScale = _audioTimeSyncController.timeScale;
                 if (_endSlowmoCoroutine != null)
                 {
-                    SharedCoroutineStarter.instance.StopCoroutine(_endSlowmoCoroutine);
+                    Plugin.SharedCoroutineStarter.StopCoroutine(_endSlowmoCoroutine);
                     timeScale = _endSlowmoTarget;
                 }
-                _applySlowmoCoroutine = SharedCoroutineStarter.instance.StartCoroutine(ApplySlowmoSmooth(_config.SlowmoAmount, timeScale));
+                _applySlowmoCoroutine = Plugin.SharedCoroutineStarter.StartCoroutine(ApplySlowmoSmooth(_config.SlowmoAmount, timeScale));
                 _slowmoApplied = true;
             }
         }
@@ -120,8 +120,8 @@ namespace TrickSaber
                 if (_config.SlowmoDuringThrow && !_isMultiplayer &&
                     !IsTrickInState(trickAction, TrickState.Started) && _slowmoApplied)
                 {
-                    if(_applySlowmoCoroutine!=null)SharedCoroutineStarter.instance.StopCoroutine(_applySlowmoCoroutine);
-                    _endSlowmoCoroutine = SharedCoroutineStarter.instance.StartCoroutine(EndSlowmoSmooth());
+                    if(_applySlowmoCoroutine!=null) Plugin.SharedCoroutineStarter.StopCoroutine(_applySlowmoCoroutine);
+                    _endSlowmoCoroutine = Plugin.SharedCoroutineStarter.StartCoroutine(EndSlowmoSmooth());
                     _slowmoApplied = false;
                 }
         }
